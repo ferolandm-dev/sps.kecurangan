@@ -17,7 +17,6 @@
                 <div class="card-header">
                     <h5 class="card-category">Distributor Aktif</h5>
                     <h4 class="card-title">{{ $totalDistributorAktif }} Distributor</h4>
-<<<<<<< HEAD
                     <div class="dropdown">
                         <button type="button"
                             class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
@@ -28,8 +27,6 @@
                             <a class="dropdown-item" href="#">Refresh</a>
                         </div>
                     </div>
-=======
->>>>>>> recovery-branch
                 </div>
                 <div class="card-footer">
                     <div class="stats">
@@ -44,7 +41,6 @@
                 <div class="card-header">
                     <h5 class="card-category">Total Sales Aktif</h5>
                     <h4 class="card-title">{{ $totalSalesAktif }} Sales</h4>
-<<<<<<< HEAD
                     <div class="dropdown">
                         <button type="button"
                             class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
@@ -55,8 +51,6 @@
                             <a class="dropdown-item" href="#">Refresh</a>
                         </div>
                     </div>
-=======
->>>>>>> recovery-branch
                 </div>
 
                 <div class="card-footer">
@@ -72,7 +66,6 @@
                 <div class="card-header">
                     <h5 class="card-category">Total Kecurangan Bulan Ini</h5>
                     <h4 class="card-title">{{ $totalKecuranganBulanIni }} Kasus</h4>
-<<<<<<< HEAD
                     <div class="dropdown">
                         <button type="button"
                             class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
@@ -83,8 +76,6 @@
                             <a class="dropdown-item" href="#">Refresh</a>
                         </div>
                     </div>
-=======
->>>>>>> recovery-branch
                 </div>
                 <div class="card-footer">
                     <div class="stats">
@@ -94,9 +85,8 @@
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
-=======
 
+        {{-- Tambahan dari recovery-branch --}}
         <div class="col-lg-4 col-md-6">
             <div class="card card-chart">
                 <div class="card-header">
@@ -111,31 +101,20 @@
                 </div>
             </div>
         </div>
->>>>>>> recovery-branch
     </div>
 
     {{-- ROW UNTUK TOP DISTRIBUTOR & TOP SALES CURANG --}}
     <div class="row">
         {{-- Top 5 Distributor --}}
         <div class="col-md-6">
-<<<<<<< HEAD
-            <div class="card">
-=======
             <div class="card h-100 d-flex flex-column">
->>>>>>> recovery-branch
                 <div class="card-header">
                     <h5 class="card-category">Top 5 Distributor</h5>
                     <h4 class="card-title">Berdasarkan Jumlah Sales Aktif</h4>
                 </div>
-<<<<<<< HEAD
-                <div class="card-body">
-                    <div class="table-responsive" style="overflow-x: auto;">
-                        <table class="table table-hover align-middle mb-0">
-=======
                 <div class="card-body flex-fill d-flex flex-column">
                     <div class="table-responsive" style="overflow-x: auto; flex: 1;">
                         <table class="table table-hover align-middle mb-0" style="height: 100%;">
->>>>>>> recovery-branch
                             <thead class="text-primary">
                                 <tr>
                                     <th style="white-space: nowrap;">ID Distributor</th>
@@ -164,24 +143,14 @@
 
         {{-- Top 5 Sales Curang --}}
         <div class="col-md-6">
-<<<<<<< HEAD
-            <div class="card">
-=======
             <div class="card h-100 d-flex flex-column">
->>>>>>> recovery-branch
                 <div class="card-header">
                     <h5 class="card-category">Top 5 Sales Curang</h5>
                     <h4 class="card-title">Berdasarkan Jumlah Kecurangan</h4>
                 </div>
-<<<<<<< HEAD
-                <div class="card-body">
-                    <div class="table-responsive" style="overflow-x: auto;">
-                        <table class="table table-hover align-middle mb-0">
-=======
                 <div class="card-body flex-fill d-flex flex-column">
                     <div class="table-responsive" style="overflow-x: auto; flex: 1;">
                         <table class="table table-hover align-middle mb-0" style="height: 100%;">
->>>>>>> recovery-branch
                             <thead class="text-primary">
                                 <tr>
                                     <th style="white-space: nowrap;">ID Sales</th>
@@ -208,10 +177,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> recovery-branch
 </div>
 @endsection
 

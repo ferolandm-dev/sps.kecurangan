@@ -23,7 +23,7 @@
             {{-- CARD DATA --}}
             <div class="card">
                 <div class="card-header">
-                    <div clas<div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
                         <h4 class="card-title mb-0">{{ __('Data Kecurangan') }}</h4>
                         <div class="d-flex align-items-center flex-wrap" style="gap: 10px; margin-top: 8px;">
 
@@ -32,6 +32,7 @@
                                 title="Tambah Sales">
                                 <i class="now-ui-icons ui-1_simple-add"></i>
                             </a>
+
                             {{-- Form Pencarian --}}
                             <form action="{{ route('kecurangan.data') }}" method="GET"
                                 class="d-flex align-items-center mr-2" style="margin-top: 10px;">
@@ -84,7 +85,6 @@
                         </div>
                     </div>
 
-
                     {{-- 🔍 Form Filter Tanggal --}}
                     <form action="{{ route('kecurangan.data') }}" method="GET"
                         class="d-flex align-items-center flex-wrap" style="gap: 10px; margin-top: 10px;">
@@ -112,6 +112,7 @@
                         </a>
                     </form>
                 </div>
+
                 <div class="card-body">
                     <div class="table-responsive">
                         <style>
@@ -170,8 +171,8 @@
                         $isActive = request('sort_by') === $column;
                         $nextOrder = ($isActive && request('sort_order') === 'asc') ? 'desc' : 'asc';
                         return '<a
-                            href="'.route('kecurangan.data', array_merge(request()->query(), ['sort_by' => $column, 'sort_order' => $nextOrder])).'"
-                            style="color:inherit;text-decoration:none;">'.$label.'</a>';
+                            href="' . route('kecurangan.data', array_merge(request()->query(), ['sort_by' => $column, 'sort_order' => $nextOrder])) . '"
+                            style="color:inherit;text-decoration:none;">' . $label . '</a>';
                         }
                         @endphp
 
@@ -182,18 +183,12 @@
                                     <th>{!! sortLink('ID Sales', 'id_sales') !!}</th>
                                     <th>{!! sortLink('Nama Sales', 'nama_sales') !!}</th>
                                     <th>{!! sortLink('Distributor', 'distributor') !!}</th>
-<<<<<<< HEAD
-=======
-                                    <th>{!! sortLink('Nama ASS', 'asisten_manager') !!}</th>
->>>>>>> recovery-branch
+                                    <th>{!! sortLink('Nama ASS', 'nama_asisten_manager') !!}</th>
                                     <th>{!! sortLink('Toko', 'toko') !!}</th>
                                     <th class="text-center">{!! sortLink('Kunjungan', 'kunjungan') !!}</th>
                                     <th>{!! sortLink('Tanggal', 'tanggal') !!}</th>
                                     <th>{!! sortLink('Keterangan', 'keterangan') !!}</th>
-<<<<<<< HEAD
-=======
                                     <th>{!! sortLink('Kuartal', 'kuartal') !!}</th>
->>>>>>> recovery-branch
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -205,19 +200,12 @@
                                     <td>{{ $item->id_sales }}</td>
                                     <td>{{ $item->nama_sales }}</td>
                                     <td>{{ $item->distributor }}</td>
-<<<<<<< HEAD
-=======
                                     <td>{{ $item->nama_asisten_manager }}</td>
->>>>>>> recovery-branch
                                     <td>{{ $item->toko }}</td>
                                     <td class="text-center">{{ $item->kunjungan }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
-                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
                                     <td>{{ $item->keterangan ?? '-' }}</td>
-<<<<<<< HEAD
-=======
                                     <td>{{ $item->kuartal }}</td>
->>>>>>> recovery-branch
                                     <td class="text-center">
                                         @if($item->validasi == 0)
                                         <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
@@ -247,14 +235,14 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="9" class="text-center text-muted">Belum ada data kecurangan</td>
+                                    <td colspan="11" class="text-center text-muted">Belum ada data kecurangan</td>
                                 </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
 
-                    {{-- Pagination hanya tampil jika bukan mode "Tampilkan Semua" --}}
+                    {{-- Pagination --}}
                     @if (!request()->has('all'))
                     <div class="d-flex justify-content-center mt-3">
                         {{ $kecurangan->links('pagination::bootstrap-4') }}

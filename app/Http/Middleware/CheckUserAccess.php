@@ -52,12 +52,7 @@ class CheckUserAccess
             'print'  => $access->can_print ?? 0,
             default  => $access->can_access ?? 0,
         };
-<<<<<<< HEAD
-
-=======
         
-        
->>>>>>> recovery-branch
         if (!$allowed) {
             return abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }

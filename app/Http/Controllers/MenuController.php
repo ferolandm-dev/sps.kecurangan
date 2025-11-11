@@ -34,82 +34,52 @@ class MenuController extends Controller
      * Simpan menu baru ke database.
      */
     public function store(Request $request)
-{
-    $validated = $request->validate([
-<<<<<<< HEAD
-        'main_menu'  => 'nullable|string|max:100',
-=======
-        'main_menu'  => 'required|string|max:100',
->>>>>>> recovery-branch
-        'sub_menu'   => 'nullable|string|max:100',
-        'icon'       => 'nullable|string|max:255',
-        'route'      => 'nullable|string|max:255',
-        'main_order' => 'required|integer|min:0',
-        'order'      => 'nullable|integer|min:0',
-        'can_crud'   => 'nullable|boolean',
-        'can_print'  => 'nullable|boolean',
-    ]);
-
-    try {
-<<<<<<< HEAD
-        // Cek apakah main_order sudah dipakai menu lain
-        $exists = DB::table('menus')
-=======
-        // 🔹 Cek: apakah ada menu lain dengan main_menu & order yang sama
-        $exists = DB::table('menus')
-            ->where('main_menu', $request->main_menu)
-            ->where('order', $request->order)
->>>>>>> recovery-branch
-            ->where('main_order', $request->main_order)
-            ->exists();
-
-        if ($exists) {
-            return redirect()
-                ->back()
-                ->withInput()
-<<<<<<< HEAD
-                ->with('error', "Urutan Main Menu {$request->main_order} sudah digunakan. Gunakan urutan lain.");
-=======
-                ->with('error', "Urutan submenu {$request->order} sudah digunakan di menu utama {$request->main_menu}.");
->>>>>>> recovery-branch
-        }
-
-        DB::table('menus')->insert([
-            'main_menu'  => $request->main_menu,
-            'sub_menu'   => $request->sub_menu,
-            'icon'       => $request->icon,
-            'route'      => $request->route,
-            'main_order' => $request->main_order,
-            'order'      => $request->order ?? 0,
-            'can_crud'   => $request->can_crud ?? 0,
-            'can_print'  => $request->can_print ?? 0,
-            'created_at' => now(),
-            'updated_at' => now(),
+    {
+        $validated = $request->validate([
+            'main_menu'  => 'required|string|max:100',
+            'sub_menu'   => 'nullable|string|max:100',
+            'icon'       => 'nullable|string|max:255',
+            'route'      => 'nullable|string|max:255',
+            'main_order' => 'required|integer|min:0',
+            'order'      => 'nullable|integer|min:0',
+            'can_crud'   => 'nullable|boolean',
+            'can_print'  => 'nullable|boolean',
         ]);
 
-<<<<<<< HEAD
-        return redirect()
-            ->route('menus.index')
-            ->with('success', 'Menu berhasil ditambahkan.');
-    } catch (\Exception $e) {
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-=======
-        return redirect()->route('menus.index')->with('success', 'Menu berhasil ditambahkan.');
-    } catch (\Exception $e) {
-        return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
->>>>>>> recovery-branch
+        try {
+            // Cek apakah ada menu lain dengan main_menu dan order yang sama
+            $exists = DB::table('menus')
+                ->where('main_menu', $request->main_menu)
+                ->where('main_order', $request->main_order)
+                ->where('order', $request->order)
+                ->exists();
+
+            if ($exists) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', "Urutan submenu {$request->order} sudah digunakan di menu utama {$request->main_menu}.");
+            }
+
+            DB::table('menus')->insert([
+                'main_menu'  => $request->main_menu,
+                'sub_menu'   => $request->sub_menu,
+                'icon'       => $request->icon,
+                'route'      => $request->route,
+                'main_order' => $request->main_order,
+                'order'      => $request->order ?? 0,
+                'can_crud'   => $request->can_crud ?? 0,
+                'can_print'  => $request->can_print ?? 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return redirect()->route('menus.index')->with('success', 'Menu berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
-}
 
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> recovery-branch
     /**
      * Tampilkan halaman edit menu.
      */
@@ -128,83 +98,54 @@ class MenuController extends Controller
      * Update data menu di database.
      */
     public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-<<<<<<< HEAD
-        'main_menu'  => 'nullable|string|max:100',
-=======
-        'main_menu'  => 'required|string|max:100',
->>>>>>> recovery-branch
-        'sub_menu'   => 'nullable|string|max:100',
-        'icon'       => 'nullable|string|max:255',
-        'route'      => 'nullable|string|max:255',
-        'main_order' => 'required|integer|min:0',
-        'order'      => 'nullable|integer|min:0',
-        'can_crud'   => 'nullable|boolean',
-        'can_print'  => 'nullable|boolean',
-    ]);
+    {
+        $validated = $request->validate([
+            'main_menu'  => 'required|string|max:100',
+            'sub_menu'   => 'nullable|string|max:100',
+            'icon'       => 'nullable|string|max:255',
+            'route'      => 'nullable|string|max:255',
+            'main_order' => 'required|integer|min:0',
+            'order'      => 'nullable|integer|min:0',
+            'can_crud'   => 'nullable|boolean',
+            'can_print'  => 'nullable|boolean',
+        ]);
 
-    try {
-<<<<<<< HEAD
-        // Pastikan main_order tidak dipakai oleh menu lain
-        $exists = DB::table('menus')
-            ->where('main_order', $request->main_order)
-=======
-        // 🔹 Cek duplikat submenu di main_menu & main_order yang sama
-        $exists = DB::table('menus')
-            ->where('main_menu', $request->main_menu)
-            ->where('main_order', $request->main_order)
-            ->where('order', $request->order)
->>>>>>> recovery-branch
-            ->where('id', '!=', $id)
-            ->exists();
+        try {
+            // Cek duplikat submenu di main_menu & main_order yang sama
+            $exists = DB::table('menus')
+                ->where('main_menu', $request->main_menu)
+                ->where('main_order', $request->main_order)
+                ->where('order', $request->order)
+                ->where('id', '!=', $id)
+                ->exists();
 
-        if ($exists) {
-            return redirect()
-                ->back()
-                ->withInput()
-<<<<<<< HEAD
-                ->with('error', "Urutan Main Menu {$request->main_order} sudah digunakan oleh menu lain.");
-=======
-                ->with('error', "Urutan submenu {$request->order} sudah digunakan di menu utama {$request->main_menu}.");
->>>>>>> recovery-branch
+            if ($exists) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', "Urutan submenu {$request->order} sudah digunakan di menu utama {$request->main_menu}.");
+            }
+
+            DB::table('menus')
+                ->where('id', $id)
+                ->update([
+                    'main_menu'  => $request->main_menu,
+                    'sub_menu'   => $request->sub_menu,
+                    'icon'       => $request->icon,
+                    'route'      => $request->route,
+                    'main_order' => $request->main_order,
+                    'order'      => $request->order ?? 0,
+                    'can_crud'   => $request->can_crud ?? 0,
+                    'can_print'  => $request->can_print ?? 0,
+                    'updated_at' => now(),
+                ]);
+
+            return redirect()->route('menus.index')->with('success', 'Menu berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        DB::table('menus')
-            ->where('id', $id)
-            ->update([
-                'main_menu'  => $request->main_menu,
-                'sub_menu'   => $request->sub_menu,
-                'icon'       => $request->icon,
-                'route'      => $request->route,
-                'main_order' => $request->main_order,
-                'order'      => $request->order ?? 0,
-                'can_crud'   => $request->can_crud ?? 0,
-                'can_print'  => $request->can_print ?? 0,
-                'updated_at' => now(),
-            ]);
-
-<<<<<<< HEAD
-        return redirect()
-            ->route('menus.index')
-            ->with('success', 'Menu berhasil diperbarui.');
-    } catch (\Exception $e) {
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
-}
 
-
-=======
-        return redirect()->route('menus.index')->with('success', 'Menu berhasil diperbarui.');
-    } catch (\Exception $e) {
-        return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-    }
-}
-
->>>>>>> recovery-branch
     /**
      * Hapus menu dari database.
      */

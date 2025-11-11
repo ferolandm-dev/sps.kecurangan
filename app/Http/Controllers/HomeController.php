@@ -14,17 +14,23 @@ class HomeController extends Controller
 
     public function index()
     {
-        // Total distributor aktif
+        // ======================================
+        // 📊 Total distributor aktif
+        // ======================================
         $totalDistributorAktif = DB::table('distributors')
             ->where('status', 'Aktif')
             ->count();
 
-        // Total sales aktif
+        // ======================================
+        // 👨‍💼 Total sales aktif
+        // ======================================
         $totalSalesAktif = DB::table('sales')
             ->where('status', 'Aktif')
             ->count();
 
-        // Jumlah kecurangan tiap bulan (yang sudah tervalidasi)
+        // ======================================
+        // ⚠️ Jumlah kecurangan tiap bulan (validasi = 1)
+        // ======================================
         $fraudPerMonth = DB::table('kecurangan')
             ->select(
                 DB::raw('MONTH(tanggal) as bulan'),
@@ -35,13 +41,15 @@ class HomeController extends Controller
             ->orderBy('bulan')
             ->pluck('total', 'bulan');
 
-        // Isi semua 12 bulan, jika kosong isi 0
+        // Pastikan 12 bulan terisi (kosong = 0)
         $fraudData = [];
         for ($i = 1; $i <= 12; $i++) {
             $fraudData[] = $fraudPerMonth[$i] ?? 0;
         }
 
-        // Top 5 distributor berdasarkan jumlah sales aktif
+        // ======================================
+        // 🏢 Top 5 distributor berdasarkan sales aktif
+        // ======================================
         $topDistributors = DB::table('distributors')
             ->leftJoin('sales', function ($join) {
                 $join->on('sales.id_distributor', '=', 'distributors.id')
@@ -59,7 +67,9 @@ class HomeController extends Controller
             ->limit(5)
             ->get();
 
-        // Top 5 sales curang (yang sudah tervalidasi)
+        // ======================================
+        // 🚨 Top 5 sales paling sering curang (validasi = 1)
+        // ======================================
         $topFraudSales = DB::table('kecurangan')
             ->join('sales', 'kecurangan.id_sales', '=', 'sales.id')
             ->select(
@@ -70,63 +80,61 @@ class HomeController extends Controller
             )
             ->where('kecurangan.validasi', 1)
             ->groupBy('sales.id', 'sales.nama')
-            ->orderByDesc('total_kecurangan') // urut dari yang paling banyak curang
-            ->orderBy('terakhir_validasi', 'asc') // kalau jumlah sama, tampilkan yang lebih dulu divalidasi
+            ->orderByDesc('total_kecurangan')
+            ->orderBy('terakhir_validasi', 'asc')
             ->limit(5)
             ->get();
 
-        // Total kecurangan bulan ini (yang tervalidasi)
+        // ======================================
+        // 📆 Total kecurangan bulan ini (validasi = 1)
+        // ======================================
         $totalKecuranganBulanIni = DB::table('kecurangan')
             ->where('validasi', 1)
             ->whereMonth('tanggal', date('m'))
             ->whereYear('tanggal', date('Y'))
             ->count();
 
-<<<<<<< HEAD
-=======
-            // Hitung kuartal sekarang
-$currentMonth = date('n');
-if ($currentMonth >= 1 && $currentMonth <= 3) {
-    $currentQuarter = 1;
-    $startMonth = 1;
-    $endMonth = 3;
-} elseif ($currentMonth >= 4 && $currentMonth <= 6) {
-    $currentQuarter = 2;
-    $startMonth = 4;
-    $endMonth = 6;
-} elseif ($currentMonth >= 7 && $currentMonth <= 9) {
-    $currentQuarter = 3;
-    $startMonth = 7;
-    $endMonth = 9;
-} else {
-    $currentQuarter = 4;
-    $startMonth = 10;
-    $endMonth = 12;
-}
+        // ======================================
+        // 📅 Hitung total kecurangan per kuartal
+        // ======================================
+        $currentMonth = date('n');
+        if ($currentMonth >= 1 && $currentMonth <= 3) {
+            $currentQuarter = 1;
+            $startMonth = 1;
+            $endMonth = 3;
+        } elseif ($currentMonth >= 4 && $currentMonth <= 6) {
+            $currentQuarter = 2;
+            $startMonth = 4;
+            $endMonth = 6;
+        } elseif ($currentMonth >= 7 && $currentMonth <= 9) {
+            $currentQuarter = 3;
+            $startMonth = 7;
+            $endMonth = 9;
+        } else {
+            $currentQuarter = 4;
+            $startMonth = 10;
+            $endMonth = 12;
+        }
 
-// Total kecurangan pada kuartal saat ini (yang tervalidasi)
-$totalKecuranganKuartalIni = DB::table('kecurangan')
-    ->where('validasi', 1)
-    ->whereMonth('tanggal', '>=', $startMonth)
-    ->whereMonth('tanggal', '<=', $endMonth)
-    ->whereYear('tanggal', date('Y'))
-    ->count();
+        $totalKecuranganKuartalIni = DB::table('kecurangan')
+            ->where('validasi', 1)
+            ->whereMonth('tanggal', '>=', $startMonth)
+            ->whereMonth('tanggal', '<=', $endMonth)
+            ->whereYear('tanggal', date('Y'))
+            ->count();
 
-
->>>>>>> recovery-branch
+        // ======================================
+        // 🔁 Kirim semua data ke view
+        // ======================================
         return view('home', compact(
             'totalDistributorAktif',
             'totalSalesAktif',
             'fraudData',
             'topDistributors',
             'topFraudSales',
-<<<<<<< HEAD
-            'totalKecuranganBulanIni'
-=======
             'totalKecuranganBulanIni',
-            'totalKecuranganKuartalIni', // 👈 tambahkan ini
-            'currentQuarter' // 👈 dan ini
->>>>>>> recovery-branch
+            'totalKecuranganKuartalIni',
+            'currentQuarter'
         ));
     }
 }

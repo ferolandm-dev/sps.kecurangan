@@ -96,7 +96,7 @@
                                             'sort_by' => 'nama',
                                             'sort_order' => (request('sort_by') === 'nama' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                         ])) }}" class="text-primary text-decoration-none">
-                                            Nama Asisten Manager
+                                            Nama ASS
                                         </a>
                                     </th>
 

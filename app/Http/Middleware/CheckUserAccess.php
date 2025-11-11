@@ -20,6 +20,7 @@ class CheckUserAccess
      */
     public function handle($request, Closure $next, $mainMenu, $subMenu = null, $type = 'access')
     {
+        
         $user = Auth::user();
         if (!$user) {
             return redirect('/login');

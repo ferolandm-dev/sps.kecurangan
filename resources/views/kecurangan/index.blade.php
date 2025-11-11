@@ -175,7 +175,8 @@ $(document).ready(function() {
         $namaSales.val('');
         $distributor.val('');
         $namaAsisten.val('');
-        $idAsisten.html('<option value="">-- Pilih Asisten Manager --</option>').trigger('change');
+        $idAsisten.html('<option value="">Pilih Asisten Manager</option>').trigger('change');
+
 
         if (!idSales) return;
 
@@ -194,7 +195,8 @@ $(document).ready(function() {
                         dataType: 'json',
                         success: function(res) {
                             let options =
-                                '<option value="">-- Pilih Asisten Manager --</option>';
+                                '<option value="">Pilih Asisten Manager</option>';
+
                             res.forEach(am => {
                                 options +=
                                     `<option value="${am.id}">${am.id} - ${am.nama}</option>`;

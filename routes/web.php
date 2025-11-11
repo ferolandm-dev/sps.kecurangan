@@ -180,11 +180,14 @@ Route::middleware('auth')->group(function () {
         });
 
     // =====================================================
-// ⚠️ MASTER KECURANGAN
+// ⚠️ MASTER & DATA KECURANGAN
 // =====================================================
-Route::prefix('kecurangan')
-    ->middleware('check.access:Master,Master Kecurangan')
-    ->group(function () {
+Route::prefix('kecurangan')->group(function () {
+
+    // ===============================
+    // 📁 MASTER KECURANGAN
+    // ===============================
+    Route::middleware('check.access:Master,Master Kecurangan')->group(function () {
 
         // Tampilkan daftar kecurangan
         Route::get('/', [KecuranganController::class, 'index'])
@@ -207,12 +210,11 @@ Route::prefix('kecurangan')
             ->name('kecurangan.validasi');
     });
 
-// =====================================================
-// 📉 DATA KECURANGAN
-// =====================================================
-Route::prefix('kecurangan')
-    ->middleware('check.access:Data,Data Kecurangan')
-    ->group(function () {
+
+    // ===============================
+    // 📉 DATA KECURANGAN
+    // ===============================
+    Route::middleware('check.access:Data,Data Kecurangan')->group(function () {
 
         // DataTable atau daftar data
         Route::get('/data', [KecuranganController::class, 'data'])
@@ -239,6 +241,8 @@ Route::prefix('kecurangan')
             ->middleware('check.access:Data,Data Kecurangan,print')
             ->name('kecurangan.exportPDF');
     });
+});
+
 
 
     // =====================================================

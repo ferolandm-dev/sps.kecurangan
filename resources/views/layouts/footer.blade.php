@@ -1,4 +1,4 @@
-<footer class="footer">
+<!-- <footer class="footer">
   <div class=" container-fluid ">
     <nav>
       <ul>
@@ -33,4 +33,4 @@
       <a href="https://www.updivision.com" target="_blank">{{__(" Updivision")}}</a>
     </div>
   </div>
-</footer>
+</footer> -->

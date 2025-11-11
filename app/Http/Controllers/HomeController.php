@@ -82,13 +82,51 @@ class HomeController extends Controller
             ->whereYear('tanggal', date('Y'))
             ->count();
 
+<<<<<<< HEAD
+=======
+            // Hitung kuartal sekarang
+$currentMonth = date('n');
+if ($currentMonth >= 1 && $currentMonth <= 3) {
+    $currentQuarter = 1;
+    $startMonth = 1;
+    $endMonth = 3;
+} elseif ($currentMonth >= 4 && $currentMonth <= 6) {
+    $currentQuarter = 2;
+    $startMonth = 4;
+    $endMonth = 6;
+} elseif ($currentMonth >= 7 && $currentMonth <= 9) {
+    $currentQuarter = 3;
+    $startMonth = 7;
+    $endMonth = 9;
+} else {
+    $currentQuarter = 4;
+    $startMonth = 10;
+    $endMonth = 12;
+}
+
+// Total kecurangan pada kuartal saat ini (yang tervalidasi)
+$totalKecuranganKuartalIni = DB::table('kecurangan')
+    ->where('validasi', 1)
+    ->whereMonth('tanggal', '>=', $startMonth)
+    ->whereMonth('tanggal', '<=', $endMonth)
+    ->whereYear('tanggal', date('Y'))
+    ->count();
+
+
+>>>>>>> recovery-branch
         return view('home', compact(
             'totalDistributorAktif',
             'totalSalesAktif',
             'fraudData',
             'topDistributors',
             'topFraudSales',
+<<<<<<< HEAD
             'totalKecuranganBulanIni'
+=======
+            'totalKecuranganBulanIni',
+            'totalKecuranganKuartalIni', // 👈 tambahkan ini
+            'currentQuarter' // 👈 dan ini
+>>>>>>> recovery-branch
         ));
     }
 }

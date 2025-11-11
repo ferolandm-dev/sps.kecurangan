@@ -9,6 +9,10 @@ use App\Http\Controllers\{
     ProfileController,
     PageController,
     HomeController,
+<<<<<<< HEAD
+=======
+    AsistenManagerController,
+>>>>>>> recovery-branch
     MenuController
 };
 
@@ -148,6 +152,7 @@ Route::prefix('users')
     // 🧾 MASTER SALES
     // =====================================================
     Route::prefix('sales')
+<<<<<<< HEAD
         ->middleware('check.access:Master,Master Sales')
         ->group(function () {
 
@@ -179,6 +184,35 @@ Route::prefix('users')
                 ->middleware('check.access:Master,Master Sales,delete')
                 ->name('sales.destroy');
         });
+=======
+    ->middleware('check.access:Master,Master Sales')
+    ->group(function () {
+        Route::get('/', [SalesController::class, 'index'])
+            ->middleware('check.access:Master,Master Sales,access')
+            ->name('sales.index');
+
+        Route::get('/create', [SalesController::class, 'create'])
+            ->middleware('check.access:Master,Master Sales,create')
+            ->name('sales.create');
+
+        Route::post('/', [SalesController::class, 'store'])
+            ->middleware('check.access:Master,Master Sales,create')
+            ->name('sales.store');
+
+        Route::get('/{id}/edit', [SalesController::class, 'edit'])
+            ->middleware('check.access:Master,Master Sales,edit')
+            ->name('sales.edit');
+
+        Route::put('/{id}', [SalesController::class, 'update'])
+            ->middleware('check.access:Master,Master Sales,edit')
+            ->name('sales.update');
+
+        Route::delete('/{id}', [SalesController::class, 'destroy'])
+            ->middleware('check.access:Master,Master Sales,delete')
+            ->name('sales.destroy');
+    });
+
+>>>>>>> recovery-branch
 
 
     // =====================================================
@@ -246,8 +280,77 @@ Route::prefix('users')
 
             Route::delete('/{id}', [MenuController::class, 'destroy'])->name('menus.destroy');
         });
+<<<<<<< HEAD
 
 
+=======
+    
+   // MASTER ASISTEN MANAGER
+Route::prefix('asisten_manager')
+    ->middleware('check.access:Master,Master ASS')
+    ->group(function () {
+
+        Route::get('/', [App\Http\Controllers\AsistenManagerController::class, 'index'])
+            ->middleware('check.access:Master,Master ASS,access')
+            ->name('asisten_manager.index');
+
+        Route::get('/create', [App\Http\Controllers\AsistenManagerController::class, 'create'])
+            ->middleware('check.access:Master,Master ASS,create')
+            ->name('asisten_manager.create');
+
+        Route::post('/', [App\Http\Controllers\AsistenManagerController::class, 'store'])
+            ->middleware('check.access:Master,Master ASS,create')
+            ->name('asisten_manager.store');
+
+        Route::get('/{id}/edit', [App\Http\Controllers\AsistenManagerController::class, 'edit'])
+            ->middleware('check.access:Master,Master ASS,edit')
+            ->name('asisten_manager.edit');
+
+        Route::put('/{id}', [App\Http\Controllers\AsistenManagerController::class, 'update'])
+            ->middleware('check.access:Master,Master ASS,edit')
+            ->name('asisten_manager.update');
+
+        Route::delete('/{id}', [App\Http\Controllers\AsistenManagerController::class, 'destroy'])
+            ->middleware('check.access:Master,Master ASS,delete')
+            ->name('asisten_manager.destroy');
+    });
+
+// DATA ASISTEN MANAGER
+Route::prefix('asisten_manager')
+    ->middleware('check.access:Data,Data ASS')
+    ->group(function () {
+
+        Route::get('/data', [App\Http\Controllers\AsistenManagerController::class, 'data'])
+            ->middleware('check.access:Data,Data ASS,access')
+            ->name('asisten_manager.data');
+
+        Route::get('/export-excel', [App\Http\Controllers\AsistenManagerController::class, 'exportExcel'])
+            ->middleware('check.access:Data,Data ASS,print')
+            ->name('asisten_manager.exportExcel');
+
+        Route::get('/export-pdf', [App\Http\Controllers\AsistenManagerController::class, 'exportPDF'])
+            ->middleware('check.access:Data,Data ASS,print')
+            ->name('asisten_manager.exportPDF');
+    });
+
+
+// TAMBAHAN: ROUTE AJAX UNTUK KEKURANGAN FITUR
+// Ambil data Sales dan Asisten Manager berdasarkan distributor
+Route::prefix('kecurangan')->group(function () {
+
+    // Ambil data Sales (sudah dipakai di AJAX sebelumnya)
+    Route::get('/sales/{id}', [App\Http\Controllers\KecuranganController::class, 'getSales'])
+        ->name('kecurangan.getSales');
+
+    // Ambil daftar Asisten Manager berdasarkan distributor (untuk filter dinamis)
+    Route::get('/asisten-manager/{distributor}', [App\Http\Controllers\KecuranganController::class, 'getAsistenManager'])
+        ->name('kecurangan.getAsistenManager');
+});
+
+
+
+        
+>>>>>>> recovery-branch
     // =====================================================
     // 📄 PAGE CONTROLLER (paling bawah)
     // =====================================================

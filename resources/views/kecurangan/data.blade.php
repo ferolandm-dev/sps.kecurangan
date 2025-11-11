@@ -182,10 +182,18 @@
                                     <th>{!! sortLink('ID Sales', 'id_sales') !!}</th>
                                     <th>{!! sortLink('Nama Sales', 'nama_sales') !!}</th>
                                     <th>{!! sortLink('Distributor', 'distributor') !!}</th>
+<<<<<<< HEAD
+=======
+                                    <th>{!! sortLink('Nama ASS', 'asisten_manager') !!}</th>
+>>>>>>> recovery-branch
                                     <th>{!! sortLink('Toko', 'toko') !!}</th>
                                     <th class="text-center">{!! sortLink('Kunjungan', 'kunjungan') !!}</th>
                                     <th>{!! sortLink('Tanggal', 'tanggal') !!}</th>
                                     <th>{!! sortLink('Keterangan', 'keterangan') !!}</th>
+<<<<<<< HEAD
+=======
+                                    <th>{!! sortLink('Kuartal', 'kuartal') !!}</th>
+>>>>>>> recovery-branch
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -197,11 +205,19 @@
                                     <td>{{ $item->id_sales }}</td>
                                     <td>{{ $item->nama_sales }}</td>
                                     <td>{{ $item->distributor }}</td>
+<<<<<<< HEAD
+=======
+                                    <td>{{ $item->nama_asisten_manager }}</td>
+>>>>>>> recovery-branch
                                     <td>{{ $item->toko }}</td>
                                     <td class="text-center">{{ $item->kunjungan }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
                                     </td>
                                     <td>{{ $item->keterangan ?? '-' }}</td>
+<<<<<<< HEAD
+=======
+                                    <td>{{ $item->kuartal }}</td>
+>>>>>>> recovery-branch
                                     <td class="text-center">
                                         @if($item->validasi == 0)
                                         <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"

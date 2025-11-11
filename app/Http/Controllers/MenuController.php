@@ -36,7 +36,11 @@ class MenuController extends Controller
     public function store(Request $request)
 {
     $validated = $request->validate([
+<<<<<<< HEAD
         'main_menu'  => 'nullable|string|max:100',
+=======
+        'main_menu'  => 'required|string|max:100',
+>>>>>>> recovery-branch
         'sub_menu'   => 'nullable|string|max:100',
         'icon'       => 'nullable|string|max:255',
         'route'      => 'nullable|string|max:255',
@@ -47,8 +51,15 @@ class MenuController extends Controller
     ]);
 
     try {
+<<<<<<< HEAD
         // Cek apakah main_order sudah dipakai menu lain
         $exists = DB::table('menus')
+=======
+        // 🔹 Cek: apakah ada menu lain dengan main_menu & order yang sama
+        $exists = DB::table('menus')
+            ->where('main_menu', $request->main_menu)
+            ->where('order', $request->order)
+>>>>>>> recovery-branch
             ->where('main_order', $request->main_order)
             ->exists();
 
@@ -56,7 +67,11 @@ class MenuController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
+<<<<<<< HEAD
                 ->with('error', "Urutan Main Menu {$request->main_order} sudah digunakan. Gunakan urutan lain.");
+=======
+                ->with('error', "Urutan submenu {$request->order} sudah digunakan di menu utama {$request->main_menu}.");
+>>>>>>> recovery-branch
         }
 
         DB::table('menus')->insert([
@@ -72,6 +87,7 @@ class MenuController extends Controller
             'updated_at' => now(),
         ]);
 
+<<<<<<< HEAD
         return redirect()
             ->route('menus.index')
             ->with('success', 'Menu berhasil ditambahkan.');
@@ -80,10 +96,20 @@ class MenuController extends Controller
             ->back()
             ->withInput()
             ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+=======
+        return redirect()->route('menus.index')->with('success', 'Menu berhasil ditambahkan.');
+    } catch (\Exception $e) {
+        return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+>>>>>>> recovery-branch
     }
 }
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> recovery-branch
     /**
      * Tampilkan halaman edit menu.
      */
@@ -104,7 +130,11 @@ class MenuController extends Controller
     public function update(Request $request, $id)
 {
     $validated = $request->validate([
+<<<<<<< HEAD
         'main_menu'  => 'nullable|string|max:100',
+=======
+        'main_menu'  => 'required|string|max:100',
+>>>>>>> recovery-branch
         'sub_menu'   => 'nullable|string|max:100',
         'icon'       => 'nullable|string|max:255',
         'route'      => 'nullable|string|max:255',
@@ -115,9 +145,17 @@ class MenuController extends Controller
     ]);
 
     try {
+<<<<<<< HEAD
         // Pastikan main_order tidak dipakai oleh menu lain
         $exists = DB::table('menus')
             ->where('main_order', $request->main_order)
+=======
+        // 🔹 Cek duplikat submenu di main_menu & main_order yang sama
+        $exists = DB::table('menus')
+            ->where('main_menu', $request->main_menu)
+            ->where('main_order', $request->main_order)
+            ->where('order', $request->order)
+>>>>>>> recovery-branch
             ->where('id', '!=', $id)
             ->exists();
 
@@ -125,7 +163,11 @@ class MenuController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
+<<<<<<< HEAD
                 ->with('error', "Urutan Main Menu {$request->main_order} sudah digunakan oleh menu lain.");
+=======
+                ->with('error', "Urutan submenu {$request->order} sudah digunakan di menu utama {$request->main_menu}.");
+>>>>>>> recovery-branch
         }
 
         DB::table('menus')
@@ -142,6 +184,7 @@ class MenuController extends Controller
                 'updated_at' => now(),
             ]);
 
+<<<<<<< HEAD
         return redirect()
             ->route('menus.index')
             ->with('success', 'Menu berhasil diperbarui.');
@@ -154,6 +197,14 @@ class MenuController extends Controller
 }
 
 
+=======
+        return redirect()->route('menus.index')->with('success', 'Menu berhasil diperbarui.');
+    } catch (\Exception $e) {
+        return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
+}
+
+>>>>>>> recovery-branch
     /**
      * Hapus menu dari database.
      */

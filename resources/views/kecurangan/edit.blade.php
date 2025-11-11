@@ -149,7 +149,7 @@
 
                         <div class="text-right">
                             <button type="submit" class="btn btn-success btn-round">
-                                <i class="now-ui-icons"></i> Simpan
+                                <i class="now-ui-icons"></i> Simpans
                             </button>
                         </div>
                     </form>

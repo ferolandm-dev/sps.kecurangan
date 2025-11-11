@@ -60,7 +60,7 @@
                             <a href="{{ route('asisten_manager.index') }}"
                                 class="btn btn-secondary btn-round">Batal</a>
                             <button type="submit" class="btn btn-success btn-round">
-                                <i class="now-ui-icons ui-1_check"></i> {{ __('Simpan') }}
+                                <i class="now-ui-icons"></i> {{ __('Simpan') }}
                             </button>
                         </div>
                     </form>

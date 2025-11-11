@@ -33,22 +33,15 @@ class KecuranganController extends Controller
             'keterangan' => 'nullable',
         ]);
 
-        // ✅ Ubah format tanggal ke Y-m-d
+        // ✅ Format tanggal & tentukan kuartal
         $tanggal = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
-
-        // ✅ Tentukan kuartal berdasarkan bulan
         $bulan = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('m');
         $tahun = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y');
 
-        if ($bulan >= 1 && $bulan <= 3) {
-            $kuartal = 'Q1 ' . $tahun;
-        } elseif ($bulan >= 4 && $bulan <= 6) {
-            $kuartal = 'Q2 ' . $tahun;
-        } elseif ($bulan >= 7 && $bulan <= 9) {
-            $kuartal = 'Q3 ' . $tahun;
-        } else {
-            $kuartal = 'Q4 ' . $tahun;
-        }
+        if ($bulan >= 1 && $bulan <= 3) $kuartal = 'Q1 ' . $tahun;
+        elseif ($bulan >= 4 && $bulan <= 6) $kuartal = 'Q2 ' . $tahun;
+        elseif ($bulan >= 7 && $bulan <= 9) $kuartal = 'Q3 ' . $tahun;
+        else $kuartal = 'Q4 ' . $tahun;
 
         DB::table('kecurangan')->insert([
             'id_sales' => $request->id_sales,
@@ -60,7 +53,7 @@ class KecuranganController extends Controller
             'kunjungan' => $request->kunjungan,
             'tanggal' => $tanggal,
             'keterangan' => $request->keterangan,
-            'kuartal' => $kuartal, // ✅ kolom baru
+            'kuartal' => $kuartal,
             'validasi' => 0,
             'created_at' => now(),
             'updated_at' => now(),
@@ -71,10 +64,72 @@ class KecuranganController extends Controller
             ->with('success', 'Data kecurangan berhasil ditambahkan!');
     }
 
+    public function edit($id)
+    {
+        $kecurangan = DB::table('kecurangan')->where('id', $id)->first();
+        if (!$kecurangan) {
+            return redirect()->route('kecurangan.data')->with('error', 'Data tidak ditemukan!');
+        }
+
+        if ($kecurangan->validasi == 1) {
+            return redirect()->route('kecurangan.data')->with('error', 'Data sudah divalidasi dan tidak bisa diedit!');
+        }
+
+        $sales = DB::table('sales')->select('id', 'nama', 'id_distributor')->get();
+        $asistenManagers = DB::table('asisten_managers')->select('id', 'nama', 'id_distributor')->get();
+
+        return view('kecurangan.edit', compact('kecurangan', 'sales', 'asistenManagers'));
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_sales' => 'required',
+            'nama_sales' => 'required',
+            'id_asisten_manager' => 'nullable',
+            'nama_asisten_manager' => 'nullable',
+            'distributor' => 'required',
+            'toko' => 'required',
+            'kunjungan' => 'required',
+            'tanggal' => 'required|date_format:d/m/Y',
+            'keterangan' => 'nullable',
+        ]);
+
+        $tanggal = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
+        $bulan = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('m');
+        $tahun = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y');
+
+        if ($bulan >= 1 && $bulan <= 3) $kuartal = 'Q1 ' . $tahun;
+        elseif ($bulan >= 4 && $bulan <= 6) $kuartal = 'Q2 ' . $tahun;
+        elseif ($bulan >= 7 && $bulan <= 9) $kuartal = 'Q3 ' . $tahun;
+        else $kuartal = 'Q4 ' . $tahun;
+
+        $data = DB::table('kecurangan')->where('id', $id)->first();
+        if ($data && $data->validasi == 1) {
+            return redirect()->route('kecurangan.data')->with('error', 'Data sudah divalidasi dan tidak bisa diedit!');
+        }
+
+        DB::table('kecurangan')->where('id', $id)->update([
+            'id_sales' => $request->id_sales,
+            'nama_sales' => $request->nama_sales,
+            'id_asisten_manager' => $request->id_asisten_manager,
+            'nama_asisten_manager' => $request->nama_asisten_manager,
+            'distributor' => $request->distributor,
+            'toko' => $request->toko,
+            'kunjungan' => $request->kunjungan,
+            'tanggal' => $tanggal,
+            'keterangan' => $request->keterangan,
+            'kuartal' => $kuartal,
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('kecurangan.data')->with('success', 'Data berhasil diperbarui!');
+    }
+
     public function getSales($id)
     {
         $sales = DB::table('sales')->where('id', $id)->first();
-
         if (!$sales) {
             return response()->json(['error' => 'Sales tidak ditemukan'], 404);
         }
@@ -108,9 +163,7 @@ class KecuranganController extends Controller
         $sortBy = $request->get('sort_by', 'tanggal');
         $sortOrder = $request->get('sort_order', 'desc');
 
-        if (!in_array($sortBy, $allowedSorts)) {
-            $sortBy = 'tanggal';
-        }
+        if (!in_array($sortBy, $allowedSorts)) $sortBy = 'tanggal';
         $sortOrder = ($sortOrder === 'asc') ? 'asc' : 'desc';
 
         $query = DB::table('kecurangan')
@@ -164,7 +217,6 @@ class KecuranganController extends Controller
     public function destroy($id)
     {
         $data = DB::table('kecurangan')->where('id', $id)->first();
-
         if ($data && $data->validasi == 1) {
             return redirect()->route('kecurangan.data')->with('error', 'Data sudah divalidasi dan tidak bisa dihapus!');
         }
@@ -203,7 +255,7 @@ class KecuranganController extends Controller
                 'kunjungan',
                 'tanggal',
                 'keterangan',
-                'kuartal' // ✅ ditambahkan agar ikut di PDF
+                'kuartal'
             );
 
         if ($startDate && $endDate) {

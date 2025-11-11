@@ -207,29 +207,39 @@
                                     <td>{{ $item->keterangan ?? '-' }}</td>
                                     <td>{{ $item->kuartal }}</td>
                                     <td class="text-center">
+                                        {{-- ✅ Jika belum tervalidasi --}}
                                         @if($item->validasi == 0)
+                                        {{-- Tombol Validasi --}}
                                         <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf
-                                            <button type="submit" class="btn btn-success btn-sm btn-round"
-                                                onclick="return confirm('Validasi data ini?');">
-                                                <i class="now-ui-icons"></i> Validasi
+                                            <button type="submit" class="btn btn-success btn-icon btn-sm btn-round"
+                                                title="Validasi Data" onclick="return confirm('Validasi data ini?');">
+                                                <i class="now-ui-icons ui-1_check"></i>
                                             </button>
                                         </form>
-                                        @else
-                                        <span class="badge badge-success">Tervalidasi</span>
-                                        @endif
 
-                                        @if($item->validasi == 0)
+                                        {{-- Tombol Edit --}}
+                                        <a href="{{ route('kecurangan.edit', $item->id) }}"
+                                            class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data">
+                                            <i class="now-ui-icons ui-2_settings-90"></i>
+                                        </a>
+
+                                        {{-- Tombol Hapus --}}
                                         <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
                                             style="display:inline-block;"
                                             onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round">
+                                            <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round"
+                                                title="Hapus Data">
                                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>
                                         </form>
+
+                                        {{-- ✅ Jika sudah tervalidasi --}}
+                                        @else
+                                        <span class="badge badge-success">Tervalidasi</span>
                                         @endif
                                     </td>
                                 </tr>

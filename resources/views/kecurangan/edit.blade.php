@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Master Kecurangan',
+'namePage' => 'Edit Kecurangan',
 'class' => 'sidebar-mini',
 'activePage' => 'kecurangan',
 ])
@@ -26,12 +26,13 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title">{{ __('Master Kecurangan') }}</h4>
+                    <h4 class="card-title">{{ __('Edit Data Kecurangan') }}</h4>
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('kecurangan.store') }}" method="POST">
+                    <form action="{{ route('kecurangan.update', $kecurangan->id) }}" method="POST">
                         @csrf
+                        @method('PUT')
 
                         {{-- ===================== BAGIAN SALES ===================== --}}
                         <h6 class="heading-small text-muted mb-3">Detail SALES</h6>
@@ -42,7 +43,9 @@
                             <select name="id_sales" id="id_sales" class="form-control select2" required>
                                 <option value="">-- Pilih ID Sales --</option>
                                 @foreach($sales as $s)
-                                <option value="{{ $s->id }}">{{ $s->id }} - {{ $s->nama }}</option>
+                                <option value="{{ $s->id }}" {{ $kecurangan->id_sales == $s->id ? 'selected' : '' }}>
+                                    {{ $s->id }} - {{ $s->nama }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -51,7 +54,8 @@
                             <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label>{{ __('Nama Sales') }}</label>
-                                    <input type="text" id="nama_sales" name="nama_sales" class="form-control" readonly>
+                                    <input type="text" id="nama_sales" name="nama_sales" class="form-control"
+                                        value="{{ $kecurangan->nama_sales }}" readonly>
                                 </div>
                             </div>
 
@@ -59,7 +63,7 @@
                                 <div class="form-group has-label">
                                     <label>{{ __('Distributor') }}</label>
                                     <input type="text" id="distributor" name="distributor" class="form-control"
-                                        readonly>
+                                        value="{{ $kecurangan->distributor }}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -73,6 +77,12 @@
                             <label for="id_asisten_manager">{{ __('ID Asisten Manager') }}</label>
                             <select name="id_asisten_manager" id="id_asisten_manager" class="form-control select2">
                                 <option value="">-- Pilih Asisten Manager --</option>
+                                @foreach($asistenManagers as $am)
+                                <option value="{{ $am->id }}"
+                                    {{ $kecurangan->id_asisten_manager == $am->id ? 'selected' : '' }}>
+                                    {{ $am->id }} - {{ $am->nama }}
+                                </option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -81,7 +91,7 @@
                                 <div class="form-group has-label">
                                     <label for="nama_asisten_manager">{{ __('Nama Asisten Manager') }}</label>
                                     <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
-                                        class="form-control" readonly>
+                                        class="form-control" value="{{ $kecurangan->nama_asisten_manager }}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -95,30 +105,34 @@
                             <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label>{{ __('Toko') }}</label>
-                                    <input type="text" name="toko" class="form-control" required>
+                                    <input type="text" name="toko" class="form-control" value="{{ $kecurangan->toko }}"
+                                        required>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label>{{ __('Kunjungan') }}</label>
-                                    <input type="text" name="kunjungan" class="form-control" required>
+                                    <input type="text" name="kunjungan" class="form-control"
+                                        value="{{ $kecurangan->kunjungan }}" required>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
-                                <div class="form-group has-label" title="Tanggal Kunjungan">
+                                <div class="form-group has-label">
                                     <label>{{ __('Tanggal') }}</label>
                                     <input type="text" name="tanggal" id="tanggal" class="form-control"
-                                        placeholder="dd/mm/yyyy" required>
+                                        value="{{ \Carbon\Carbon::parse($kecurangan->tanggal)->format('d/m/Y') }}"
+                                        required>
                                 </div>
                             </div>
 
-                            {{-- Kuartal otomatis --}}
+                            {{-- Kuartal --}}
                             <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label>{{ __('Kuartal') }}</label>
-                                    <input type="text" name="kuartal" id="kuartal" class="form-control" readonly>
+                                    <input type="text" name="kuartal" id="kuartal" class="form-control"
+                                        value="{{ $kecurangan->kuartal }}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -127,7 +141,8 @@
                             <div class="col-md-6">
                                 <div class="form-group has-label">
                                     <label>{{ __('Keterangan') }}</label>
-                                    <input type="text" name="keterangan" class="form-control">
+                                    <input type="text" name="keterangan" class="form-control"
+                                        value="{{ $kecurangan->keterangan }}">
                                 </div>
                             </div>
                         </div>
@@ -163,6 +178,26 @@ $(document).ready(function() {
         width: '100%'
     });
 
+    // Saat ubah tanggal → update kuartal otomatis
+    $('#tanggal').datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        onSelect: function(dateText) {
+            const [day, month, year] = dateText.split('/');
+            const bulan = parseInt(month);
+            const tahun = parseInt(year.length === 2 ? '20' + year : year);
+            let kuartal = '';
+
+            if (bulan >= 1 && bulan <= 3) kuartal = 'Q1 ' + tahun;
+            else if (bulan >= 4 && bulan <= 6) kuartal = 'Q2 ' + tahun;
+            else if (bulan >= 7 && bulan <= 9) kuartal = 'Q3 ' + tahun;
+            else if (bulan >= 10 && bulan <= 12) kuartal = 'Q4 ' + tahun;
+
+            $('#kuartal').val(kuartal);
+        }
+    });
+
     // === Saat pilih Sales ===
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
@@ -171,12 +206,10 @@ $(document).ready(function() {
         const $idAsisten = $('#id_asisten_manager');
         const $namaAsisten = $('#nama_asisten_manager');
 
-        // Reset field
         $namaSales.val('');
         $distributor.val('');
         $namaAsisten.val('');
         $idAsisten.html('<option value="">Pilih Asisten Manager</option>').trigger('change');
-
 
         if (!idSales) return;
 
@@ -196,7 +229,6 @@ $(document).ready(function() {
                         success: function(res) {
                             let options =
                                 '<option value="">Pilih Asisten Manager</option>';
-
                             res.forEach(am => {
                                 options +=
                                     `<option value="${am.id}">${am.id} - ${am.nama}</option>`;
@@ -209,41 +241,12 @@ $(document).ready(function() {
         });
     });
 
-    // === Saat pilih Asisten Manager ===
+    // Saat pilih asisten manager
     $('#id_asisten_manager').on('change', function() {
         const selectedText = $(this).find('option:selected').text();
         const nama = selectedText.split('-').slice(1).join('-').trim();
         $('#nama_asisten_manager').val(nama);
     });
-
-    // === Datepicker + Kuartal Otomatis (Sesuai Controller: Q1 2025 dst) ===
-    $('#tanggal').datepicker({
-        dateFormat: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        showAnim: 'slideDown',
-        onSelect: function(dateText) {
-            const [day, month, year] = dateText.split('/');
-            const bulan = parseInt(month);
-            const tahun = parseInt(year.length === 2 ? '20' + year : year);
-            let kuartal = '';
-
-            if (bulan >= 1 && bulan <= 3) kuartal = 'Q1 ' + tahun;
-            else if (bulan >= 4 && bulan <= 6) kuartal = 'Q2 ' + tahun;
-            else if (bulan >= 7 && bulan <= 9) kuartal = 'Q3 ' + tahun;
-            else if (bulan >= 10 && bulan <= 12) kuartal = 'Q4 ' + tahun;
-
-            $('#kuartal').val(kuartal);
-        }
-    });
-
-    // Reset form setelah submit sukses
-    @if(session('success'))
-    $('#tanggal').val('');
-    $('#kuartal').val('');
-    $('#id_sales').val('').trigger('change');
-    $('#id_asisten_manager').val('').trigger('change');
-    @endif
 });
 </script>
 @endpush

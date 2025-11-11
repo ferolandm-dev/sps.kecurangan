@@ -199,6 +199,16 @@ Route::prefix('kecurangan')->group(function () {
             ->middleware('check.access:Master,Master Kecurangan,create')
             ->name('kecurangan.store');
 
+        // Edit data kecurangan
+        Route::get('/{id}/edit', [KecuranganController::class, 'edit'])
+            ->middleware('check.access:Master,Master Kecurangan,edit')
+            ->name('kecurangan.edit');
+
+        // Update data kecurangan
+        Route::put('/{id}', [KecuranganController::class, 'update'])
+            ->middleware('check.access:Master,Master Kecurangan,edit')
+            ->name('kecurangan.update');
+
         // Hapus data kecurangan
         Route::delete('/{id}', [KecuranganController::class, 'destroy'])
             ->middleware('check.access:Master,Master Kecurangan,delete')
@@ -216,7 +226,7 @@ Route::prefix('kecurangan')->group(function () {
     // ===============================
     Route::middleware('check.access:Data,Data Kecurangan')->group(function () {
 
-        // DataTable atau daftar data
+        // DataTable / daftar data
         Route::get('/data', [KecuranganController::class, 'data'])
             ->middleware('check.access:Data,Data Kecurangan,access')
             ->name('kecurangan.data');
@@ -242,7 +252,6 @@ Route::prefix('kecurangan')->group(function () {
             ->name('kecurangan.exportPDF');
     });
 });
-
 
 
     // =====================================================

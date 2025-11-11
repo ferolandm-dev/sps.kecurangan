@@ -226,8 +226,8 @@
                                             onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm btn-round">
-                                                <i class="now-ui-icons"></i> Hapus
+                                            <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round">
+                                                <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>
                                         </form>
                                         @endif

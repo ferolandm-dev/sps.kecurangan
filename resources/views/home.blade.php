@@ -17,16 +17,6 @@
                 <div class="card-header">
                     <h5 class="card-category">Distributor Aktif</h5>
                     <h4 class="card-title">{{ $totalDistributorAktif }} Distributor</h4>
-                    <div class="dropdown">
-                        <button type="button"
-                            class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
-                            data-toggle="dropdown">
-                            <i class="now-ui-icons loader_gear"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Refresh</a>
-                        </div>
-                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="stats">
@@ -41,16 +31,6 @@
                 <div class="card-header">
                     <h5 class="card-category">Total Sales Aktif</h5>
                     <h4 class="card-title">{{ $totalSalesAktif }} Sales</h4>
-                    <div class="dropdown">
-                        <button type="button"
-                            class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
-                            data-toggle="dropdown">
-                            <i class="now-ui-icons loader_gear"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Refresh</a>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="card-footer">
@@ -66,16 +46,6 @@
                 <div class="card-header">
                     <h5 class="card-category">Total Kecurangan Bulan Ini</h5>
                     <h4 class="card-title">{{ $totalKecuranganBulanIni }} Kasus</h4>
-                    <div class="dropdown">
-                        <button type="button"
-                            class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
-                            data-toggle="dropdown">
-                            <i class="now-ui-icons loader_gear"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Refresh</a>
-                        </div>
-                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="stats">
@@ -108,16 +78,6 @@
                 <div class="card-header">
                     <h5 class="card-category">Total User</h5>
                     <h4 class="card-title">{{ $totalUser }} Pengguna</h4>
-                    <div class="dropdown">
-                        <button type="button"
-                            class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
-                            data-toggle="dropdown">
-                            <i class="now-ui-icons loader_gear"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Refresh</a>
-                        </div>
-                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="stats">

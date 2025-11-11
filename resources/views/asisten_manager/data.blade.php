@@ -109,15 +109,6 @@
                                         </a>
                                     </th>
 
-                                    <th style="width:20%; text-align:center;">
-                                        <a href="{{ route('asisten_manager.data', array_merge(request()->query(), [
-                                            'sort_by' => 'total_kecurangan',
-                                            'sort_order' => (request('sort_by') === 'total_kecurangan' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-primary text-decoration-none">
-                                            Total Kecurangan
-                                        </a>
-                                    </th>
-
                                     <th style="width:15%; text-align:center;">
                                         <a href="{{ route('asisten_manager.data', array_merge(request()->query(), [
                                             'sort_by' => 'status',
@@ -140,7 +131,6 @@
                                         {{ $item->nama }}
                                     </td>
                                     <td style="text-align:center;">{{ $item->id_distributor }}</td>
-                                    <td style="text-align:center;">{{ $item->total_kecurangan ?? 0 }}</td>
                                     <td style="text-align:center;">
                                         <span
                                             class="badge badge-{{ strtolower($item->status) == 'aktif' ? 'success' : 'danger' }}">

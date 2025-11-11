@@ -34,7 +34,7 @@
                     @endphp
 
                     @if ($canCreate)
-                    <a href="{{ route('user.create') }}" class="btn btn-primary btn-round" title="Tambah User">
+                    <a href="{{ route('user.create') }}" class="btn btn-icon btn-primary btn-round" title="Tambah User">
                         <i class="now-ui-icons ui-1_simple-add"></i>
                     </a>
                     @endif

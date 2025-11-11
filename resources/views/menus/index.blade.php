@@ -38,7 +38,8 @@
 
                     {{-- Tombol Tambah Menu --}}
                     @if (checkAccess('Pengaturan', 'Menu Management', 'create'))
-                    <a href="{{ route('menus.create') }}" class="btn btn-primary btn-round" title="Tambah Menu">
+                    <a href="{{ route('menus.create') }}" class="btn btn-icon btn-primary btn-round"
+                        title="Tambah Menu">
                         <i class="now-ui-icons ui-1_simple-add"></i>
                     </a>
                     @endif

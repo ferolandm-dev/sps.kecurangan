@@ -2,8 +2,9 @@
 'namePage' => 'Dashboard',
 'class' => 'login-page sidebar-mini ',
 'activePage' => 'home',
-'backgroundImage' => asset('now') . "/img/bg14.jpg",
+'backgroundImage' => ngrok_asset('now/img/bg14.jpg'),
 ])
+
 
 @section('content')
 <div class="panel-header panel-header-lg">
@@ -86,6 +87,7 @@
             </div>
         </div>
 
+
         {{-- Tambahan dari recovery-branch --}}
         <div class="col-lg-4 col-md-6">
             <div class="card card-chart">
@@ -101,6 +103,31 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h5 class="card-category">Total User</h5>
+                    <h4 class="card-title">{{ $totalUser }} Pengguna</h4>
+                    <div class="dropdown">
+                        <button type="button"
+                            class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
+                            data-toggle="dropdown">
+                            <i class="now-ui-icons loader_gear"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">Refresh</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     {{-- ROW UNTUK TOP DISTRIBUTOR & TOP SALES CURANG --}}

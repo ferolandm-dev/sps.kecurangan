@@ -124,6 +124,11 @@ class HomeController extends Controller
             ->count();
 
         // ======================================
+        // 👥 Total User
+        // ======================================
+        $totalUser = DB::table('users')->count();
+
+        // ======================================
         // 🔁 Kirim semua data ke view
         // ======================================
         return view('home', compact(
@@ -134,7 +139,8 @@ class HomeController extends Controller
             'topFraudSales',
             'totalKecuranganBulanIni',
             'totalKecuranganKuartalIni',
-            'currentQuarter'
+            'currentQuarter',
+            'totalUser'
         ));
     }
 }

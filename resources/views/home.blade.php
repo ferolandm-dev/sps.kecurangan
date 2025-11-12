@@ -6,14 +6,106 @@
 ])
 
 @section('content')
-<div class="panel-header panel-header-lg">
-    <canvas id="bigDashboardChart"></canvas>
-</div>
+
+{{-- ===== STYLE: GLASS EFFECT & BACKGROUND ===== --}}
+<style>
+.content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* PANEL ATAS (CHART) */
+.glass-panel {
+    background: linear-gradient(135deg, rgba(41, 177, 74, 0.08), rgba(255, 255, 255, 0.1));
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(41, 177, 74, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    /* margin-top: 50px; */
+    /* 🟢 tambahkan baris ini */
+    margin-bottom: 30px;
+    padding: 20px;
+}
+
+/* KARTU */
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(41, 177, 74, 0.25);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    color: #222;
+}
+
+/* HOVER – tanpa kuning */
+.glass-card:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(135deg, rgba(41, 177, 74, 0.1), rgba(255, 255, 255, 0.3));
+    border-color: rgba(41, 177, 74, 0.5);
+    box-shadow: 0 6px 25px rgba(41, 177, 74, 0.25);
+}
+
+.glass-card .card-header h5 {
+    color: #29b14a;
+    font-weight: 600;
+}
+
+.glass-card .card-header h4 {
+    color: #111;
+    font-weight: 700;
+}
+
+/* TABEL */
+.table thead th {
+    white-space: nowrap;
+    /* Biar teks tidak turun ke bawah */
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 600;
+    color: #29b14a;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table tbody td {
+    white-space: nowrap;
+    /* Biar isi kolom juga tidak turun */
+    vertical-align: middle;
+}
+
+
+/* Hover baris tabel – ganti dari kuning ke hijau lembut */
+.table-hover tbody tr:hover {
+    background-color: rgba(41, 177, 74, 0.08);
+}
+
+/* Icon & footer info */
+.stats i {
+    color: #29b14a;
+}
+
+.stats {
+    color: #555;
+}
+
+.panel-header {
+    background: #eee733
+}
+</style>
+
+<div class="panel-header panel-header-sm"></div>
+
+{{-- ===== CONTENT START ===== --}}
 <div class="content">
+    {{-- ===== CHART PANEL (dipindahkan ke sini) ===== --}}
+    <div class="glass-panel">
+        <canvas id="bigDashboardChart" style="width: 100%; height: 300px;"></canvas>
+    </div>
+
     <div class="row">
-        {{-- Kartu Statistik Utama --}}
         <div class="col-lg-4">
-            <div class="card card-chart">
+            <div class="card glass-card card-chart">
                 <div class="card-header">
                     <h5 class="card-category">Distributor Aktif</h5>
                     <h4 class="card-title">{{ $totalDistributorAktif }} Distributor</h4>
@@ -27,12 +119,11 @@
         </div>
 
         <div class="col-lg-4 col-md-6">
-            <div class="card card-chart">
+            <div class="card glass-card card-chart">
                 <div class="card-header">
                     <h5 class="card-category">Total Sales Aktif</h5>
                     <h4 class="card-title">{{ $totalSalesAktif }} Sales</h4>
                 </div>
-
                 <div class="card-footer">
                     <div class="stats">
                         <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
@@ -42,24 +133,23 @@
         </div>
 
         <div class="col-lg-4 col-md-6">
-            <div class="card card-chart">
+            <div class="card glass-card card-chart">
                 <div class="card-header">
                     <h5 class="card-category">Total Kecurangan Bulan Ini</h5>
                     <h4 class="card-title">{{ $totalKecuranganBulanIni }} Kasus</h4>
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <i class="now-ui-icons ui-2_time-alarm"></i> Diperbarui bulan
-                        {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
+                        <i class="now-ui-icons ui-2_time-alarm"></i>
+                        Diperbarui bulan {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
                     </div>
                 </div>
             </div>
         </div>
 
-
-        {{-- Tambahan dari recovery-branch --}}
+        {{-- Kuartal & User --}}
         <div class="col-lg-4 col-md-6">
-            <div class="card card-chart">
+            <div class="card glass-card card-chart">
                 <div class="card-header">
                     <h5 class="card-category">Total Kecurangan Kuartal {{ $currentQuarter }}</h5>
                     <h4 class="card-title">{{ $totalKecuranganKuartalIni }} Kasus</h4>
@@ -74,7 +164,7 @@
         </div>
 
         <div class="col-lg-4 col-md-6">
-            <div class="card card-chart">
+            <div class="card glass-card card-chart">
                 <div class="card-header">
                     <h5 class="card-category">Total User</h5>
                     <h4 class="card-title">{{ $totalUser }} Pengguna</h4>
@@ -86,26 +176,24 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    {{-- ROW UNTUK TOP DISTRIBUTOR & TOP SALES CURANG --}}
-    <div class="row">
-        {{-- Top 5 Distributor --}}
+    {{-- ===== TABLES ===== --}}
+    <div class="row mt-4">
         <div class="col-md-6">
-            <div class="card h-100 d-flex flex-column">
+            <div class="card glass-card h-100">
                 <div class="card-header">
                     <h5 class="card-category">Top 5 Distributor</h5>
                     <h4 class="card-title">Berdasarkan Jumlah Sales Aktif</h4>
                 </div>
-                <div class="card-body flex-fill d-flex flex-column">
-                    <div class="table-responsive" style="overflow-x: auto; flex: 1;">
-                        <table class="table table-hover align-middle mb-0" style="height: 100%;">
-                            <thead class="text-primary">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
                                 <tr>
-                                    <th style="white-space: nowrap;">ID Distributor</th>
-                                    <th style="min-width: 200px;">Nama Distributor</th>
-                                    <th class="text-right" style="white-space: nowrap;">Jumlah Sales</th>
+                                    <th>ID Distributor</th>
+                                    <th>Nama Distributor</th>
+                                    <th class="text-right">Jumlah Sales</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,21 +215,20 @@
             </div>
         </div>
 
-        {{-- Top 5 Sales Curang --}}
         <div class="col-md-6">
-            <div class="card h-100 d-flex flex-column">
+            <div class="card glass-card h-100">
                 <div class="card-header">
                     <h5 class="card-category">Top 5 Sales Curang</h5>
                     <h4 class="card-title">Berdasarkan Jumlah Kecurangan</h4>
                 </div>
-                <div class="card-body flex-fill d-flex flex-column">
-                    <div class="table-responsive" style="overflow-x: auto; flex: 1;">
-                        <table class="table table-hover align-middle mb-0" style="height: 100%;">
-                            <thead class="text-primary">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
                                 <tr>
-                                    <th style="white-space: nowrap;">ID Sales</th>
-                                    <th style="min-width: 200px;">Nama Sales</th>
-                                    <th class="text-right" style="white-space: nowrap;">Total Kecurangan</th>
+                                    <th>ID Sales</th>
+                                    <th>Nama Sales</th>
+                                    <th class="text-right">Total Kecurangan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -183,16 +270,16 @@ document.addEventListener("DOMContentLoaded", function() {
             datasets: [{
                 label: 'Jumlah Kecurangan',
                 data: fraudData,
-                borderColor: '#f96332',
-                backgroundColor: 'rgba(249, 99, 50, 0.1)',
+                borderColor: '#29b14a',
+                backgroundColor: 'rgba(41, 177, 74, 0.1)',
                 fill: true,
                 tension: 0.4,
                 borderWidth: 3,
-                pointBackgroundColor: '#f96332',
+                pointBackgroundColor: '#eee733',
                 pointRadius: 5,
                 pointHoverRadius: 7,
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#f96332',
+                pointHoverBackgroundColor: '#29b14a',
+                pointHoverBorderColor: '#fff',
                 pointHoverBorderWidth: 2,
             }]
         },
@@ -203,27 +290,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 legend: {
                     display: true,
                     labels: {
-                        color: '#fff'
+                        color: '#333'
                     }
                 }
             },
             scales: {
                 x: {
                     ticks: {
-                        color: '#fff'
+                        color: '#333'
                     },
                     grid: {
-                        color: 'rgba(255,255,255,0.1)'
+                        color: 'rgba(0,0,0,0.05)'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: '#fff',
+                        color: '#333',
                         stepSize: 1
                     },
                     grid: {
-                        color: 'rgba(255,255,255,0.1)'
+                        color: 'rgba(0,0,0,0.05)'
                     }
                 }
             }

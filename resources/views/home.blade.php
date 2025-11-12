@@ -17,12 +17,11 @@
 
 /* PANEL ATAS (CHART) */
 .glass-panel {
-    background: linear-gradient(135deg, rgba(41, 177, 74, 0.08), rgba(255, 255, 255, 0.1));
     backdrop-filter: blur(12px);
     border-radius: 20px;
     border: 1px solid rgba(41, 177, 74, 0.25);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    /* margin-top: 50px; */
+    margin-top: -40px;
     /* 🟢 tambahkan baris ini */
     margin-bottom: 30px;
     padding: 20px;
@@ -90,7 +89,7 @@
 }
 
 .panel-header {
-    background: #eee733
+    background: #c3be25ff
 }
 </style>
 

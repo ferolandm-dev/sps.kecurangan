@@ -5,7 +5,7 @@
 ])
 
 @section('content')
-<div class="panel-header panel-header-sm"></div>
+<div class="panel-header panel-header-sm" style="background: #c3be25ff"></div>
 <div class="content">
     <div class="row">
         <div class="col-md-12">

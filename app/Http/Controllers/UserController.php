@@ -125,41 +125,45 @@ class UserController extends Controller
      * 🔹 Update akses user
      */
     public function updateAccess(Request $request, $id)
-    {
-        if (!auth()->check()) {
-            abort(403, 'Unauthorized');
-        }
+{
+    if (!auth()->check()) {
+        abort(403, 'Unauthorized');
+    }
 
-        $targetUser = DB::table('users')->where('id', $id)->first();
-        if (!$targetUser) {
-            return redirect()->route('user.index')->with('error', 'User tidak ditemukan.');
-        }
+    $targetUser = DB::table('users')->where('id', $id)->first();
+    if (!$targetUser) {
+        return redirect()->route('user.index')->with('error', 'User tidak ditemukan.');
+    }
 
-        // Hapus semua akses lama user
-        DB::table('user_access')->where('user_id', $id)->delete();
+    // Hapus semua akses lama user
+    DB::table('user_access')->where('user_id', $id)->delete();
 
-        // Simpan akses baru
-        if ($request->filled('access')) {
-            foreach ($request->access as $mainMenu => $subMenus) {
-                foreach ($subMenus as $subMenu => $permissions) {
-                    if (strtolower($subMenu) === 'user profile') continue;
+    // Simpan akses baru
+    if ($request->filled('access')) {
+        foreach ($request->access as $mainMenu => $subMenus) {
+            foreach ($subMenus as $subMenu => $permissions) {
+                if (strtolower($subMenu) === 'user profile') continue;
 
-                    DB::table('user_access')->insert([
-                        'user_id'     => $id,
-                        'main_menu'   => $mainMenu === 'root' ? '' : $mainMenu,
-                        'sub_menu'    => $subMenu === 'null' ? null : $subMenu,
-                        'can_access'  => $permissions['can_access'] ?? 0,
-                        'can_create'  => $permissions['can_create'] ?? 0,
-                        'can_edit'    => $permissions['can_edit'] ?? 0,
-                        'can_delete'  => $permissions['can_delete'] ?? 0,
-                        'can_print'   => $permissions['can_print'] ?? 0,
-                        'created_at'  => now(),
-                        'updated_at'  => now(),
-                    ]);
-                }
+                // ✅ Jika _main_ → berarti main_menu tanpa sub_menu
+                $isMainOnly = $subMenu === '_main_';
+
+                DB::table('user_access')->insert([
+                    'user_id'     => $id,
+                    'main_menu'   => $mainMenu === 'root' ? '' : $mainMenu,
+                    'sub_menu'    => $isMainOnly ? null : ($subMenu === 'null' ? null : $subMenu),
+                    'can_access'  => $permissions['can_access'] ?? 0,
+                    'can_create'  => $permissions['can_create'] ?? 0,
+                    'can_edit'    => $permissions['can_edit'] ?? 0,
+                    'can_delete'  => $permissions['can_delete'] ?? 0,
+                    'can_print'   => $permissions['can_print'] ?? 0,
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ]);
             }
         }
-
-        return redirect()->route('user.index')->with('success', 'Akses pengguna berhasil diperbarui!');
     }
+
+    return redirect()->route('user.index')->with('success', 'Akses pengguna berhasil diperbarui!');
+}
+
 }

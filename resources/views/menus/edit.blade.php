@@ -1,67 +1,133 @@
 @extends('layouts.app', [
-'namePage' => 'Edit Menu',
+'namePage' => 'Tambah Menu',
 'class' => 'sidebar-mini',
 'activePage' => 'menus',
 ])
 
 @section('content')
-<div class="panel-header panel-header-sm"></div>
+<div class="panel-header panel-header-sm" style="background: #c3be25ff"></div>
 
-<div class="content">
+<div class="content" style="
+    backdrop-filter: blur(12px);
+    margin-top: -70px;
+    padding: 30px;
+    color: #333;
+">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card">
-                {{-- Header --}}
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title">{{ __('Edit Menu') }}</h4>
+
+            {{-- ✅ ALERT SUCCESS --}}
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert" style="
+                background: linear-gradient(135deg, #29b14a 0%, #34d058 100%);
+                color: #fff;
+                border: none;
+                border-radius: 14px;
+                padding: 14px 18px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                box-shadow: 0 4px 12px rgba(41,177,74,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 25px;
+            ">
+                <div class="d-flex align-items-center">
+                    <i class="now-ui-icons ui-1_bell-53 mr-2" style="font-size:18px;"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="
+                    color:#fff;
+                    opacity:0.8;
+                    font-size:22px;
+                    margin-left:10px;
+                ">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+
+            {{-- ⚠️ ALERT ERROR --}}
+            @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert" style="
+                background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
+                color: #fff;
+                border: none;
+                border-radius: 14px;
+                padding: 14px 18px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                box-shadow: 0 4px 12px rgba(231,76,60,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 25px;
+            ">
+                <div class="d-flex align-items-center">
+                    <i class="now-ui-icons ui-1_bell-53 mr-2" style="font-size:18px;"></i>
+                    <span>{!! session('error') !!}</span>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="
+                    color:#fff;
+                    opacity:0.8;
+                    font-size:22px;
+                    margin-left:10px;
+                ">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+
+            {{-- ⚠️ ALERT VALIDASI --}}
+            @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert" style="
+                background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
+                color: #fff;
+                border: none;
+                border-radius: 14px;
+                padding: 14px 18px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                box-shadow: 0 4px 12px rgba(231,76,60,0.3);
+                margin-bottom: 25px;
+            ">
+                <div class="d-flex align-items-start">
+                    <i class="now-ui-icons ui-1_bell-53 mr-2" style="font-size:18px;margin-top:2px;"></i>
+                    <ul class="mb-0 pl-2">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="
+                    color:#fff;
+                    opacity:0.8;
+                    font-size:22px;
+                    margin-left:10px;
+                ">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+
+            {{-- 🟢 FORM TAMBAH MENU --}}
+            <div class="card" style="border-radius: 20px;">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                    <h4 class="card-title mb-0 text-dark">
+                        <i class="now-ui-icons"></i> {{ __('Tambah Menu Baru') }}
+                    </h4>
                 </div>
 
-                <div class="card-body">
-                    {{-- ALERT ERROR DARI VALIDASI --}}
-                    @if ($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
-
-                    {{-- ALERT ERROR DARI QUERY (DUPLICATE ORDER) --}}
-                    @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Gagal!</strong> {{ session('error') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
-
-                    {{-- ALERT SUCCESS --}}
-                    @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
-
-                    {{-- FORM EDIT MENU --}}
-                    <form method="POST" action="{{ route('menus.update', $menu->id) }}">
+                <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
+                    <form method="POST" action="{{ route('menus.store') }}">
                         @csrf
-                        @method('PUT')
 
                         {{-- Main Menu --}}
                         <div class="form-group">
                             <label for="main_menu">{{ __('Main Menu') }}</label>
                             <input type="text" name="main_menu" id="main_menu"
                                 class="form-control @error('main_menu') is-invalid @enderror"
-                                value="{{ old('main_menu', $menu->main_menu) }}" placeholder="Contoh: Master">
+                                value="{{ old('main_menu') }}" placeholder="Contoh: Master">
                             @error('main_menu')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -72,7 +138,7 @@
                             <label for="sub_menu">{{ __('Sub Menu') }}</label>
                             <input type="text" name="sub_menu" id="sub_menu"
                                 class="form-control @error('sub_menu') is-invalid @enderror"
-                                value="{{ old('sub_menu', $menu->sub_menu) }}" placeholder="Contoh: Data User">
+                                value="{{ old('sub_menu') }}" placeholder="Contoh: Data User">
                             @error('sub_menu')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -83,8 +149,7 @@
                             <label for="icon">{{ __('Icon') }}</label>
                             <input type="text" name="icon" id="icon"
                                 class="form-control @error('icon') is-invalid @enderror"
-                                value="{{ old('icon', $menu->icon) }}"
-                                placeholder="Contoh: now-ui-icons users_single-02">
+                                value="{{ old('icon') }}" placeholder="Contoh: now-ui-icons users_single-02">
                             @error('icon')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -95,7 +160,7 @@
                             <label for="route">{{ __('Route') }}</label>
                             <input type="text" name="route" id="route"
                                 class="form-control @error('route') is-invalid @enderror"
-                                value="{{ old('route', $menu->route) }}" placeholder="Contoh: users.index">
+                                value="{{ old('route') }}" placeholder="Contoh: users.index">
                             @error('route')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -106,7 +171,7 @@
                             <label for="main_order">{{ __('Urutan Main Menu') }}</label>
                             <input type="number" name="main_order" id="main_order"
                                 class="form-control @error('main_order') is-invalid @enderror"
-                                value="{{ old('main_order', $menu->main_order) }}" placeholder="Contoh: 1">
+                                value="{{ old('main_order', 0) }}" placeholder="Contoh: 1">
                             @error('main_order')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -117,7 +182,7 @@
                             <label for="order">{{ __('Urutan Sub Menu') }}</label>
                             <input type="number" name="order" id="order"
                                 class="form-control @error('order') is-invalid @enderror"
-                                value="{{ old('order', $menu->order) }}" min="0">
+                                value="{{ old('order', 0) }}" min="0">
                             @error('order')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -132,10 +197,8 @@
                                 <div class="col-md-5">
                                     <label>{{ __('CRUD') }}</label>
                                     <select name="can_crud" class="form-select mb-2" style="width: 200px">
-                                        <option value="1" {{ old('can_crud', $menu->can_crud) == 1 ? 'selected' : '' }}>
-                                            Ya</option>
-                                        <option value="0" {{ old('can_crud', $menu->can_crud) == 0 ? 'selected' : '' }}>
-                                            Tidak</option>
+                                        <option value="1" {{ old('can_crud') == 1 ? 'selected' : '' }}>Ya</option>
+                                        <option value="0" {{ old('can_crud', 0) == 0 ? 'selected' : '' }}>Tidak</option>
                                     </select>
                                 </div>
 
@@ -143,30 +206,30 @@
                                 <div class="col-md-5">
                                     <label>{{ __('PRINT') }}</label>
                                     <select name="can_print" class="form-select" style="width: 200px">
-                                        <option value="1"
-                                            {{ old('can_print', $menu->can_print) == 1 ? 'selected' : '' }}>Ya</option>
-                                        <option value="0"
-                                            {{ old('can_print', $menu->can_print) == 0 ? 'selected' : '' }}>Tidak
-                                        </option>
+                                        <option value="1" {{ old('can_print') == 1 ? 'selected' : '' }}>Ya</option>
+                                        <option value="0" {{ old('can_print', 0) == 0 ? 'selected' : '' }}>Tidak</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         <small class="text-muted d-block mt-3 mb-3">
-                            * Minimal isi salah satu field utama (Main Menu, Sub Menu, atau Route).
+                            * Minimal isi salah satu field utama (Main Menu, Sub Menu, atau Route).<br>
+                            * “Urutan Main Menu” menentukan posisi menu utama di sidebar.<br>
+                            * “Urutan Sub Menu” menentukan posisi submenu di dalam Main Menu yang sama.
                         </small>
 
-                        <div class="text-right">
+                        <div class="text-right mt-4">
                             <a href="{{ route('menus.index') }}" class="btn btn-secondary btn-round">Batal</a>
-                            <button type="submit" class="btn btn-success btn-round">
-                                <i class="now-ui-icons"></i> {{ __('Simpan') }}
+                            <button type="submit" class="btn btn-success btn-round"
+                                style="background:#29b14a;border:none;">
+                                <i class="now-ui-icons"></i> Simpan
                             </button>
                         </div>
                     </form>
-                    {{-- END FORM --}}
                 </div>
             </div>
+
         </div>
     </div>
 </div>

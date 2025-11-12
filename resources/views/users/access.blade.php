@@ -5,10 +5,15 @@
 ])
 
 @section('content')
-<div class="panel-header panel-header-sm"></div>
+<div class="panel-header panel-header-sm" style></div>
 
-<div class="content">
-    <div class="card shadow-sm">
+<div class="content" style="
+    backdrop-filter: blur(12px);
+    margin-top: -70px;
+    padding: 30px;
+    color: #333;
+">
+    <div class="card shadow-sm" style="border-radius: 20px;">
         <div class="card-header d-flex justify-content-between align-items-center border-bottom">
             <h4 class="card-title mb-0 ">Pengaturan Akses - {{ $user->name }}</h4>
             <a href="{{ route('user.index') }}" class="btn btn-outline-secondary btn-round">
@@ -56,27 +61,47 @@
                     @foreach ($menus as $mainKey => $subs)
                     @php
                     $main = $mainKey ?: 'root';
-                    $subs = $subs->filter(fn($s) => strtolower($s->sub_menu) !== 'user profile');
-                    if ($subs->isEmpty()) continue;
+                    $filteredSubs = $subs->filter(fn($s) => strtolower($s->sub_menu) !== 'user profile');
+                    if ($filteredSubs->isEmpty()) continue;
 
+                    $hasSubMenu = $filteredSubs->contains(fn($s) => !empty($s->sub_menu));
                     $accessGroup = $userAccess[$mainKey] ?? $userAccess[''] ?? collect();
                     @endphp
 
                     <div class="col-md-12">
                         <div class="menu-access-box">
-                            <h5 class="menu-access-title">
-                                {{ $mainKey ? ucfirst($mainKey) : 'Tanpa Kategori' }}
-                            </h5>
+                            <div class="d-flex align-items-center mb-2">
+                                {{-- Jika tidak ada sub menu, checkbox di kiri --}}
+                                @if (!$hasSubMenu)
+                                @php
+                                $menu = $filteredSubs->first();
+                                $access = collect($accessGroup)->firstWhere('sub_menu', null);
+                                @endphp
 
-                            @foreach ($subs as $sub)
+                                <label class="custom-checkbox mb-0 mr-2">
+                                    <input type="hidden" name="access[{{ $main }}][_main_][can_access]" value="0">
+                                    <input type="checkbox" name="access[{{ $main }}][_main_][can_access]" value="1"
+                                        {{ $access && $access->can_access ? 'checked' : '' }}>
+                                    <span class="checkmark"></span>
+                                </label>
+                                @endif
+
+                                <h5 class="menu-access-title mb-0">
+                                    {{ $mainKey ? ucfirst($mainKey) : 'Tanpa Kategori' }}
+                                </h5>
+                            </div>
+
+                            {{-- Jika punya sub menu, tampilkan di dalam kotak --}}
+                            @if ($hasSubMenu)
+                            @foreach ($filteredSubs as $sub)
                             @php
+                            if (empty($sub->sub_menu)) continue;
                             $access = collect($accessGroup)->firstWhere('sub_menu', $sub->sub_menu);
-                            $canCrud = isset($sub->can_crud) ? (int)$sub->can_crud : 0;
-                            $canPrint = isset($sub->can_print) ? (int)$sub->can_print : 0;
+                            $canCrud = (int) ($sub->can_crud ?? 0);
+                            $canPrint = (int) ($sub->can_print ?? 0);
                             @endphp
 
-                            <div class="custom-checkbox-group">
-                                {{-- ✅ Checkbox utama (akses menu) --}}
+                            <div class="custom-checkbox-group ml-3">
                                 <label class="custom-checkbox">
                                     <input type="hidden" name="access[{{ $main }}][{{ $sub->sub_menu }}][can_access]"
                                         value="0">
@@ -86,10 +111,8 @@
                                     <span class="label-text">{{ ucfirst($sub->sub_menu) }}</span>
                                 </label>
 
-                                {{-- ✅ Tampilkan CRUD & Print sesuai konfigurasi menu --}}
                                 <div class="ml-4 crud-options">
                                     @if ($canCrud === 1)
-                                    {{-- ✅ CREATE --}}
                                     <label class="custom-checkbox small-checkbox">
                                         <input type="hidden"
                                             name="access[{{ $main }}][{{ $sub->sub_menu }}][can_create]" value="0">
@@ -100,7 +123,6 @@
                                         <span class="label-text">Create</span>
                                     </label>
 
-                                    {{-- ✅ EDIT --}}
                                     <label class="custom-checkbox small-checkbox">
                                         <input type="hidden" name="access[{{ $main }}][{{ $sub->sub_menu }}][can_edit]"
                                             value="0">
@@ -111,7 +133,6 @@
                                         <span class="label-text">Edit</span>
                                     </label>
 
-                                    {{-- ✅ DELETE --}}
                                     <label class="custom-checkbox small-checkbox">
                                         <input type="hidden"
                                             name="access[{{ $main }}][{{ $sub->sub_menu }}][can_delete]" value="0">
@@ -124,8 +145,7 @@
                                     @endif
 
                                     @if ($canPrint === 1)
-                                    {{-- ✅ PRINT --}}
-                                    <label class="custom-checkbox **small-checkbox**">
+                                    <label class="custom-checkbox small-checkbox">
                                         <input type="hidden" name="access[{{ $main }}][{{ $sub->sub_menu }}][can_print]"
                                             value="0">
                                         <input type="checkbox"
@@ -138,10 +158,12 @@
                                 </div>
                             </div>
                             @endforeach
+                            @endif
                         </div>
                     </div>
                     @endforeach
                 </div>
+
 
                 <div class="text-right mt-3">
                     <a href="{{ route('user.index') }}" class="btn btn-secondary btn-round">Batal</a>
@@ -173,7 +195,7 @@
 .menu-access-title {
     font-size: 17px;
     font-weight: 600;
-    color: #f96332;
+    color: #29b14a;
     margin-bottom: 12px;
 }
 
@@ -199,7 +221,7 @@
     width: 18px;
     height: 18px;
     background-color: #fff;
-    border: 2px solid #f96332;
+    border: 2px solid #29b14a;
     border-radius: 4px;
     transition: all 0.2s ease;
     display: inline-block;
@@ -264,8 +286,8 @@
 
 /* Pastikan warna latar belakang saat di-check tetap ada */
 .custom-checkbox input:checked~.checkmark {
-    background-color: #f96332;
-    border-color: #f96332;
+    background-color: #29b14a;
+    border-color: #29b14a;
 }
 </style>
 @endsection

@@ -123,6 +123,45 @@
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Kejadian</h6>
 
                         <div class="row">
+                            {{-- Dropdown Jenis Sanksi --}}
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="jenis_sanksi"
+                                        class="text-dark font-weight-bold">{{ __('Jenis Sanksi') }}</label>
+                                    <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required
+                                        style="border-radius:12px; border:1px solid #E3E3E3; width:100%;">
+                                        <option value="">-- Pilih Jenis Sanksi --</option>
+                                        @foreach($jenisSanksi as $jenis)
+                                        <option value="{{ $jenis }}">{{ $jenis }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{-- Dropdown Deskripsi Sanksi --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="deskripsi_sanksi"
+                                        class="text-dark font-weight-bold">{{ __('Deskripsi Sanksi') }}</label>
+                                    <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
+                                        required style="border-radius:12px; border:1px solid #E3E3E3; width:100%;">
+                                        <option value="">-- Pilih Deskripsi --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="nilai_sanksi"
+                                        class="text-dark font-weight-bold">{{ __('Nilai Sanksi (Rp)') }}</label>
+                                    <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control"
+                                        readonly style="border-radius:12px;">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label class="text-dark font-weight-bold">{{ __('Toko') }}</label>
@@ -191,19 +230,41 @@
     </div>
 </div>
 
-{{-- ===================== MODAL PREVIEW FOTO ===================== --}}
-<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
-    <div class="modal-dialog modal-dialog-centered" style="max-width:1000px;">
-        <div class="modal-content border-0" style="background:rgba(255,255,255,0.98);border-radius:15px;">
-            <button type="button" id="modalCloseBtn" style="position:absolute;top:10px;right:15px;font-size:32px;
-                background:none;border:none;cursor:pointer;z-index:2102;">&times;</button>
-            <button type="button" id="modalPrev" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);
-                font-size:40px;background:none;border:none;cursor:pointer;z-index:2102;">‹</button>
-            <button type="button" id="modalNext" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                font-size:40px;background:none;border:none;cursor:pointer;z-index:2102;">›</button>
-            <div class="d-flex justify-content-center align-items-center" style="height:80vh;">
-                <img id="modalImage" src="" alt="Preview"
-                    style="max-width:80%;max-height:80%;object-fit:contain;border-radius:10px;">
+{{-- ===================== MODAL PREVIEW FOTO (GAYA BARU) ===================== --}}
+<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+            border-radius:15px;
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);
+            overflow:hidden;
+            position:relative;">
+
+            {{-- Header --}}
+            <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
+                <h5 class="modal-title text-success" style="font-weight:600;">
+                    <i class="now-ui-icons media-1_album mr-1"></i> Pratinjau Foto
+                </h5>
+                <button type="button" id="modalCloseBtn" class="close" data-dismiss="modal" aria-label="Close"
+                    style="font-size:28px;color:#333;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {{-- Isi Modal --}}
+            <div class="modal-body d-flex justify-content-center align-items-center"
+                style="height:75vh; overflow:hidden; position:relative;">
+                <img id="modalImage" src="" alt="Preview" style="max-width:90%; max-height:90%; object-fit:contain;
+                    border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2);
+                    transition:0.3s;">
+                <button type="button" id="modalPrev" class="btn btn-link" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">‹</button>
+                <button type="button" id="modalNext" class="btn btn-link" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">›</button>
+            </div>
+
+            {{-- Footer --}}
+            <div class="modal-footer" style="border-top:none;justify-content:center;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
@@ -217,25 +278,36 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
 <style>
-.modal-backdrop.show,
-.modal-backdrop {
-    opacity: 0 !important;
-    background: transparent !important;
+/* === BACKDROP AKTIF DAN TIDAK TRANSPARAN === */
+.modal-backdrop.show {
+    opacity: 1 !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(2px);
 }
 
+/* Tombol navigasi modal tetap di atas */
 #modalCloseBtn,
 #modalPrev,
 #modalNext {
     z-index: 2102 !important;
     pointer-events: auto !important;
 }
+
+/* Kunci scroll pada body dan modal */
+body.modal-open {
+    overflow: hidden !important;
+}
+
+.modal {
+    overflow: hidden !important;
+}
 </style>
 
 <script>
 $(document).ready(function() {
-    $('#id_sales, #id_asisten_manager').select2({
+    // === Select2 Setup ===
+    $('#id_sales, #id_asisten_manager, #jenis_sanksi, #deskripsi_sanksi').select2({
         placeholder: "-- Pilih --",
-        allowClear: true,
         width: '100%'
     });
 
@@ -245,6 +317,7 @@ $(document).ready(function() {
     const $fileInput = $('#bukti');
     const $previewContainer = $('#preview-container');
 
+    // === Upload & Preview ===
     $('#btn-upload').on('click', function() {
         $fileInput.val('');
         $fileInput.trigger('click');
@@ -274,9 +347,9 @@ $(document).ready(function() {
                 const html = `
                     <div class="position-relative m-1" style="display:inline-block;">
                         <img src="${e.target.result}" class="preview-img" data-index="${index}"
-                            style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
+                             style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
                         <button type="button" class="btn btn-danger btn-sm btn-remove" data-index="${index}"
-                            style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
+                             style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
                     </div>`;
                 $previewContainer.append(html);
             };
@@ -292,11 +365,12 @@ $(document).ready(function() {
         syncInputFiles();
     });
 
+    // === Modal Preview ===
     $(document).on('click', '.preview-img', function() {
         currentIndex = Number($(this).data('index'));
         showModalImage(currentIndex);
         $('#modalPreview').modal({
-            backdrop: false,
+            backdrop: 'static', // aktifkan overlay, tidak bisa klik luar
             keyboard: true,
             show: true
         });
@@ -321,6 +395,8 @@ $(document).ready(function() {
         currentIndex = (currentIndex - 1 + selectedFiles.length) % selectedFiles.length;
         showModalImage(currentIndex);
     });
+
+    // === Navigasi Keyboard ===
     $(document).on('keydown', e => {
         if (!$('#modalPreview').hasClass('show')) return;
         if (e.key === 'Escape') $('#modalPreview').modal('hide');
@@ -328,6 +404,40 @@ $(document).ready(function() {
         if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
     });
 
+    // === Kunci scroll saat modal terbuka ===
+    $('#modalPreview').on('shown.bs.modal', function() {
+        $('body').css('overflow', 'hidden');
+        $('#modalPreview, #modalPreview .modal-body').css({
+            'overflow': 'hidden',
+            'touch-action': 'none'
+        });
+
+        // ubah backdrop biar gelap elegan
+        $('.modal-backdrop')
+            .addClass('show')
+            .css({
+                'background-color': 'rgba(0,0,0,0.7)',
+                'backdrop-filter': 'blur(2px)'
+            });
+
+        $(document).on('touchmove.modalBlock', function(e) {
+            if ($('#modalPreview').hasClass('show')) e.preventDefault();
+        });
+    });
+
+    // === Pulihkan scroll saat modal tertutup ===
+    $('#modalPreview').on('hidden.bs.modal', function() {
+        $('#modalImage').attr('src', '');
+        $('body').css('overflow', 'auto');
+        $('#modalPreview, #modalPreview .modal-body').css({
+            'overflow': '',
+            'touch-action': ''
+        });
+        $('.modal-backdrop').removeAttr('style');
+        $(document).off('touchmove.modalBlock');
+    });
+
+    // === Datepicker ===
     $('#tanggal').datepicker({
         dateFormat: 'dd/mm/yy',
         changeMonth: true,
@@ -342,6 +452,7 @@ $(document).ready(function() {
         }
     });
 
+    // === Dropdown Dinamis Sales / AM / Sanksi ===
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
         $('#nama_sales, #distributor, #nama_asisten_manager').val('');
@@ -367,7 +478,38 @@ $(document).ready(function() {
         const nama = txt.split('-').slice(1).join('-').trim();
         $('#nama_asisten_manager').val(nama);
     });
+
+    $('#jenis_sanksi').on('change', function() {
+        const jenis = $(this).val();
+        const $deskripsiSelect = $('#deskripsi_sanksi');
+        const $nilaiInput = $('#nilai_sanksi');
+        $deskripsiSelect.html('<option value="">-- Pilih Deskripsi --</option>');
+        $nilaiInput.val('');
+        if (!jenis) return;
+        $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
+            let options = '<option value="">-- Pilih Deskripsi --</option>';
+            data.forEach(item => {
+                options +=
+                    `<option value="${item.keterangan}">${item.keterangan}</option>`;
+            });
+            $deskripsiSelect.html(options);
+        });
+    });
+
+    $('#deskripsi_sanksi').on('change', function() {
+        const jenis = $('#jenis_sanksi').val();
+        const deskripsi = $(this).val();
+        const $nilaiInput = $('#nilai_sanksi');
+        if (!jenis || !deskripsi) return $nilaiInput.val('');
+        $.getJSON(`/sanksi/nilai/${jenis}/${deskripsi}`, function(data) {
+            if (data && data.nilai !== undefined) {
+                const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
+                $nilaiInput.val('Rp ' + formatted);
+            } else $nilaiInput.val('');
+        });
+    });
 });
 </script>
 @endpush
+
 @endsection

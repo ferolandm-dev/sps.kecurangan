@@ -40,8 +40,8 @@
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         {{-- Form Pencarian --}}
-                        <form action="{{ route('sales.data') }}" method="GET"
-                            class="d-flex align-items-center mr-2" style="margin-top: 10px;">
+                        <form action="{{ route('sales.data') }}" method="GET" class="d-flex align-items-center mr-2"
+                            style="margin-top: 10px;">
                             <div class="input-group" style="width:250px;">
                                 <input type="text" name="search" class="form-control" placeholder="Cari sales..."
                                     value="{{ request('search') }}"

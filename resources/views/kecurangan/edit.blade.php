@@ -136,6 +136,40 @@
 
                         <div class="row">
                             <div class="col-md-3">
+                                <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                                <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required>
+                                    <option value="">-- Pilih Jenis Sanksi --</option>
+                                    @foreach($jenisSanksi as $jenis)
+                                    <option value="{{ $jenis }}"
+                                        {{ $jenis == $kecurangan->jenis_sanksi ? 'selected' : '' }}>
+                                        {{ $jenis }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="text-dark font-weight-bold">Deskripsi Sanksi</label>
+                                <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
+                                    required>
+                                    {{-- Jika sedang edit dan sudah ada nilai --}}
+                                    @if(!empty($kecurangan->keterangan_sanksi))
+                                    <option value="{{ $kecurangan->keterangan_sanksi }}" selected>
+                                        {{ $kecurangan->keterangan_sanksi }}
+                                    </option>
+                                    @else
+                                    <option value="">-- Pilih Deskripsi --</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="text-dark font-weight-bold">Nilai Sanksi (Rp)</label>
+                                <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control"
+                                    value="Rp {{ number_format($kecurangan->nilai_sanksi, 0, ',', '.') }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label class="text-dark font-weight-bold">{{ __('Toko') }}</label>
                                     <input type="text" name="toko" class="form-control" required
@@ -168,11 +202,11 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group has-label">
                             <label class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
-                            <input type="text" name="keterangan" class="form-control" style="border-radius:12px;"
-                                value="{{ $kecurangan->keterangan }}">
+                            <textarea type="text" name="keterangan" class="form-control" style=" border-radius: 12px; 
+                            width: 40%; height: 100px; padding: 10px 14px; border: 1px solid #E3E3E3; "
+                                value="{{ $kecurangan->keterangan }}"></textarea>
                         </div>
 
                         <hr class="my-4" style="border-color:#29b14a;">
@@ -243,26 +277,51 @@
     </div>
 </div>
 
-{{-- Modal Preview Foto --}}
-<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
-    <div class="modal-dialog modal-dialog-centered" style="max-width:1000px;">
-        <div class="modal-content border-0" style="background:rgba(255,255,255,0.98);border-radius:15px;">
-            <button type="button" id="modalCloseBtn" style="position:absolute;top:10px;right:15px;font-size:32px;
-                background:none;border:none;cursor:pointer;z-index:2102;">&times;</button>
-            <button type="button" id="modalPrev" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);
-                font-size:40px;background:none;border:none;cursor:pointer;z-index:2102;">‹</button>
-            <button type="button" id="modalNext" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                font-size:40px;background:none;border:none;cursor:pointer;z-index:2102;">›</button>
-            <div class="d-flex justify-content-center align-items-center" style="height:80vh;">
-                <img id="modalImage" src="" alt="Preview"
-                    style="max-width:80%;max-height:80%;object-fit:contain;border-radius:10px;">
+{{-- ===================== MODAL PREVIEW FOTO (GAYA BARU) ===================== --}}
+<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+            border-radius:15px;
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);
+            overflow:hidden;
+            position:relative;">
+
+            {{-- Header --}}
+            <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
+                <h5 class="modal-title text-success" style="font-weight:600;">
+                    <i class="now-ui-icons media-1_album mr-1"></i> Pratinjau Foto
+                </h5>
+                <button type="button" id="modalCloseBtn" class="close" data-dismiss="modal" aria-label="Close"
+                    style="font-size:28px;color:#333;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {{-- Isi Modal --}}
+            <div class="modal-body d-flex justify-content-center align-items-center"
+                style="height:75vh; overflow:hidden; position:relative;">
+                <img id="modalImage" src="" alt="Preview" style="max-width:90%; max-height:90%; object-fit:contain;
+                    border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2);
+                    transition:0.3s;">
+
+                {{-- Tombol Navigasi --}}
+                <button type="button" id="modalPrev" class="btn btn-link" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">‹</button>
+                <button type="button" id="modalNext" class="btn btn-link" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">›</button>
+            </div>
+
+            {{-- Footer --}}
+            <div class="modal-footer" style="border-top:none;justify-content:center;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
 </div>
 
+
 @push('js')
-{{-- Custom css (sama seperti index) --}}
+{{-- Custom css --}}
 <link href="{{ asset('css/kecurangan.css') }}" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -271,14 +330,23 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
 <style>
-/* Hilangkan latar gelap bootstrap */
-.modal-backdrop.show,
-.modal-backdrop {
-    opacity: 0 !important;
-    background: transparent !important;
+/* ===================== BACKDROP (ELEGAN) ===================== */
+.modal-backdrop.show {
+    opacity: 0.7 !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(3px);
 }
 
-/* Pastikan tombol modal bisa diklik */
+/* ===================== NON-SCROLL SAAT MODAL TERBUKA ===================== */
+body.modal-open {
+    overflow: hidden !important;
+}
+
+.modal {
+    overflow: hidden !important;
+}
+
+/* ===================== TOMBOL MODAL (Z-INDEX & INTERAKSI) ===================== */
 #modalCloseBtn,
 #modalPrev,
 #modalNext {
@@ -289,13 +357,14 @@
 
 <script>
 $(document).ready(function() {
-    // ===================== INIT =====================
-    $('#id_sales, #id_asisten_manager').select2({
+    // ===================== SELECT2 =====================
+    $('#jenis_sanksi, #deskripsi_sanksi, #id_sales, #id_asisten_manager').select2({
         placeholder: "-- Pilih --",
         allowClear: true,
         width: '100%'
     });
 
+    // ===================== VARIABEL =====================
     let selectedFiles = [];
     let currentIndex = 0;
     const MAX_FILES = 5;
@@ -303,7 +372,7 @@ $(document).ready(function() {
     const $previewContainer = $('#preview-container');
     const $existingContainer = $('#existing-container');
 
-    // ===================== EXISTING PHOTOS =====================
+    // ===================== HANDLE FOTO =====================
     function collectAllPreviewElements() {
         const arr = [];
         $existingContainer.find('img.existing-img').each(function() {
@@ -315,7 +384,6 @@ $(document).ready(function() {
         return arr;
     }
 
-    // ===================== UPLOAD FOTO =====================
     $('#btn-upload').on('click', function() {
         $fileInput.val('');
         $fileInput.trigger('click');
@@ -329,16 +397,17 @@ $(document).ready(function() {
 
     $fileInput.on('change', function() {
         const incoming = Array.from(this.files || []);
-        const newFiles = incoming.filter(f =>
-            !selectedFiles.some(sf => sf.name === f.name && sf.size === f.size)
-        );
+        const newFiles = incoming.filter(f => !selectedFiles.some(sf => sf.name === f.name && sf
+            .size === f.size));
         const existingCount = $existingContainer.find('.existing-photo').length;
         const spaceLeft = MAX_FILES - existingCount;
+
         if (spaceLeft <= 0) {
             alert('Jumlah foto sudah mencapai batas maksimal (' + MAX_FILES + ').');
             $fileInput.val('');
             return;
         }
+
         selectedFiles = [...selectedFiles, ...newFiles].slice(0, spaceLeft);
         renderPreview();
         syncInputFiles();
@@ -371,19 +440,15 @@ $(document).ready(function() {
         syncInputFiles();
     });
 
-    // ===================== DELETE EXISTING PHOTO (TANPA AJAX) =====================
     $(document).on('click', '.btn-delete-existing', function(e) {
         e.stopPropagation();
         const $wrap = $(this).closest('.existing-photo');
         const fotoId = $wrap.data('id');
-        // tambahkan input hidden agar dikirim ke backend
-        const hiddenInput = `<input type="hidden" name="deleted_photos[]" value="${fotoId}">`;
-        $('form').append(hiddenInput);
-        // hapus langsung dari tampilan
+        $('form').append(`<input type="hidden" name="deleted_photos[]" value="${fotoId}">`);
         $wrap.remove();
     });
 
-    // ===================== MODAL PREVIEW FOTO =====================
+    // ===================== MODAL PREVIEW FOTO (GAYA BARU) =====================
     $(document).on('click', '.existing-img, .preview-img', function() {
         const allEls = collectAllPreviewElements();
         let idx = allEls.findIndex(el => el[0] === this);
@@ -391,7 +456,7 @@ $(document).ready(function() {
         currentIndex = idx;
         showModalImageByIndex(currentIndex);
         $('#modalPreview').modal({
-            backdrop: false,
+            backdrop: 'static',
             keyboard: true,
             show: true
         });
@@ -400,18 +465,17 @@ $(document).ready(function() {
     function showModalImageByIndex(index) {
         const allEls = collectAllPreviewElements();
         if (!allEls[index]) return;
-        const $el = allEls[index];
-        $('#modalImage').attr('src', $el.attr('src') || '');
+        $('#modalImage').attr('src', allEls[index].attr('src') || '');
     }
 
     $(document).on('click', '#modalCloseBtn', () => $('#modalPreview').modal('hide'));
-    $(document).on('click', '#modalNext', function() {
+    $(document).on('click', '#modalNext', () => {
         const allEls = collectAllPreviewElements();
         if (!allEls.length) return;
         currentIndex = (currentIndex + 1) % allEls.length;
         showModalImageByIndex(currentIndex);
     });
-    $(document).on('click', '#modalPrev', function() {
+    $(document).on('click', '#modalPrev', () => {
         const allEls = collectAllPreviewElements();
         if (!allEls.length) return;
         currentIndex = (currentIndex - 1 + allEls.length) % allEls.length;
@@ -423,11 +487,15 @@ $(document).ready(function() {
         else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
         else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
     });
-    $('#modalPreview').on('hidden.bs.modal', function() {
+
+    $('#modalPreview').on('show.bs.modal', function() {
+        $('body').css('overflow', 'hidden');
+    }).on('hidden.bs.modal', function() {
         $('#modalImage').attr('src', '');
+        $('body').css('overflow', 'auto');
     });
 
-    // ===================== FORM SUBMIT =====================
+    // ===================== VALIDASI SUBMIT =====================
     $('form').on('submit', function() {
         syncInputFiles();
         const existingCount = $existingContainer.find('.existing-photo').length;
@@ -438,7 +506,7 @@ $(document).ready(function() {
         return true;
     });
 
-    // ===================== SALES AJAX =====================
+    // ===================== AJAX SALES =====================
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
         const $namaSales = $('#nama_sales');
@@ -453,69 +521,44 @@ $(document).ready(function() {
 
         if (!idSales) return;
 
-        $.ajax({
-            url: `/kecurangan/sales/${idSales}`,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                $namaSales.val(data.nama_sales);
-                $distributor.val(data.distributor);
-
-                if (data.distributor_id) {
-                    $.ajax({
-                        url: `/kecurangan/asisten-manager/${data.distributor_id}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(res) {
-                            let options =
-                                '<option value="">Pilih Asisten Manager</option>';
-                            res.forEach(am => {
-                                options +=
-                                    `<option value="${am.id}">${am.id} - ${am.nama}</option>`;
-                            });
-                            $idAsisten.html(options).trigger('change');
-                        }
+        $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
+            $namaSales.val(data.nama_sales);
+            $distributor.val(data.distributor);
+            if (data.distributor_id) {
+                $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
+                    let options = '<option value="">Pilih Asisten Manager</option>';
+                    res.forEach(am => {
+                        options +=
+                            `<option value="${am.id}">${am.id} - ${am.nama}</option>`;
                     });
-                }
+                    $idAsisten.html(options).trigger('change');
+                });
             }
         });
     });
 
-    // ===================== ASISTEN MANAGER =====================
     $('#id_asisten_manager').on('change', function() {
         const selectedText = $(this).find('option:selected').text();
         const nama = selectedText.split('-').slice(1).join('-').trim();
         $('#nama_asisten_manager').val(nama);
     });
 
-    // ===================== AUTOLOAD ASISTEN MANAGER SAAT EDIT =====================
+    // ===================== AUTOLOAD SAAT EDIT =====================
     const initialSales = $('#id_sales').val();
     const currentAsistenId = "{{ $kecurangan->id_asisten_manager ?? '' }}";
     if (initialSales) {
-        $.ajax({
-            url: `/kecurangan/sales/${initialSales}`,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                $('#nama_sales').val(data.nama_sales);
-                $('#distributor').val(data.distributor);
-
-                if (data.distributor_id) {
-                    $.ajax({
-                        url: `/kecurangan/asisten-manager/${data.distributor_id}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(res) {
-                            let options =
-                                '<option value="">Pilih Asisten Manager</option>';
-                            res.forEach(am => {
-                                options +=
-                                    `<option value="${am.id}" ${am.id == currentAsistenId ? 'selected' : ''}>${am.id} - ${am.nama}</option>`;
-                            });
-                            $('#id_asisten_manager').html(options).trigger('change');
-                        }
+        $.getJSON(`/kecurangan/sales/${initialSales}`, function(data) {
+            $('#nama_sales').val(data.nama_sales);
+            $('#distributor').val(data.distributor);
+            if (data.distributor_id) {
+                $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
+                    let options = '<option value="">Pilih Asisten Manager</option>';
+                    res.forEach(am => {
+                        options +=
+                            `<option value="${am.id}" ${am.id == currentAsistenId ? 'selected' : ''}>${am.id} - ${am.nama}</option>`;
                     });
-                }
+                    $('#id_asisten_manager').html(options).trigger('change');
+                });
             }
         });
     }
@@ -527,20 +570,38 @@ $(document).ready(function() {
         changeYear: true,
         showAnim: 'slideDown',
         onSelect: function(dateText) {
-            const [day, month, year] = dateText.split('/');
-            const bulan = parseInt(month);
-            const tahun = parseInt(year.length === 2 ? '20' + year : year);
-            let kuartal = '';
-            if (bulan <= 3) kuartal = 'Q1 ' + tahun;
-            else if (bulan <= 6) kuartal = 'Q2 ' + tahun;
-            else if (bulan <= 9) kuartal = 'Q3 ' + tahun;
-            else kuartal = 'Q4 ' + tahun;
+            const [d, m, y] = dateText.split('/');
+            const bln = parseInt(m);
+            const th = parseInt(y);
+            const kuartal = bln <= 3 ? 'Q1 ' + th : bln <= 6 ? 'Q2 ' + th : bln <= 9 ? 'Q3 ' + th :
+                'Q4 ' + th;
             $('#kuartal').val(kuartal);
         }
     });
+
+    // ===================== SANKSI =====================
+    $('#jenis_sanksi').on('change', function() {
+        const jenis = $(this).val();
+        $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
+            let options = '<option value="">-- Pilih Deskripsi --</option>';
+            data.forEach(item => {
+                options +=
+                    `<option value="${item.keterangan}">${item.keterangan}</option>`;
+            });
+            $('#deskripsi_sanksi').html(options).trigger('change');
+        });
+    });
+
+    $('#deskripsi_sanksi').on('change', function() {
+        const jenis = $('#jenis_sanksi').val();
+        const deskripsi = $(this).val();
+        $.getJSON(`/sanksi/nilai/${jenis}/${deskripsi}`, function(data) {
+            const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
+            $('#nilai_sanksi').val('Rp ' + formatted);
+        });
+    });
 });
 </script>
-
 @endpush
 
 @endsection

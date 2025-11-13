@@ -186,11 +186,18 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('kecurangan')->group(function () {
 
+    // ===============================
+    // 📋 MASTER KECURANGAN
+    // ===============================
     Route::middleware('check.access:Master,Master Kecurangan')->group(function () {
 
         Route::get('/', [KecuranganController::class, 'index'])
             ->middleware('check.access:Master,Master Kecurangan,access')
             ->name('kecurangan.index');
+
+        Route::get('/create', [KecuranganController::class, 'create'])
+            ->middleware('check.access:Master,Master Kecurangan,create')
+            ->name('kecurangan.create');
 
         Route::post('/', [KecuranganController::class, 'store'])
             ->middleware('check.access:Master,Master Kecurangan,create')
@@ -228,7 +235,6 @@ Route::prefix('kecurangan')->group(function () {
             ->name('kecurangan.hapusFoto');
     });
 
-
     // ===============================
     // 📉 DATA KECURANGAN
     // ===============================
@@ -254,7 +260,7 @@ Route::prefix('kecurangan')->group(function () {
             ->middleware('check.access:Data,Data Kecurangan,print')
             ->name('kecurangan.exportPDF');
 
-        // 👇👇 Tambahkan route ini untuk AJAX Lihat Bukti 👇👇
+        // 👇 AJAX Lihat Bukti
         Route::get('/{id}/bukti', [KecuranganController::class, 'getBukti'])
             ->middleware('check.access:Data,Data Kecurangan,access')
             ->name('kecurangan.getBukti');
@@ -353,6 +359,13 @@ Route::prefix('sanksi')
         Route::delete('/{id}', [SanksiController::class, 'destroy'])
             ->middleware('check.access:Master,Master Sanksi,delete')
             ->name('sanksi.destroy');
+
+        Route::get('/deskripsi/{jenis}', [SanksiController::class, 'getDeskripsiByJenis'])
+            ->name('sanksi.deskripsi');
+
+        Route::get('/nilai/{jenis}/{deskripsi}', [SanksiController::class, 'getNilaiByDeskripsi'])
+            ->name('sanksi.nilai');
+
     });
 
 

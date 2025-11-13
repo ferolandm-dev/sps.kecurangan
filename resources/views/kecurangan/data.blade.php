@@ -75,19 +75,19 @@
 
                         {{-- 🔄 Tombol Tampilkan Semua / Halaman --}}
                         @if (request()->has('all'))
-                        <a href="{{ route('kecurangan.data', request()->except('all')) }}"
-                            class="btn btn-warning btn-round mr-2"
+                        <a href="{{ request()->fullUrlWithoutQuery('all') }}" class="btn btn-warning btn-round mr-2"
                             style="background:#eee733;color:#000;border:none;margin-top:10px;"
                             title="Tampilkan Halaman">
                             <i class="now-ui-icons arrows-1_refresh-69"></i> Tampilkan Halaman
                         </a>
                         @else
-                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), ['all' => true])) }}"
+                        <a href="{{ request()->fullUrlWithQuery(['all' => true]) }}"
                             class="btn btn-success btn-round mr-2"
                             style="background:#29b14a;border:none;margin-top:10px;" title="Tampilkan Semua Data">
                             <i class="now-ui-icons ui-1_zoom-bold"></i> Tampilkan Semua
                         </a>
                         @endif
+
 
                         {{-- ✅ Export Excel & PDF --}}
                         @if (checkAccess('Data', 'Data Kecurangan', 'print'))
@@ -155,6 +155,9 @@
                                         </th>
                                         <th>Distributor</th>
                                         <th>Nama ASS</th>
+                                        <th>Jenis Sanksi</th>
+                                        <th>Keterangan Sanksi</th>
+                                        <th>Nilai Sanksi</th>
                                         <th>Toko</th>
                                         <th class="text-center">Kunjungan</th>
                                         <th>
@@ -165,7 +168,7 @@
                                                 Tanggal
                                             </a>
                                         </th>
-                                        <th style="min-width: 400px; width: 45%;">Keterangan</th>
+                                        <th style="text-align:center; min-width: 200px; width: 45%;">Keterangan</th>
                                         <th>Kuartal</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
@@ -181,15 +184,29 @@
                                         <td style="vertical-align: top;">{{ $item->nama_sales }}</td>
                                         <td style="vertical-align: top;">{{ $item->distributor }}</td>
                                         <td style="vertical-align: top;">{{ $item->nama_asisten_manager }}</td>
+                                        <td style="vertical-align: top;">{{ $item->jenis_sanksi }}</td>
+                                        <td style="vertical-align: top;">{{ $item->keterangan_sanksi }}</td>
+                                        <td style="vertical-align: top;">
+                                            Rp {{ number_format($item->nilai_sanksi, 0, ',', '.') }}
+                                        </td>
                                         <td style="vertical-align: top;">{{ $item->toko }}</td>
                                         <td style="text-align:center; vertical-align: top;">{{ $item->kunjungan }}</td>
                                         <td style="vertical-align: top;">
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
 
-                                        <td
-                                            style="white-space: normal; word-wrap: break-word; text-align: justify; line-height: 1.5em; width: 45%; max-width: 600px; vertical-align: top;">
-                                            {{ $item->keterangan ?? '-' }}
+                                        <td style="vertical-align: top; text-align: center;">
+                                            @if ($item->keterangan)
+                                            <button type="button"
+                                                class="btn btn-info btn-sm btn-round btn-lihat-keterangan"
+                                                data-keterangan="{{ $item->keterangan }}" title="Lihat Keterangan"
+                                                style="background:#17a2b8;border:none;">
+                                                <i class="now-ui-icons"></i> Lihat
+                                            </button>
+                                            @else
+                                            <span class="text-muted">-</span>
+                                            @endif
                                         </td>
+
 
                                         <td style="vertical-align: top;">{{ $item->kuartal }}</td>
                                         <td class="text-center" style="vertical-align: top;">
@@ -256,45 +273,77 @@
         </div>
     </div>
 </div>
-{{-- ===================== MODAL LIHAT BUKTI ===================== --}}
-<div class="modal fade" id="modalBukti" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
-        <div class="modal-content border-0" style="background:rgba(255,255,255,0.98);
-                border-radius:15px;
-                position:relative;
-                box-shadow:0 4px 25px rgba(0,0,0,0.3);
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                overflow:hidden;">
 
-            {{-- Tombol Tutup --}}
-            <button type="button" id="modalCloseBtn" style="
-        position:absolute;top:10px;right:20px;
-        font-size:32px;background:none;border:none;
-        cursor:pointer;z-index:2102;">&times;</button>
-
-            {{-- Tombol Navigasi --}}
-            <button type="button" id="modalPrev" style="
-        position:absolute;left:20px;top:50%;
-        transform:translateY(-50%);
-        font-size:40px;background:none;border:none;
-        cursor:pointer;z-index:2102;">‹</button>
-
-            <button type="button" id="modalNext" style="
-        position:absolute;right:20px;top:50%;
-        transform:translateY(-50%);
-        font-size:40px;background:none;border:none;
-        cursor:pointer;z-index:2102;">›</button>
-
-            {{-- Isi Modal --}}
-            <div class="d-flex justify-content-center align-items-center" style="height:80vh;">
-                <img id="modalImage" src="" alt="Preview"
-                    style="max-width:90%;max-height:90%;object-fit:contain;border-radius:10px;">
+{{-- ===================== MODAL LIHAT KETERANGAN ===================== --}}
+<div class="modal fade" id="modalKeterangan" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+            border-radius:15px;
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="border-bottom:none;">
+                <h5 class="modal-title text-success" style="font-weight:600;">
+                    <i class="now-ui-icons design_bullet-list-67 mr-1"></i> Keterangan
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    style="font-size:28px;color:#333;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size:15px; color:#333; text-align:justify; line-height:1.6em;">
+                <p id="isiKeterangan"></p>
+            </div>
+            <div class="modal-footer" style="border-top:none;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
 </div>
+
+{{-- ===================== MODAL LIHAT BUKTI ===================== --}}
+<div class="modal fade" id="modalBukti" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+            border-radius:15px;
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);
+            overflow:hidden;">
+
+            {{-- Header --}}
+            <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
+                <h5 class="modal-title text-success" style="font-weight:600;">
+                    <i class="now-ui-icons media-1_album mr-1"></i> Bukti Kecurangan
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    style="font-size:28px;color:#333;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {{-- Isi Modal --}}
+            <div class="modal-body d-flex justify-content-center align-items-center"
+                style="height:75vh; position:relative;">
+                {{-- Gambar utama --}}
+                <img id="modalImage" src="" alt="Preview"
+                    style="max-width:90%; max-height:90%; object-fit:contain; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:0.3s;">
+
+                {{-- Tombol Navigasi --}}
+                <button type="button" id="modalPrev" class="btn btn-link" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">
+                    ‹
+                </button>
+                <button type="button" id="modalNext" class="btn btn-link" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">
+                    ›
+                </button>
+            </div>
+
+            {{-- Footer --}}
+            <div class="modal-footer" style="border-top:none;justify-content:center;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @push('js')
 <script>
@@ -309,7 +358,7 @@ $(document).ready(function() {
         currentIndex = 0;
 
         $('#modalBukti').modal({
-            backdrop: false,
+            backdrop: 'static', // overlay + disable click outside
             keyboard: true,
             show: true
         });
@@ -319,14 +368,32 @@ $(document).ready(function() {
             method: 'GET',
             beforeSend: function() {
                 $('#modalImage').attr('src', '').attr('alt', 'Memuat...');
+                $('#modalIndicator').remove();
             },
             success: function(response) {
                 if (!response.length) {
                     $('#modalImage').attr('alt', 'Tidak ada foto.');
                     return;
                 }
+
                 fotoList = response.map(f => f.url);
                 showModalImage(currentIndex);
+
+                // tambah indikator
+                if (!$('#modalIndicator').length) {
+                    $('.modal-body').append(`
+                        <div id="modalIndicator" 
+                             style="position:absolute;bottom:15px;left:50%;
+                             transform:translateX(-50%);
+                             background:rgba(0,0,0,0.6);
+                             color:#fff;
+                             padding:5px 12px;
+                             border-radius:20px;
+                             font-size:14px;">
+                        </div>
+                    `);
+                }
+                updateIndicator();
             },
             error: function() {
                 $('#modalImage').attr('alt', 'Gagal memuat foto.');
@@ -336,7 +403,22 @@ $(document).ready(function() {
 
     function showModalImage(index) {
         if (!fotoList.length) return;
-        $('#modalImage').attr('src', fotoList[index]);
+
+        $('#modalImage').addClass('fade-out');
+        setTimeout(() => {
+            $('#modalImage')
+                .attr('src', fotoList[index])
+                .removeClass('fade-out');
+            updateIndicator();
+        }, 150);
+    }
+
+    function updateIndicator() {
+        if (fotoList.length > 1) {
+            $('#modalIndicator').text(`Foto ${currentIndex + 1} / ${fotoList.length}`);
+        } else {
+            $('#modalIndicator').text('');
+        }
     }
 
     $('#modalNext').on('click', function() {
@@ -351,10 +433,7 @@ $(document).ready(function() {
         showModalImage(currentIndex);
     });
 
-    $('#modalCloseBtn').on('click', function() {
-        $('#modalBukti').modal('hide');
-    });
-
+    // keyboard navigation
     $(document).on('keydown', function(e) {
         if (!$('#modalBukti').hasClass('show')) return;
         if (e.key === 'Escape') $('#modalBukti').modal('hide');
@@ -362,18 +441,60 @@ $(document).ready(function() {
         else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
     });
 
-    $('#modalBukti').on('hidden.bs.modal', function() {
-        $('#modalImage').attr('src', '');
-        fotoList = [];
-        currentIndex = 0;
+    // Saat modal tampil: kunci scroll body dan modal
+    $('#modalBukti').on('shown.bs.modal', function() {
+        // kunci page background scroll
+        $('body').css('overflow', 'hidden');
+
+        // pastikan modal & modal-body tidak scroll
+        $('#modalBukti').css({
+            'overflow': 'hidden'
+        });
+        $('#modalBukti .modal-body').css({
+            'overflow': 'hidden',
+            'touch-action': 'none'
+        });
+
+        // cegah touchmove pada modal agar tidak scroll pada mobile
+        $(document).on('touchmove.modalBlock', function(e) {
+            if ($('#modalBukti').hasClass('show')) {
+                // jika target berada di dalam modal (tutup), cegah default
+                if ($(e.target).closest('#modalBukti').length) {
+                    e.preventDefault();
+                }
+            }
+        });
     });
 
-    // FIX posisi modal agar tidak ikut scroll
-    $('#modalBukti').on('shown.bs.modal', function() {
-        $('body').css('overflow', 'hidden');
-    }).on('hidden.bs.modal', function() {
+    // Saat modal tertutup: pulihkan scroll
+    $('#modalBukti').on('hidden.bs.modal', function() {
+        $('#modalImage').attr('src', '');
+        $('#modalIndicator').remove();
+        fotoList = [];
+        currentIndex = 0;
+
+        // pulihkan body & modal overflow
         $('body').css('overflow', 'auto');
+        $('#modalBukti').css({
+            'overflow': ''
+        });
+        $('#modalBukti .modal-body').css({
+            'overflow': '',
+            'touch-action': ''
+        });
+
+        // lepas handler touchmove
+        $(document).off('touchmove.modalBlock');
+    });
+
+    // ======= MODAL KETERANGAN =======
+    $('.btn-lihat-keterangan').on('click', function() {
+        const isi = $(this).data('keterangan');
+        $('#isiKeterangan').text(isi);
+        $('#modalKeterangan').modal('show');
     });
 });
 </script>
+
+
 @endpush

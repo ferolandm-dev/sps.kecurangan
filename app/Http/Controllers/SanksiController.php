@@ -107,4 +107,29 @@ class SanksiController extends Controller
         DB::table('sanksi')->where('id', $id)->delete();
         return redirect()->route('sanksi.index')->with('success', 'Data sanksi berhasil dihapus!');
     }
+
+    public function getDeskripsiByJenis($jenis)
+{
+    $data = DB::table('sanksi')
+        ->where('jenis', $jenis)
+        ->select('keterangan')
+        ->distinct()
+        ->get();
+
+    return response()->json($data);
+}
+
+public function getNilaiByDeskripsi($jenis, $deskripsi)
+{
+    $sanksi = DB::table('sanksi')
+        ->where('jenis', $jenis)
+        ->where('keterangan', $deskripsi)
+        ->select('nilai')
+        ->first();
+
+    return response()->json(['nilai' => $sanksi->nilai ?? 0]);
+}
+
+
+
 }

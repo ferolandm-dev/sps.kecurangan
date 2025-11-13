@@ -230,7 +230,7 @@
     </div>
 </div>
 
-{{-- ===================== MODAL PREVIEW FOTO (GAYA BARU) ===================== --}}
+{{-- ===================== MODAL PREVIEW FOTO ===================== --}}
 <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
         <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
@@ -242,14 +242,10 @@
             {{-- Header --}}
             <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
                 <h5 class="modal-title text-success" style="font-weight:600;">
-                    <i class="now-ui-icons media-1_album mr-1"></i> Pratinjau Foto
+                    <i class="now-ui-icons"></i> Bukti Kecurangan
                 </h5>
-                <button type="button" id="modalCloseBtn" class="close" data-dismiss="modal" aria-label="Close"
-                    style="font-size:28px;color:#333;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
-
+            
             {{-- Isi Modal --}}
             <div class="modal-body d-flex justify-content-center align-items-center"
                 style="height:75vh; overflow:hidden; position:relative;">

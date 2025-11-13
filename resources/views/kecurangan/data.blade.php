@@ -282,12 +282,8 @@
             box-shadow:0 4px 25px rgba(0,0,0,0.3);">
             <div class="modal-header" style="border-bottom:none;">
                 <h5 class="modal-title text-success" style="font-weight:600;">
-                    <i class="now-ui-icons design_bullet-list-67 mr-1"></i> Keterangan
+                    <i class="now-ui-icons"></i> Keterangan
                 </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                    style="font-size:28px;color:#333;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body" style="font-size:15px; color:#333; text-align:justify; line-height:1.6em;">
                 <p id="isiKeterangan"></p>
@@ -310,12 +306,8 @@
             {{-- Header --}}
             <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
                 <h5 class="modal-title text-success" style="font-weight:600;">
-                    <i class="now-ui-icons media-1_album mr-1"></i> Bukti Kecurangan
+                    <i class="now-ui-icons"></i> Bukti Kecurangan
                 </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                    style="font-size:28px;color:#333;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
 
             {{-- Isi Modal --}}
@@ -368,7 +360,6 @@ $(document).ready(function() {
             method: 'GET',
             beforeSend: function() {
                 $('#modalImage').attr('src', '').attr('alt', 'Memuat...');
-                $('#modalIndicator').remove();
             },
             success: function(response) {
                 if (!response.length) {
@@ -379,21 +370,6 @@ $(document).ready(function() {
                 fotoList = response.map(f => f.url);
                 showModalImage(currentIndex);
 
-                // tambah indikator
-                if (!$('#modalIndicator').length) {
-                    $('.modal-body').append(`
-                        <div id="modalIndicator" 
-                             style="position:absolute;bottom:15px;left:50%;
-                             transform:translateX(-50%);
-                             background:rgba(0,0,0,0.6);
-                             color:#fff;
-                             padding:5px 12px;
-                             border-radius:20px;
-                             font-size:14px;">
-                        </div>
-                    `);
-                }
-                updateIndicator();
             },
             error: function() {
                 $('#modalImage').attr('alt', 'Gagal memuat foto.');
@@ -411,14 +387,6 @@ $(document).ready(function() {
                 .removeClass('fade-out');
             updateIndicator();
         }, 150);
-    }
-
-    function updateIndicator() {
-        if (fotoList.length > 1) {
-            $('#modalIndicator').text(`Foto ${currentIndex + 1} / ${fotoList.length}`);
-        } else {
-            $('#modalIndicator').text('');
-        }
     }
 
     $('#modalNext').on('click', function() {
@@ -469,7 +437,6 @@ $(document).ready(function() {
     // Saat modal tertutup: pulihkan scroll
     $('#modalBukti').on('hidden.bs.modal', function() {
         $('#modalImage').attr('src', '');
-        $('#modalIndicator').remove();
         fotoList = [];
         currentIndex = 0;
 

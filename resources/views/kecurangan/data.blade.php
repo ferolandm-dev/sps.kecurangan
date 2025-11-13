@@ -5,7 +5,7 @@
 ])
 
 @section('content')
-<div class="panel-header panel-header-sm" style="background: #c3be25ff"></div>
+<div class="panel-header panel-header-sm" style="background: #dbd300ff"></div>
 
 <div class="content" style="
     backdrop-filter: blur(12px);
@@ -200,7 +200,7 @@
                                                 class="btn btn-info btn-sm btn-round btn-lihat-keterangan"
                                                 data-keterangan="{{ $item->keterangan }}" title="Lihat Keterangan"
                                                 style="background:#17a2b8;border:none;">
-                                                <i class="now-ui-icons"></i> Lihat
+                                                <i class="now-ui-icons files_paper"></i>
                                             </button>
                                             @else
                                             <span class="text-muted">-</span>

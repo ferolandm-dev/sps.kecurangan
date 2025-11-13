@@ -5,7 +5,7 @@
 ])
 
 @section('content')
-<div class="panel-header panel-header-sm" style="background: #c3be25ff"></div>
+<div class="panel-header panel-header-sm" style="background: #dbd300ff"></div>
 
 <div class="content" style="
     backdrop-filter: blur(12px);

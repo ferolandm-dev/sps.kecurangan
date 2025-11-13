@@ -229,6 +229,7 @@
 
                         <!-- Tombol Simpan -->
                         <div class="text-right mt-4">
+                            <a href="{{ route('kecurangan.data') }}" class="btn btn-secondary btn-round">Batal</a>
                             <button type="submit" class="btn btn-success btn-round">
                                 <i class="now-ui-icons"></i> Simpan
                             </button>

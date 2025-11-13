@@ -10,7 +10,8 @@ use App\Http\Controllers\{
     PageController,
     HomeController,
     AsistenManagerController,
-    MenuController
+    MenuController,
+    SanksiController
 };
 
 // ===============================
@@ -323,6 +324,37 @@ Route::prefix('kecurangan')->group(function () {
                 ->middleware('check.access:Data,Data ASS,print')
                 ->name('asisten_manager.exportPDF');
         });
+
+
+Route::prefix('sanksi')
+    ->middleware('check.access:Master,Master Sanksi')
+    ->group(function () {
+
+        Route::get('/', [SanksiController::class, 'index'])
+            ->middleware('check.access:Master,Master Sanksi,access')
+            ->name('sanksi.index');
+
+        Route::get('/create', [SanksiController::class, 'create'])
+            ->middleware('check.access:Master,Master Sanksi,create')
+            ->name('sanksi.create');
+
+        Route::post('/', [SanksiController::class, 'store'])
+            ->middleware('check.access:Master,Master Sanksi,create')
+            ->name('sanksi.store');
+
+        Route::get('/{id}/edit', [SanksiController::class, 'edit'])
+            ->middleware('check.access:Master,Master Sanksi,edit')
+            ->name('sanksi.edit');
+
+        Route::put('/{id}', [SanksiController::class, 'update'])
+            ->middleware('check.access:Master,Master Sanksi,edit')
+            ->name('sanksi.update');
+
+        Route::delete('/{id}', [SanksiController::class, 'destroy'])
+            ->middleware('check.access:Master,Master Sanksi,delete')
+            ->name('sanksi.destroy');
+    });
+
 
     // =====================================================
     // 📄 PAGE CONTROLLER

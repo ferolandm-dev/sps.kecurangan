@@ -154,8 +154,9 @@
                         </div>
 
                         <div class="form-group has-label">
-                            <label class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
-                            <input type="text" name="keterangan" class="form-control" style="border-radius:12px;">
+                            <label for="keterangan" class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
+                            <textarea type="text" name="keterangan" id="keterangan" class="form-control" style=" border-radius: 12px; 
+                            width: 40%; height: 100px; padding: 10px 14px; border: 1px solid #E3E3E3; "></textarea>
                         </div>
 
                         <hr class="my-4" style="border-color:#29b14a;">

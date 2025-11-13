@@ -111,44 +111,45 @@
             @endif
 
             {{-- ✏️ FORM EDIT SANGSI --}}
-            <div class="card" style="border-radius: 20px;">
+            <div class="card" style="border-radius:20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">
-                        <i class="now-ui-icons"></i> {{ __('Edit Data Sanksi') }}
-                    </h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Edit Data Sanksi') }}</h4>
                 </div>
 
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
-                    <form action="{{ route('sanksi.update', $sanksi->id) }}" method="POST">
+                    <form method="POST" action="{{ route('sanksi.update', $sanksi->id) }}">
                         @csrf
                         @method('PUT')
-
-                        {{-- ID Sanksi --}}
-                        <div class="form-group">
-                            <label for="id">{{ __('ID Sanksi') }}</label>
-                            <input type="text" name="id" id="id" class="form-control" value="{{ $sanksi->id }}"
-                                readonly>
-                        </div>
 
                         {{-- Jenis Sanksi --}}
                         <div class="form-group">
                             <label for="jenis">{{ __('Jenis Sanksi') }}</label>
-                            <input type="text" name="jenis" id="jenis" class="form-control"
-                                value="{{ old('jenis', $sanksi->jenis) }}" required>
+                            <select name="jenis" id="jenis" class="form-control select2" required>
+                                <option value="">-- Pilih Jenis --</option>
+                                <option value="Sanksi" {{ $sanksi->jenis == 'Sanksi' ? 'selected' : '' }}>Sanksi
+                                </option>
+                                <option value="Non-Sanksi" {{ $sanksi->jenis == 'Non-Sanksi' ? 'selected' : '' }}>
+                                    Non-Sanksi</option>
+                            </select>
                         </div>
 
                         {{-- Keterangan --}}
                         <div class="form-group">
                             <label for="keterangan">{{ __('Keterangan') }}</label>
-                            <textarea name="keterangan" id="keterangan" class="form-control" rows="3"
-                                placeholder="Masukkan keterangan...">{{ old('keterangan', $sanksi->keterangan) }}</textarea>
+                            <textarea name="keterangan" id="keterangan" rows="3" class="form-control"
+                                placeholder="Tuliskan keterangan atau alasan sanksi..." style="border: 1px solid #ced4da;
+                                    border-radius: 6px;
+                                    padding: 10px 12px;
+                                    resize: none;
+                                    background: #fff;">{{ old('keterangan', $sanksi->keterangan) }}</textarea>
                         </div>
 
-                        {{-- Nilai --}}
+                        {{-- Nilai (Rupiah) --}}
                         <div class="form-group">
                             <label for="nilai">{{ __('Nilai (Rupiah)') }}</label>
                             <input type="number" name="nilai" id="nilai" class="form-control"
-                                value="{{ old('nilai', $sanksi->nilai) }}" min="0" required>
+                                placeholder="Contoh: 50000" min="0" step="100"
+                                value="{{ old('nilai', $sanksi->nilai) }}" required>
                         </div>
 
                         {{-- Tombol Aksi --}}
@@ -156,7 +157,7 @@
                             <a href="{{ route('sanksi.index') }}" class="btn btn-secondary btn-round">Batal</a>
                             <button type="submit" class="btn btn-success btn-round"
                                 style="background:#29b14a;border:none;">
-                                <i class="now-ui-icons"></i> Simpan Perubahan
+                                <i class="now-ui-icons"></i> Simpan
                             </button>
                         </div>
                     </form>
@@ -167,3 +168,18 @@
     </div>
 </div>
 @endsection
+
+@push('js')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#jenis').select2({
+        placeholder: "-- Pilih Jenis --",
+        allowClear: false,
+        width: '100%'
+    });
+});
+</script>
+@endpush

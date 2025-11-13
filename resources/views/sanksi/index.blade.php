@@ -96,26 +96,60 @@
 
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
                     <div class="table-responsive">
-                        <table class="table table-hover align-items-center mb-0" style="color:#333;">
-                            <thead style="color:#29b14a">
+                        <table class="table table-hover align-middle text-nowrap mb-0" style="color:#333;">
+                            <thead style="color:#29b14a;">
                                 <tr>
-                                    <th>ID Sanksi</th>
-                                    <th>Jenis</th>
-                                    <th>Keterangan</th>
-                                    <th>Nilai (Rupiah)</th>
-                                    <th class="text-center">Aksi</th>
+                                    <th style="width:5%; text-align:center;">#</th>
+
+                                    <th style="width:20%;">
+                                        <a href="{{ route('sanksi.index', array_merge(request()->query(), [
+                        'sort_by' => 'jenis',
+                        'sort_order' => (request('sort_by') === 'jenis' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Jenis
+                                        </a>
+                                    </th>
+
+                                    <th style="width:35%;">
+                                        <a href="{{ route('sanksi.index', array_merge(request()->query(), [
+                        'sort_by' => 'keterangan',
+                        'sort_order' => (request('sort_by') === 'keterangan' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Keterangan
+                                        </a>
+                                    </th>
+
+                                    <th style="width:20%; text-align:center;">
+                                        <a href="{{ route('sanksi.index', array_merge(request()->query(), [
+                        'sort_by' => 'nilai',
+                        'sort_order' => (request('sort_by') === 'nilai' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Nilai (Rupiah)
+                                        </a>
+                                    </th>
+
+                                    <th style="width:20%; text-align:center;">Aksi</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @forelse ($sanksi as $item)
+                                @forelse ($sanksi as $index => $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td style="text-align:center;">
+                                        {{ $loop->iteration + (method_exists($sanksi, 'firstItem') ? $sanksi->firstItem() - 1 : 0) }}
+                                    </td>
+
                                     <td>{{ $item->jenis }}</td>
-                                    <td>{{ $item->keterangan }}</td>
-                                    <td>Rp {{ number_format($item->nilai, 0, ',', '.') }}</td>
+
+                                    <td class="text-truncate" style="max-width: 300px;" title="{{ $item->keterangan }}">
+                                        {{ $item->keterangan }}
+                                    </td>
+
+                                    <td style="text-align:center;">
+                                        Rp {{ number_format($item->nilai, 0, ',', '.') }}
+                                    </td>
+
                                     <td class="text-center">
-                                        {{-- Tombol Edit --}}
                                         @if (checkAccess('Master', 'Master Sanksi', 'edit'))
                                         <a href="{{ route('sanksi.edit', $item->id) }}"
                                             class="btn btn-warning btn-icon btn-sm btn-round"
@@ -124,7 +158,6 @@
                                         </a>
                                         @endif
 
-                                        {{-- Tombol Hapus --}}
                                         @if (checkAccess('Master', 'Master Sanksi', 'delete'))
                                         <form action="{{ route('sanksi.destroy', $item->id) }}" method="POST"
                                             style="display:inline-block;"
@@ -149,7 +182,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     {{-- Pagination --}}
                     @if (!request()->has('all'))
                     <div class="d-flex justify-content-center mt-3">

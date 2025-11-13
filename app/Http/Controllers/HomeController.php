@@ -123,6 +123,13 @@ class HomeController extends Controller
             ->whereYear('tanggal', date('Y'))
             ->count();
 
+        $totalNilaiSanksiBulanIni = DB::table('kecurangan')
+            ->where('validasi', 1)
+            ->whereMonth('tanggal', date('m'))
+            ->whereYear('tanggal', date('Y'))
+            ->sum('nilai_sanksi');
+
+
         // ======================================
         // 👥 Total User
         // ======================================
@@ -140,7 +147,8 @@ class HomeController extends Controller
             'totalKecuranganBulanIni',
             'totalKecuranganKuartalIni',
             'currentQuarter',
-            'totalUser'
+            'totalUser',
+            'totalNilaiSanksiBulanIni'
         ));
     }
 }

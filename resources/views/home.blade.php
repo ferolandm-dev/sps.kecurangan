@@ -141,7 +141,7 @@
                 <div class="card-footer">
                     <div class="stats">
                         <i class="now-ui-icons ui-2_time-alarm"></i>
-                        Diperbarui bulan {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
+                        {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
                     </div>
                 </div>
             </div>
@@ -166,6 +166,23 @@
         <div class="col-lg-4 col-md-6">
             <div class="card glass-card card-chart">
                 <div class="card-header">
+                    <h5 class="card-category">Total Nilai Sanksi Bulan Ini</h5>
+                    <h4 class="card-title">
+                        Rp {{ number_format($totalNilaiSanksiBulanIni, 0, ',', '.') }}
+                    </h4>
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="now-ui-icons ui-1_calendar-60"></i>
+                        {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card glass-card card-chart">
+                <div class="card-header">
                     <h5 class="card-category">Total User</h5>
                     <h4 class="card-title">{{ $totalUser }} Pengguna</h4>
                 </div>
@@ -176,6 +193,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     {{-- ===== TABLES ===== --}}

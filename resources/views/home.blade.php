@@ -10,22 +10,24 @@
 {{-- ===== STYLE: GLASS EFFECT & BACKGROUND ===== --}}
 <style>
 .content {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
+    backdrop-filter: blur(12px);
+    margin-top: -70px;
+    padding: 30px;
+    color: #333;
 }
 
 /* PANEL ATAS (CHART) */
+/* PANEL ATAS (CHART) */
 .glass-panel {
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 20px;
     border: 1px solid rgba(41, 177, 74, 0.25);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     margin-top: -40px;
-    /* 🟢 tambahkan baris ini */
     margin-bottom: 30px;
     padding: 20px;
 }
+
 
 /* KARTU */
 .glass-card {
@@ -41,7 +43,6 @@
 /* HOVER – tanpa kuning */
 .glass-card:hover {
     transform: translateY(-4px);
-    background: linear-gradient(135deg, rgba(41, 177, 74, 0.1), rgba(255, 255, 255, 0.3));
     border-color: rgba(41, 177, 74, 0.5);
     box-shadow: 0 6px 25px rgba(41, 177, 74, 0.25);
 }

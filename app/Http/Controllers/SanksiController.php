@@ -121,14 +121,19 @@ class SanksiController extends Controller
 
 public function getNilaiByDeskripsi($jenis, $deskripsi)
 {
+    $decodedDeskripsi = urldecode($deskripsi);
+
     $sanksi = DB::table('sanksi')
         ->where('jenis', $jenis)
-        ->where('keterangan', $deskripsi)
+        ->where('keterangan', $decodedDeskripsi)
         ->select('nilai')
         ->first();
 
-    return response()->json(['nilai' => $sanksi->nilai ?? 0]);
+    return response()->json([
+        'nilai' => $sanksi ? (float) $sanksi->nilai : 0
+    ]);
 }
+
 
 
 

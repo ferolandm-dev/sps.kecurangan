@@ -245,7 +245,7 @@
                     <i class="now-ui-icons"></i> Bukti Kecurangan
                 </h5>
             </div>
-            
+
             {{-- Isi Modal --}}
             <div class="modal-body d-flex justify-content-center align-items-center"
                 style="height:75vh; overflow:hidden; position:relative;">
@@ -497,13 +497,21 @@ $(document).ready(function() {
         const deskripsi = $(this).val();
         const $nilaiInput = $('#nilai_sanksi');
         if (!jenis || !deskripsi) return $nilaiInput.val('');
-        $.getJSON(`/sanksi/nilai/${jenis}/${deskripsi}`, function(data) {
+
+        // encode deskripsi supaya karakter khusus (mis. "/") tidak merusak path URL
+        const encodedDeskripsi = encodeURIComponent(deskripsi);
+
+        $.getJSON(`/sanksi/nilai/${jenis}/${encodedDeskripsi}`, function(data) {
             if (data && data.nilai !== undefined) {
                 const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
                 $nilaiInput.val('Rp ' + formatted);
             } else $nilaiInput.val('');
+        }).fail(function() {
+            // debug ringan: kosongkan jika gagal
+            $nilaiInput.val('');
         });
     });
+
 });
 </script>
 @endpush

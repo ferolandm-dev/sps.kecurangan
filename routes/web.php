@@ -364,7 +364,9 @@ Route::prefix('sanksi')
             ->name('sanksi.deskripsi');
 
         Route::get('/nilai/{jenis}/{deskripsi}', [SanksiController::class, 'getNilaiByDeskripsi'])
+            ->where('deskripsi', '.*')
             ->name('sanksi.nilai');
+
 
     });
 

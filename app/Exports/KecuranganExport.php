@@ -22,7 +22,20 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
     public function collection()
     {
         $query = DB::table('kecurangan')
-            ->select('id_sales', 'nama_sales', 'distributor', 'toko', 'kunjungan', 'tanggal', 'keterangan');
+            ->select(
+                'id_sales',
+                'nama_sales',
+                'distributor',
+                'nama_asisten_manager',
+                'jenis_sanksi',
+                'keterangan_sanksi',
+                'nilai_sanksi',
+                'toko',
+                'kunjungan',
+                'tanggal',
+                'keterangan',
+                'kuartal'
+            );
 
         // Filter berdasarkan tanggal
         if ($this->startDate && $this->endDate) {
@@ -38,10 +51,15 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
             $row->id_sales,
             $row->nama_sales,
             $row->distributor,
+            $row->nama_asisten_manager,
+            $row->jenis_sanksi ?? '-',
+            $row->keterangan_sanksi ?? '-',
+            $row->nilai_sanksi ? 'Rp ' . number_format($row->nilai_sanksi, 0, ',', '.') : '-',
             $row->toko,
             $row->kunjungan,
             \Carbon\Carbon::parse($row->tanggal)->format('d/m/Y'),
             $row->keterangan ?? '-',
+            $row->kuartal ?? '-',
         ];
     }
 
@@ -51,10 +69,15 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
             'ID Sales',
             'Nama Sales',
             'Distributor',
+            'Asisten Manager',
+            'Jenis Sanksi',
+            'Keterangan Sanksi',
+            'Nilai Sanksi',
             'Toko',
             'Kunjungan',
             'Tanggal',
             'Keterangan',
+            'Kuartal',
         ];
     }
 }

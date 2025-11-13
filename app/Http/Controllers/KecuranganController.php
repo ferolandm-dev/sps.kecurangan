@@ -359,19 +359,39 @@ class KecuranganController extends Controller
     }
 
     public function exportPDF(Request $request)
-    {
-        $query = DB::table('kecurangan')
-            ->select('id_sales', 'nama_sales', 'distributor', 'toko', 'tanggal', 'keterangan', 'jenis_sanksi', 'nilai_sanksi', 'keterangan_sanksi');
+{
+    // Ambil parameter tanggal jika ada (format: yyyy-mm-dd dari input date)
+    $startDate = $request->filled('start_date') ? $request->start_date : null;
+    $endDate   = $request->filled('end_date') ? $request->end_date : null;
 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('tanggal', [$request->start_date, $request->end_date]);
-        }
+    $query = DB::table('kecurangan')
+        ->select(
+            'kecurangan.*',
+            'sales.nama as nama_sales',
+            'distributors.distributor',
+            'asisten_managers.nama as nama_asisten_manager'
+        )
+        ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
+        ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
+        ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
 
-        $data = $query->orderBy('tanggal', 'desc')->get();
-
-        $pdf = PDF::loadView('pdf.kecurangan', compact('data'))->setPaper('a4', 'landscape');
-        return $pdf->download('Laporan_Kecurangan.pdf');
+    if ($startDate && $endDate) {
+        // Pastikan format tanggal sesuai kolom DB (yyyy-mm-dd)
+        $query->whereBetween('kecurangan.tanggal', [$startDate, $endDate]);
     }
+
+    $data = $query->orderBy('kecurangan.tanggal', 'desc')->get();
+
+    // Kirim juga startDate & endDate ke view agar tidak undefined
+    $pdf = PDF::loadView('pdf.kecurangan', [
+        'data' => $data,
+        'startDate' => $startDate,
+        'endDate' => $endDate
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->download('Laporan_Kecurangan.pdf');
+}
+
 
     public function getBukti($id)
     {

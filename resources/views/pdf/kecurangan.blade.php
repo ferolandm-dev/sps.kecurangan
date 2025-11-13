@@ -33,7 +33,7 @@
     th,
     td {
         border: 1px solid #000;
-        padding: 8px 6px;
+        padding: 6px 5px;
         text-align: left;
         vertical-align: middle;
     }
@@ -62,7 +62,7 @@
 
     <h2>LAPORAN DATA KECURANGAN</h2>
 
-    @if ($startDate && $endDate)
+    @if (!empty($startDate) && !empty($endDate))
     <p>Periode: <strong>{{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }}</strong>
         s/d
         <strong>{{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</strong>
@@ -79,6 +79,9 @@
                 <th>Nama Sales</th>
                 <th>Distributor</th>
                 <th>Asisten Manager</th>
+                <th>Jenis Sanksi</th>
+                <th>Keterangan Sanksi</th>
+                <th>Nilai Sanksi</th>
                 <th>Toko</th>
                 <th>Kunjungan</th>
                 <th>Tanggal</th>
@@ -94,17 +97,26 @@
                 <td>{{ $item->nama_sales }}</td>
                 <td>{{ $item->distributor }}</td>
                 <td>{{ $item->nama_asisten_manager }}</td>
+                <td>{{ $item->jenis_sanksi ?? '-' }}</td>
+                <td>{{ $item->keterangan_sanksi ?? '-' }}</td>
+                <td>
+                    @if (!empty($item->nilai_sanksi))
+                    Rp {{ number_format($item->nilai_sanksi, 0, ',', '.') }}
+                    @else
+                    -
+                    @endif
+                </td>
                 <td>{{ $item->toko }}</td>
-                <td>{{ $item->kunjungan }}</td>
+                <td style="text-align: center;">{{ $item->kunjungan }}</td>
                 <td style="text-align: center;">
                     {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
                 </td>
                 <td>{{ $item->keterangan ?? '-' }}</td>
-                <td>{{ $item->kuartal }}</td>
+                <td style="text-align: center;">{{ $item->kuartal }}</td>
             </tr>
             @empty
             <tr>
-                <td colspan="8" style="text-align:center; color:#888;">Tidak ada data</td>
+                <td colspan="13" style="text-align:center; color:#888;">Tidak ada data</td>
             </tr>
             @endforelse
         </tbody>

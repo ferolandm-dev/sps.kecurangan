@@ -16,22 +16,33 @@
     <div class="row">
         <div class="col-md-12">
 
-            {{-- ✅ ALERT SUCCESS --}}
+            {{-- ALERT SUCCESS --}}
             @if (session('success'))
-            <div class="alert alert-success alert-with-icon alert-dismissible fade show" data-notify="container"
-                role="alert" style="
-                    background: rgba(41,177,74,0.2);
-                    border: 1px solid #29b14a;
-                    color: #155724;
-                    border-radius: 12px;
-                ">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#155724;">
-                    <i class="now-ui-icons ui-1_simple-remove"></i>
+            <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert" style=" background: linear-gradient(135deg, #29b14a 0%, #34d058 100%); color: #fff;
+                border: none;
+                border-radius: 14px;
+                padding: 14px 18px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                box-shadow: 0 4px 12px rgba(41,177,74,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 25px;">
+                <div class="d-flex align-items-center">
+                    <i class="now-ui-icons ui-1_bell-53 mr-2" style="font-size:18px;"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="
+                    color:#fff;
+                    opacity:0.8;
+                    font-size:22px;
+                    margin-left:10px;">
+                    <span aria-hidden="true">&times;</span>
                 </button>
-                <span data-notify="icon" class="now-ui-icons ui-1_check"></span>
-                <span data-notify="message">{{ session('success') }}</span>
             </div>
             @endif
+
 
             {{-- ✅ CARD DATA KECURANGAN --}}
             <div class="card" style="border-radius: 20px;">
@@ -175,20 +186,18 @@
                                         <td style="vertical-align: top;">
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
 
-                                        <td style="
-            white-space: normal;
-            word-wrap: break-word;
-            text-align: justify;
-            line-height: 1.5em;
-            width: 45%;
-            max-width: 600px;
-            vertical-align: top;
-        ">
+                                        <td
+                                            style="white-space: normal; word-wrap: break-word; text-align: justify; line-height: 1.5em; width: 45%; max-width: 600px; vertical-align: top;">
                                             {{ $item->keterangan ?? '-' }}
                                         </td>
 
                                         <td style="vertical-align: top;">{{ $item->kuartal }}</td>
                                         <td class="text-center" style="vertical-align: top;">
+                                            <button class="btn btn-info btn-icon btn-sm btn-round btn-lihat-bukti"
+                                                data-id="{{ $item->id }}" title="Lihat Bukti"
+                                                style="background:#17a2b8;border:none;">
+                                                <i class="now-ui-icons media-1_album"></i>
+                                            </button>
                                             @if($item->validasi == 0)
                                             <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
                                                 style="display:inline-block;">
@@ -247,4 +256,124 @@
         </div>
     </div>
 </div>
+{{-- ===================== MODAL LIHAT BUKTI ===================== --}}
+<div class="modal fade" id="modalBukti" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.98);
+                border-radius:15px;
+                position:relative;
+                box-shadow:0 4px 25px rgba(0,0,0,0.3);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                overflow:hidden;">
+
+            {{-- Tombol Tutup --}}
+            <button type="button" id="modalCloseBtn" style="
+        position:absolute;top:10px;right:20px;
+        font-size:32px;background:none;border:none;
+        cursor:pointer;z-index:2102;">&times;</button>
+
+            {{-- Tombol Navigasi --}}
+            <button type="button" id="modalPrev" style="
+        position:absolute;left:20px;top:50%;
+        transform:translateY(-50%);
+        font-size:40px;background:none;border:none;
+        cursor:pointer;z-index:2102;">‹</button>
+
+            <button type="button" id="modalNext" style="
+        position:absolute;right:20px;top:50%;
+        transform:translateY(-50%);
+        font-size:40px;background:none;border:none;
+        cursor:pointer;z-index:2102;">›</button>
+
+            {{-- Isi Modal --}}
+            <div class="d-flex justify-content-center align-items-center" style="height:80vh;">
+                <img id="modalImage" src="" alt="Preview"
+                    style="max-width:90%;max-height:90%;object-fit:contain;border-radius:10px;">
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+@push('js')
+<script>
+$(document).ready(function() {
+    let fotoList = [];
+    let currentIndex = 0;
+
+    // Klik tombol lihat bukti
+    $('.btn-lihat-bukti').on('click', function() {
+        const id = $(this).data('id');
+        fotoList = [];
+        currentIndex = 0;
+
+        $('#modalBukti').modal({
+            backdrop: false,
+            keyboard: true,
+            show: true
+        });
+
+        $.ajax({
+            url: `/kecurangan/${id}/bukti`,
+            method: 'GET',
+            beforeSend: function() {
+                $('#modalImage').attr('src', '').attr('alt', 'Memuat...');
+            },
+            success: function(response) {
+                if (!response.length) {
+                    $('#modalImage').attr('alt', 'Tidak ada foto.');
+                    return;
+                }
+                fotoList = response.map(f => f.url);
+                showModalImage(currentIndex);
+            },
+            error: function() {
+                $('#modalImage').attr('alt', 'Gagal memuat foto.');
+            }
+        });
+    });
+
+    function showModalImage(index) {
+        if (!fotoList.length) return;
+        $('#modalImage').attr('src', fotoList[index]);
+    }
+
+    $('#modalNext').on('click', function() {
+        if (!fotoList.length) return;
+        currentIndex = (currentIndex + 1) % fotoList.length;
+        showModalImage(currentIndex);
+    });
+
+    $('#modalPrev').on('click', function() {
+        if (!fotoList.length) return;
+        currentIndex = (currentIndex - 1 + fotoList.length) % fotoList.length;
+        showModalImage(currentIndex);
+    });
+
+    $('#modalCloseBtn').on('click', function() {
+        $('#modalBukti').modal('hide');
+    });
+
+    $(document).on('keydown', function(e) {
+        if (!$('#modalBukti').hasClass('show')) return;
+        if (e.key === 'Escape') $('#modalBukti').modal('hide');
+        else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
+        else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
+    });
+
+    $('#modalBukti').on('hidden.bs.modal', function() {
+        $('#modalImage').attr('src', '');
+        fotoList = [];
+        currentIndex = 0;
+    });
+
+    // FIX posisi modal agar tidak ikut scroll
+    $('#modalBukti').on('shown.bs.modal', function() {
+        $('body').css('overflow', 'hidden');
+    }).on('hidden.bs.modal', function() {
+        $('body').css('overflow', 'auto');
+    });
+});
+</script>
+@endpush

@@ -28,7 +28,7 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#155724;">
                     <i class="now-ui-icons ui-1_simple-remove"></i>
                 </button>
-                <span data-notify="icon" class="now-ui-icons ui-1_check"></span>
+                <span data-notify="icon" class="now-ui-icons ui-1_bell-53 mr-2"></span>
                 <span data-notify="message">{{ session('success') }}</span>
             </div>
             @endif
@@ -53,14 +53,14 @@
             <div class="card" style="border-radius: 20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap"
                     style="border-radius: 20px 20px 0 0; background: rgba(255,255,255,0.5);">
-                    <h4 class="card-title mb-0 text-dark mt-4">{{ __('Master Kecurangan') }}</h4>
+                    <h4 class="card-title mb-0 text-dark mt-4">{{ __('Tambah Data Kecurangan') }}</h4>
                 </div>
 
                 <div class="card-body" style="background: rgba(255,255,255,0.7); border-radius: 0 0 20px 20px;">
-                    <form action="{{ route('kecurangan.store') }}" method="POST">
+                    <form action="{{ route('kecurangan.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        {{-- ===================== BAGIAN SALES ===================== --}}
+                        {{-- ===================== DETAIL SALES ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Sales</h6>
 
                         <div class="form-group">
@@ -94,7 +94,7 @@
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== BAGIAN ASISTEN MANAGER ===================== --}}
+                        {{-- ===================== DETAIL ASISTEN MANAGER ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
 
                         <div class="form-group">
@@ -119,7 +119,7 @@
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== BAGIAN KEJADIAN ===================== --}}
+                        {{-- ===================== DETAIL KEJADIAN ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Kejadian</h6>
 
                         <div class="row">
@@ -130,7 +130,6 @@
                                         style="border-radius:12px;">
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label class="text-dark font-weight-bold">{{ __('Kunjungan') }}</label>
@@ -138,7 +137,6 @@
                                         style="border-radius:12px;">
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group has-label" title="Tanggal Kunjungan">
                                     <label class="text-dark font-weight-bold">{{ __('Tanggal') }}</label>
@@ -146,7 +144,6 @@
                                         placeholder="dd/mm/yyyy" required style="border-radius:12px;">
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="form-group has-label">
                                     <label class="text-dark font-weight-bold">{{ __('Kuartal') }}</label>
@@ -161,9 +158,27 @@
                             <input type="text" name="keterangan" class="form-control" style="border-radius:12px;">
                         </div>
 
+                        <hr class="my-4" style="border-color:#29b14a;">
+
+                        {{-- ===================== FOTO KEJADIAN ===================== --}}
+                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Bukti Kecurangan (Foto)
+                        </h6>
+
+                        <div class="form-group has-label">
+                            <label
+                                class="text-dark font-weight-bold d-block mb-2">{{ __('Upload Foto (Maksimal 5)') }}</label>
+                            <button type="button" id="btn-upload" class="btn btn-outline-success btn-round mb-3"
+                                style="border-radius:12px;padding:8px 16px;">
+                                <i class="now-ui-icons ui-1_simple-add"></i> Pilih Foto
+                            </button>
+                            <input type="file" name="bukti[]" id="bukti" accept=".jpg,.jpeg,.png" multiple hidden>
+                            <div id="preview-container"
+                                class="mt-2 d-flex flex-wrap gap-2 justify-content-start align-items-start"></div>
+                            <small class="form-text text-muted mt-2">Format: JPG, JPEG, PNG — maksimal 5 foto.</small>
+                        </div>
+
                         <div class="text-right mt-4">
-                            <button type="submit" class="btn btn-success btn-round"
-                                style="background:#29b14a;border:none;padding:8px 20px;">
+                            <button type="submit" class="btn btn-success btn-round">
                                 <i class="now-ui-icons"></i> Simpan
                             </button>
                         </div>
@@ -175,14 +190,45 @@
     </div>
 </div>
 
+{{-- ===================== MODAL PREVIEW FOTO ===================== --}}
+<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:1000px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.98);border-radius:15px;">
+            <button type="button" id="modalCloseBtn" style="position:absolute;top:10px;right:15px;font-size:32px;
+                background:none;border:none;cursor:pointer;z-index:2102;">&times;</button>
+            <button type="button" id="modalPrev" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);
+                font-size:40px;background:none;border:none;cursor:pointer;z-index:2102;">‹</button>
+            <button type="button" id="modalNext" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                font-size:40px;background:none;border:none;cursor:pointer;z-index:2102;">›</button>
+            <div class="d-flex justify-content-center align-items-center" style="height:80vh;">
+                <img id="modalImage" src="" alt="Preview"
+                    style="max-width:80%;max-height:80%;object-fit:contain;border-radius:10px;">
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('js')
-{{-- Select2 --}}
+<link href="{{ asset('css/kecurangan.css') }}" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-{{-- jQuery UI Datepicker --}}
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+<style>
+.modal-backdrop.show,
+.modal-backdrop {
+    opacity: 0 !important;
+    background: transparent !important;
+}
+
+#modalCloseBtn,
+#modalPrev,
+#modalNext {
+    z-index: 2102 !important;
+    pointer-events: auto !important;
+}
+</style>
 
 <script>
 $(document).ready(function() {
@@ -192,80 +238,134 @@ $(document).ready(function() {
         width: '100%'
     });
 
-    $('#id_sales').on('change', function() {
-        const idSales = $(this).val();
-        const $namaSales = $('#nama_sales');
-        const $distributor = $('#distributor');
-        const $idAsisten = $('#id_asisten_manager');
-        const $namaAsisten = $('#nama_asisten_manager');
+    let selectedFiles = [];
+    let currentIndex = 0;
+    const MAX_FILES = 5;
+    const $fileInput = $('#bukti');
+    const $previewContainer = $('#preview-container');
 
-        $namaSales.val('');
-        $distributor.val('');
-        $namaAsisten.val('');
-        $idAsisten.html('<option value="">Pilih Asisten Manager</option>').trigger('change');
+    $('#btn-upload').on('click', function() {
+        $fileInput.val('');
+        $fileInput.trigger('click');
+    });
 
-        if (!idSales) return;
+    function syncInputFiles() {
+        const dt = new DataTransfer();
+        selectedFiles.forEach(f => dt.items.add(f));
+        $fileInput[0].files = dt.files;
+    }
 
-        $.ajax({
-            url: `/kecurangan/sales/${idSales}`,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                $namaSales.val(data.nama_sales);
-                $distributor.val(data.distributor);
+    $fileInput.on('change', function() {
+        const incoming = Array.from(this.files || []);
+        const newFiles = incoming.filter(f => !selectedFiles.some(sf => sf.name === f.name && sf
+            .size === f.size));
+        selectedFiles = [...selectedFiles, ...newFiles].slice(0, MAX_FILES);
+        renderPreview();
+        syncInputFiles();
+    });
 
-                if (data.distributor_id) {
-                    $.ajax({
-                        url: `/kecurangan/asisten-manager/${data.distributor_id}`,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(res) {
-                            let options =
-                                '<option value="">Pilih Asisten Manager</option>';
-                            res.forEach(am => {
-                                options +=
-                                    `<option value="${am.id}">${am.id} - ${am.nama}</option>`;
-                            });
-                            $idAsisten.html(options).trigger('change');
-                        }
-                    });
-                }
-            }
+    function renderPreview() {
+        $previewContainer.empty();
+        selectedFiles.forEach((file, index) => {
+            if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const html = `
+                    <div class="position-relative m-1" style="display:inline-block;">
+                        <img src="${e.target.result}" class="preview-img" data-index="${index}"
+                            style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
+                        <button type="button" class="btn btn-danger btn-sm btn-remove" data-index="${index}"
+                            style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
+                    </div>`;
+                $previewContainer.append(html);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    $(document).on('click', '.btn-remove', function(e) {
+        e.stopPropagation();
+        const idx = Number($(this).data('index'));
+        selectedFiles.splice(idx, 1);
+        renderPreview();
+        syncInputFiles();
+    });
+
+    $(document).on('click', '.preview-img', function() {
+        currentIndex = Number($(this).data('index'));
+        showModalImage(currentIndex);
+        $('#modalPreview').modal({
+            backdrop: false,
+            keyboard: true,
+            show: true
         });
     });
 
-    $('#id_asisten_manager').on('change', function() {
-        const selectedText = $(this).find('option:selected').text();
-        const nama = selectedText.split('-').slice(1).join('-').trim();
-        $('#nama_asisten_manager').val(nama);
+    function showModalImage(i) {
+        const file = selectedFiles[i];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => $('#modalImage').attr('src', e.target.result);
+        reader.readAsDataURL(file);
+    }
+
+    $('#modalCloseBtn').on('click', () => $('#modalPreview').modal('hide'));
+    $('#modalNext').on('click', () => {
+        if (!selectedFiles.length) return;
+        currentIndex = (currentIndex + 1) % selectedFiles.length;
+        showModalImage(currentIndex);
+    });
+    $('#modalPrev').on('click', () => {
+        if (!selectedFiles.length) return;
+        currentIndex = (currentIndex - 1 + selectedFiles.length) % selectedFiles.length;
+        showModalImage(currentIndex);
+    });
+    $(document).on('keydown', e => {
+        if (!$('#modalPreview').hasClass('show')) return;
+        if (e.key === 'Escape') $('#modalPreview').modal('hide');
+        if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
+        if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
     });
 
     $('#tanggal').datepicker({
         dateFormat: 'dd/mm/yy',
         changeMonth: true,
         changeYear: true,
-        showAnim: 'slideDown',
         onSelect: function(dateText) {
-            const [day, month, year] = dateText.split('/');
-            const bulan = parseInt(month);
-            const tahun = parseInt(year.length === 2 ? '20' + year : year);
-            let kuartal = '';
-
-            if (bulan >= 1 && bulan <= 3) kuartal = 'Q1 ' + tahun;
-            else if (bulan >= 4 && bulan <= 6) kuartal = 'Q2 ' + tahun;
-            else if (bulan >= 7 && bulan <= 9) kuartal = 'Q3 ' + tahun;
-            else if (bulan >= 10 && bulan <= 12) kuartal = 'Q4 ' + tahun;
-
+            const [d, m, y] = dateText.split('/');
+            const bln = parseInt(m);
+            const th = parseInt(y.length === 2 ? '20' + y : y);
+            const kuartal = bln <= 3 ? 'Q1 ' + th : bln <= 6 ? 'Q2 ' + th : bln <= 9 ? 'Q3 ' + th :
+                'Q4 ' + th;
             $('#kuartal').val(kuartal);
         }
     });
 
-    @if(session('success'))
-    $('#tanggal').val('');
-    $('#kuartal').val('');
-    $('#id_sales').val('').trigger('change');
-    $('#id_asisten_manager').val('').trigger('change');
-    @endif
+    $('#id_sales').on('change', function() {
+        const idSales = $(this).val();
+        $('#nama_sales, #distributor, #nama_asisten_manager').val('');
+        $('#id_asisten_manager').html('<option value="">-- Pilih Asisten Manager --</option>').trigger(
+            'change');
+        if (!idSales) return;
+        $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
+            $('#nama_sales').val(data.nama_sales);
+            $('#distributor').val(data.distributor);
+            if (data.distributor_id) {
+                $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
+                    let opt = '<option value="">-- Pilih Asisten Manager --</option>';
+                    res.forEach(a => opt +=
+                        `<option value="${a.id}">${a.id} - ${a.nama}</option>`);
+                    $('#id_asisten_manager').html(opt).trigger('change');
+                });
+            }
+        });
+    });
+
+    $('#id_asisten_manager').on('change', function() {
+        const txt = $(this).find('option:selected').text();
+        const nama = txt.split('-').slice(1).join('-').trim();
+        $('#nama_asisten_manager').val(nama);
+    });
 });
 </script>
 @endpush

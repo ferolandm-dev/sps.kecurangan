@@ -180,44 +180,51 @@ Route::middleware('auth')->group(function () {
         });
 
     // =====================================================
-// ⚠️ MASTER & DATA KECURANGAN
-// =====================================================
+    // ⚠️ MASTER & DATA KECURANGAN
+    // =====================================================
+
 Route::prefix('kecurangan')->group(function () {
 
-    // ===============================
-    // 📁 MASTER KECURANGAN
-    // ===============================
     Route::middleware('check.access:Master,Master Kecurangan')->group(function () {
 
-        // Tampilkan daftar kecurangan
         Route::get('/', [KecuranganController::class, 'index'])
             ->middleware('check.access:Master,Master Kecurangan,access')
             ->name('kecurangan.index');
 
-        // Simpan data kecurangan baru
         Route::post('/', [KecuranganController::class, 'store'])
             ->middleware('check.access:Master,Master Kecurangan,create')
             ->name('kecurangan.store');
 
-        // Edit data kecurangan
         Route::get('/{id}/edit', [KecuranganController::class, 'edit'])
             ->middleware('check.access:Master,Master Kecurangan,edit')
             ->name('kecurangan.edit');
 
-        // Update data kecurangan
         Route::put('/{id}', [KecuranganController::class, 'update'])
             ->middleware('check.access:Master,Master Kecurangan,edit')
             ->name('kecurangan.update');
 
-        // Hapus data kecurangan
         Route::delete('/{id}', [KecuranganController::class, 'destroy'])
             ->middleware('check.access:Master,Master Kecurangan,delete')
             ->name('kecurangan.destroy');
 
-        // Validasi kecurangan
         Route::post('/validasi/{id}', [KecuranganController::class, 'validasi'])
             ->middleware('check.access:Master,Master Kecurangan,edit')
             ->name('kecurangan.validasi');
+
+        // 📸 Upload bukti foto (maks 5, hanya jpg/png)
+        Route::post('/{id}/upload-bukti', [KecuranganController::class, 'uploadBukti'])
+            ->middleware('check.access:Master,Master Kecurangan,create')
+            ->name('kecurangan.uploadBukti');
+
+        // 🗑️ Hapus foto bukti
+        Route::delete('/bukti/{id}', [KecuranganController::class, 'hapusBukti'])
+            ->middleware('check.access:Master,Master Kecurangan,delete')
+            ->name('kecurangan.hapusBukti');
+
+        // 🗑️ Hapus foto bukti berdasarkan ID di tabel kecurangan_foto
+        Route::delete('/foto/{id}', [KecuranganController::class, 'hapusFoto'])
+            ->middleware('check.access:Master,Master Kecurangan,delete')
+            ->name('kecurangan.hapusFoto');
     });
 
 
@@ -226,32 +233,34 @@ Route::prefix('kecurangan')->group(function () {
     // ===============================
     Route::middleware('check.access:Data,Data Kecurangan')->group(function () {
 
-        // DataTable / daftar data
         Route::get('/data', [KecuranganController::class, 'data'])
             ->middleware('check.access:Data,Data Kecurangan,access')
             ->name('kecurangan.data');
 
-        // Ambil sales berdasarkan ID asisten manager
         Route::get('/sales/{id}', [KecuranganController::class, 'getSales'])
             ->middleware('check.access:Data,Data Kecurangan,access')
             ->name('kecurangan.getSales');
 
-        // Ambil asisten manager berdasarkan distributor
         Route::get('/asisten-manager/{id_distributor}', [KecuranganController::class, 'getAsistenManager'])
             ->middleware('check.access:Data,Data Kecurangan,access')
             ->name('kecurangan.getAsistenManager');
 
-        // Export Excel
         Route::get('/export-excel', [KecuranganController::class, 'exportExcel'])
             ->middleware('check.access:Data,Data Kecurangan,print')
             ->name('kecurangan.exportExcel');
 
-        // Export PDF
         Route::get('/export-pdf', [KecuranganController::class, 'exportPDF'])
             ->middleware('check.access:Data,Data Kecurangan,print')
             ->name('kecurangan.exportPDF');
+
+        // 👇👇 Tambahkan route ini untuk AJAX Lihat Bukti 👇👇
+        Route::get('/{id}/bukti', [KecuranganController::class, 'getBukti'])
+            ->middleware('check.access:Data,Data Kecurangan,access')
+            ->name('kecurangan.getBukti');
     });
 });
+
+
 
 
     // =====================================================

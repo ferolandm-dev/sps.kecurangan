@@ -5,7 +5,7 @@
 ])
 
 @section('content')
-<div class="panel-header panel-header-sm" style></div>
+<div class="panel-header panel-header-sm" style="background: #c3be25ff"></div>
 
 <div class="content" style="
     backdrop-filter: blur(12px);
@@ -14,7 +14,7 @@
     color: #333;
 ">
     <div class="card shadow-sm" style="border-radius: 20px;">
-        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+        <div class="card-header d-flex justify-content-between align-items-center ">
             <h4 class="card-title mb-0 ">Pengaturan Akses - {{ $user->name }}</h4>
             <a href="{{ route('user.index') }}" class="btn btn-outline-secondary btn-round">
                 <i class="now-ui-icons arrows-1_minimal-left"></i> Kembali

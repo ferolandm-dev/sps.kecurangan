@@ -88,10 +88,8 @@
                         </a>
                         @endif
 
-
                         {{-- ✅ Export Excel & PDF --}}
                         @if (checkAccess('Data', 'Data Kecurangan', 'print'))
-
                         {{-- Tombol Excel (Open Modal) --}}
                         <button type="button" class="btn btn-success btn-round mr-2 d-flex align-items-center"
                             style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel"
@@ -107,15 +105,25 @@
                         </button>
                         @endif
                     </div>
-                </div>
-                <button class="btn btn-success btn-round" data-toggle="modal" data-target="#modalFilter">
-                    <i class="now-ui-icons ui-1_zoom-bold"></i> Filter
-                </button>
 
-                <a href="{{ route('kecurangan.data') }}" class="btn btn-secondary btn-round" style="height:38px;"
-                    title="Reset Filter">
-                    <i class="now-ui-icons arrows-1_refresh-69"></i> Reset
-                </a>
+                    <div class="d-flex justify-content-end align-items-center flex-wrap" style="margin-top:10px;">
+
+                        <!-- Filter -->
+                        <button class="btn btn-success btn-round d-flex align-items-center" data-toggle="modal"
+                            data-target="#modalFilter"
+                            style="height:38px;background:#29b14a;border:none;margin-right:10px;">
+                            <i class="now-ui-icons ui-1_zoom-bold mr-1"></i> Filter
+                        </button>
+
+                        <!-- Reset -->
+                        <a href="{{ route('kecurangan.data') }}"
+                            class="btn btn-secondary btn-round d-flex align-items-center"
+                            style="height:38px;margin-right:10px;">
+                            <i class="now-ui-icons arrows-1_refresh-69 mr-1"></i> Reset
+                        </a>
+
+                    </div>
+                </div>
 
                 {{-- 📋 TABEL DATA --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
@@ -409,6 +417,7 @@
                             @endif
                         </select>
                     </div>
+                    
                     {{-- Tanggal --}}
                     <div class="form-group">
                         <label class="text-dark font-weight-bold">Tanggal Mulai</label>

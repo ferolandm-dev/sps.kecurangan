@@ -376,10 +376,6 @@ class KecuranganController extends Controller
     return view('kecurangan.data', compact('kecurangan', 'jenisSanksi'));
 }
 
-
-
-
-
     public function destroy($id)
     {
         $data = DB::table('kecurangan')->where('id', $id)->first();

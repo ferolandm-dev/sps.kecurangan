@@ -88,6 +88,7 @@
                     </div>
                 </div>
 
+
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle text-nowrap mb-0" style="color:#333;">

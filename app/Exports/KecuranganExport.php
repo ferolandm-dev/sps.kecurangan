@@ -10,39 +10,64 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class KecuranganExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
 {
+    protected $mode;
     protected $startDate;
     protected $endDate;
+    protected $jenis;        // <-- tambah
+    protected $keterangan;   // <-- tambah
 
-    public function __construct($startDate = null, $endDate = null)
-    {
-        $this->startDate = $startDate;
-        $this->endDate   = $endDate;
+    public function __construct(
+        $mode = 'all',
+        $startDate = null,
+        $endDate = null,
+        $jenis = null,          // <-- tambah
+        $keterangan = null      // <-- tambah
+    ) {
+        $this->mode        = $mode;
+        $this->startDate   = $startDate;
+        $this->endDate     = $endDate;
+        $this->jenis       = $jenis;        // <-- string
+        $this->keterangan  = $keterangan;   // <-- string
     }
 
     public function collection()
     {
         $query = DB::table('kecurangan')
+            ->where('kecurangan.validasi', 1)
             ->select(
-                'id_sales',
-                'nama_sales',
-                'distributor',
-                'nama_asisten_manager',
-                'jenis_sanksi',
-                'keterangan_sanksi',
-                'nilai_sanksi',
-                'toko',
-                'kunjungan',
-                'tanggal',
-                'keterangan',
-                'kuartal'
-            );
+                'kecurangan.id_sales',
+                'sales.nama AS nama_sales',
+                'distributors.distributor AS distributor',
+                'asisten_managers.nama AS nama_asisten_manager',
+                'kecurangan.jenis_sanksi',
+                'kecurangan.keterangan_sanksi',
+                'kecurangan.nilai_sanksi',
+                'kecurangan.toko',
+                'kecurangan.kunjungan',
+                'kecurangan.tanggal',
+                'kecurangan.keterangan',
+                'kecurangan.kuartal'
+            )
+            ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
+            ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
+            ->leftJoin('asisten_managers', 'sales.id_distributor', '=', 'asisten_managers.id_distributor');
 
-        // Filter berdasarkan tanggal
+        // Filter Tanggal
         if ($this->startDate && $this->endDate) {
-            $query->whereBetween('tanggal', [$this->startDate, $this->endDate]);
+            $query->whereBetween('kecurangan.tanggal', [$this->startDate, $this->endDate]);
         }
 
-        return $query->orderBy('tanggal', 'desc')->get();
+        // Filter Jenis Sanksi
+        if (!empty($this->jenis)) {
+            $query->where('kecurangan.jenis_sanksi', $this->jenis);
+        }
+
+        // Filter Keterangan Sanksi
+        if (!empty($this->keterangan)) {
+            $query->where('kecurangan.keterangan_sanksi', $this->keterangan);
+        }
+
+        return $query->orderBy('kecurangan.tanggal', 'desc')->get();
     }
 
     public function map($row): array

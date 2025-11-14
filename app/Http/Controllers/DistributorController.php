@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel; // ← ini penting
-use App\Exports\DistributorsExport;  // pastikan kamu sudah buat file export ini
-use PDF; // kalau nanti export PDF juga
+use Maatwebsite\Excel\Facades\Excel; 
+use App\Exports\DistributorsExport;  
+use PDF; 
 
 class DistributorController extends Controller
 {
@@ -102,52 +102,52 @@ class DistributorController extends Controller
     }
 
     public function data(Request $request)
-{
-    $sort_by = $request->get('sort_by', 'distributor');
-    $sort_order = $request->get('sort_order', 'asc');
+    {
+        $sort_by = $request->get('sort_by', 'distributor');
+        $sort_order = $request->get('sort_order', 'asc');
 
-    $allowed_columns = ['id', 'distributor', 'status', 'jumlah_sales'];
-    $allowed_order = ['asc', 'desc'];
+        $allowed_columns = ['id', 'distributor', 'status', 'jumlah_sales'];
+        $allowed_order = ['asc', 'desc'];
 
-    if (!in_array($sort_by, $allowed_columns)) $sort_by = 'distributor';
-    if (!in_array($sort_order, $allowed_order)) $sort_order = 'asc';
+        if (!in_array($sort_by, $allowed_columns)) $sort_by = 'distributor';
+        if (!in_array($sort_order, $allowed_order)) $sort_order = 'asc';
 
-    // Base query
-    $query = DB::table('distributors')
-        ->leftJoin('sales', function ($join) {
-            $join->on('distributors.id', '=', 'sales.id_distributor')
-                 ->where('sales.status', '=', 'Aktif');
-        })
-        ->select(
-            'distributors.id',
-            'distributors.distributor',
-            'distributors.status',
-            DB::raw('COUNT(sales.id) as jumlah_sales')
-        )
-        ->groupBy('distributors.id', 'distributors.distributor', 'distributors.status');
+        // Base query
+        $query = DB::table('distributors')
+            ->leftJoin('sales', function ($join) {
+                $join->on('distributors.id', '=', 'sales.id_distributor')
+                    ->where('sales.status', '=', 'Aktif');
+            })
+            ->select(
+                'distributors.id',
+                'distributors.distributor',
+                'distributors.status',
+                DB::raw('COUNT(sales.id) as jumlah_sales')
+            )
+            ->groupBy('distributors.id', 'distributors.distributor', 'distributors.status');
 
-    // Pencarian
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('distributors.id', 'like', "%{$search}%")
-              ->orWhere('distributors.distributor', 'like', "%{$search}%")
-              ->orWhere('distributors.status', 'like', "%{$search}%");
-        });
+        // Pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('distributors.id', 'like', "%{$search}%")
+                ->orWhere('distributors.distributor', 'like', "%{$search}%")
+                ->orWhere('distributors.status', 'like', "%{$search}%");
+            });
+        }
+
+        // Sorting
+        $query->orderBy($sort_by, $sort_order);
+
+        // Paginate / tampilkan semua
+        if ($request->has('all')) {
+            $distributors = $query->get();
+        } else {
+            $distributors = $query->paginate(10)->appends($request->query());
+        }
+
+        return view('distributors.data', compact('distributors', 'sort_by', 'sort_order'));
     }
-
-    // Sorting
-    $query->orderBy($sort_by, $sort_order);
-
-    // Paginate / tampilkan semua
-    if ($request->has('all')) {
-        $distributors = $query->get();
-    } else {
-        $distributors = $query->paginate(10)->appends($request->query());
-    }
-
-    return view('distributors.data', compact('distributors', 'sort_by', 'sort_order'));
-}
 
 public function exportExcel()
     {

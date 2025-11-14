@@ -10,7 +10,7 @@ use PDF;
 
 class AsistenManagerController extends Controller
 {
-    // 🔹 Tampilkan semua data Asisten Manager
+    // Tampilkan semua data Asisten Manager
     public function index(Request $request)
     {
         $query = DB::table('asisten_managers');
@@ -36,14 +36,14 @@ class AsistenManagerController extends Controller
         return view('asisten_manager.index', compact('asistenManagers'));
     }
 
-    // 🔹 Form tambah data
+    // Form tambah data
     public function create()
     {
         $distributors = DB::table('distributors')->get();
         return view('asisten_manager.create', compact('distributors'));
     }
 
-    // 🔹 Simpan data baru
+    // Simpan data baru
     public function store(Request $request)
     {
         $request->validate([
@@ -80,7 +80,7 @@ class AsistenManagerController extends Controller
         return redirect()->route('asisten_manager.index')->with('success', 'Data Asisten Manager berhasil ditambahkan!');
     }
 
-    // 🔹 Form edit data
+    // Form edit data
     public function edit($id)
     {
         $asistenManager = DB::table('asisten_managers')->where('id', $id)->first();
@@ -92,7 +92,7 @@ class AsistenManagerController extends Controller
         return view('asisten_manager.edit', compact('asistenManager'));
     }
 
-    // 🔹 Update data
+    // Update data
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -109,14 +109,14 @@ class AsistenManagerController extends Controller
         return redirect()->route('asisten_manager.index')->with('success', 'Data Asisten Manager berhasil diperbarui!');
     }
 
-    // 🔹 Hapus data
+    // Hapus data
     public function destroy($id)
     {
         DB::table('asisten_managers')->where('id', $id)->delete();
         return redirect()->route('asisten_manager.index')->with('success', 'Data Asisten Manager berhasil dihapus!');
     }
 
-    // 🔹 Data + total kecurangan (jika nanti dibutuhkan)
+    // Data + total kecurangan (jika nanti dibutuhkan)
     public function data(Request $request)
     {
         $query = DB::table('asisten_managers')
@@ -158,13 +158,13 @@ class AsistenManagerController extends Controller
         return view('asisten_manager.data', compact('asistenManagers', 'sortBy', 'sortOrder'));
     }
 
-    // 🔹 Export Excel
+    // Export Excel
     public function exportExcel()
     {
         return Excel::download(new AsistenManagerExport, 'data_asisten_manager.xlsx');
     }
 
-    // 🔹 Export PDF
+    // xport PDF
     public function exportPdf()
     {
         $data = DB::table('asisten_managers')

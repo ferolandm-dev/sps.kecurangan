@@ -106,7 +106,7 @@
                                                 'sort_by' => 'jenis',
                                                 'sort_order' => (request('sort_by') === 'jenis' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                             ])) }}" class="text-success text-decoration-none">
-                                            Jenis
+                                            Jenis Sanksi
                                         </a>
                                     </th>
 

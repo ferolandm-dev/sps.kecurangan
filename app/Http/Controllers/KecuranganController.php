@@ -12,88 +12,104 @@ use PDF;
 class KecuranganController extends Controller
 {
     public function index()
-    {
-        $sales = DB::table('sales')->select('id', 'nama', 'id_distributor')->get();
-        $asistenManagers = DB::table('asisten_managers')->select('id', 'nama', 'id_distributor')->get();
-        $kecurangan = DB::table('kecurangan')->orderBy('tanggal', 'desc')->get();
-        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('jenis'); 
-
-        return view('kecurangan.index', compact('sales', 'asistenManagers', 'kecurangan', 'jenisSanksi'));
-    }
- public function store(Request $request)
 {
-    // 🧩 Validasi input
-    $request->validate([
-        'id_sales' => 'required',
-        'nama_sales' => 'required',
-        'id_asisten_manager' => 'nullable',
-        'nama_asisten_manager' => 'nullable',
-        'distributor' => 'required',
-        'toko' => 'required',
-        'kunjungan' => 'required',
-        'tanggal' => 'required|date_format:d/m/Y',
-        'keterangan' => 'nullable',
-        'jenis_sanksi' => 'required|string|max:100',
-        'deskripsi_sanksi' => 'required|string',
-        'nilai_sanksi' => 'nullable|string',
-        'bukti.*' => 'image|mimes:jpg,jpeg,png|max:5120',
-    ]);
+    $sales = DB::table('sales')
+        ->select('id', 'nama', 'id_distributor')
+        ->get();
 
-    // 🚫 Cegah lebih dari 5 foto
-    if ($request->hasFile('bukti') && count($request->file('bukti')) > 5) {
-        return back()->with('error', 'Maksimal 5 foto yang dapat diunggah.')->withInput();
-    }
+    $asistenManagers = DB::table('asisten_managers')
+        ->select('id', 'nama', 'id_distributor')
+        ->get();
 
-    // 📅 Format tanggal dan kuartal
-    $tanggal = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
-    $bulan = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('m');
-    $tahun = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y');
+    // Ambil distinct jenis (string)
+    $jenisSanksi = DB::table('sanksi')
+        ->distinct()
+        ->pluck('jenis');
 
-    if ($bulan >= 1 && $bulan <= 3) $kuartal = 'Q1 ' . $tahun;
-    elseif ($bulan >= 4 && $bulan <= 6) $kuartal = 'Q2 ' . $tahun;
-    elseif ($bulan >= 7 && $bulan <= 9) $kuartal = 'Q3 ' . $tahun;
-    else $kuartal = 'Q4 ' . $tahun;
+    // Ambil seluruh data sanksi COMPLETE (object)
+    $keteranganSanksi = DB::table('sanksi')->get();
 
-    // 💰 Bersihkan nilai sanksi (hapus Rp, titik, spasi)
-    $nilaiSanksi = $request->nilai_sanksi ? str_replace(['Rp', '.', ' '], '', $request->nilai_sanksi) : null;
+    $kecurangan = DB::table('kecurangan')
+        ->join('sales', 'kecurangan.id_sales', '=', 'sales.id')
+        ->select('kecurangan.*', 'sales.nama as nama_sales')
+        ->orderBy('kecurangan.id', 'desc')
+        ->get();
 
-    // 💾 Simpan ke tabel `kecurangan`
-    $id = DB::table('kecurangan')->insertGetId([
-        'id_sales' => $request->id_sales,
-        'nama_sales' => $request->nama_sales,
-        'id_asisten_manager' => $request->id_asisten_manager,
-        'nama_asisten_manager' => $request->nama_asisten_manager,
-        'distributor' => $request->distributor,
-        'toko' => $request->toko,
-        'kunjungan' => $request->kunjungan,
-        'tanggal' => $tanggal,
-        'keterangan' => $request->keterangan,
-        'kuartal' => $kuartal,
-        'jenis_sanksi' => $request->jenis_sanksi,
-        'keterangan_sanksi' => $request->deskripsi_sanksi,
-        'nilai_sanksi' => $nilaiSanksi,
-        'validasi' => 0,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    // 📸 Upload foto bukti jika ada
-    if ($request->hasFile('bukti')) {
-        foreach ($request->file('bukti') as $file) {
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('kecurangan', $filename, 'public');
-            DB::table('kecurangan_foto')->insert([
-                'id_kecurangan' => $id,
-                'path' => $path,
-                'created_at' => now(),
-            ]);
-        }
-    }
-
-    // ✅ Redirect ke halaman data
-    return redirect()->route('kecurangan.data')->with('success', 'Data kecurangan berhasil ditambahkan!');
+    return view('kecurangan.index', compact(
+        'sales',
+        'asistenManagers',
+        'kecurangan',
+        'jenisSanksi',
+        'keteranganSanksi'
+    ));
 }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_sales' => 'required',
+            'nama_sales' => 'required',
+            'id_asisten_manager' => 'nullable',
+            'nama_asisten_manager' => 'nullable',
+            'distributor' => 'required',
+            'toko' => 'required',
+            'kunjungan' => 'required',
+            'tanggal' => 'required|date_format:d/m/Y',
+            'keterangan' => 'nullable',
+            'jenis_sanksi' => 'required|string|max:100',
+            'deskripsi_sanksi' => 'required|string',
+            'nilai_sanksi' => 'nullable|string',
+            'bukti.*' => 'image|mimes:jpg,jpeg,png|max:5120',
+        ]);
+
+        if ($request->hasFile('bukti') && count($request->file('bukti')) > 5) {
+            return back()->with('error', 'Maksimal 5 foto yang dapat diunggah.')->withInput();
+        }
+
+        $tanggal = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
+        $bulan = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('m');
+        $tahun = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y');
+
+        if ($bulan >= 1 && $bulan <= 3) $kuartal = 'Q1 ' . $tahun;
+        elseif ($bulan >= 4 && $bulan <= 6) $kuartal = 'Q2 ' . $tahun;
+        elseif ($bulan >= 7 && $bulan <= 9) $kuartal = 'Q3 ' . $tahun;
+        else $kuartal = 'Q4 ' . $tahun;
+
+        $nilaiSanksi = $request->nilai_sanksi ? str_replace(['Rp', '.', ' '], '', $request->nilai_sanksi) : null;
+
+        $id = DB::table('kecurangan')->insertGetId([
+            'id_sales' => $request->id_sales,
+            'nama_sales' => $request->nama_sales,
+            'id_asisten_manager' => $request->id_asisten_manager,
+            'nama_asisten_manager' => $request->nama_asisten_manager,
+            'distributor' => $request->distributor,
+            'toko' => $request->toko,
+            'kunjungan' => $request->kunjungan,
+            'tanggal' => $tanggal,
+            'keterangan' => $request->keterangan,
+            'kuartal' => $kuartal,
+            'jenis_sanksi' => $request->jenis_sanksi,
+            'keterangan_sanksi' => $request->deskripsi_sanksi,
+            'nilai_sanksi' => $nilaiSanksi,
+            'validasi' => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        if ($request->hasFile('bukti')) {
+            foreach ($request->file('bukti') as $file) {
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('kecurangan', $filename, 'public');
+                DB::table('kecurangan_foto')->insert([
+                    'id_kecurangan' => $id,
+                    'path' => $path,
+                    'created_at' => now(),
+                ]);
+            }
+        }
+
+        return redirect()->route('kecurangan.data')->with('success', 'Data kecurangan berhasil ditambahkan!');
+    }
 
 
     public function uploadBukti(Request $request, $id)
@@ -125,6 +141,7 @@ class KecuranganController extends Controller
         return back()->with('success', 'Foto bukti berhasil ditambahkan.');
     }
 
+
     public function hapusBukti($id)
     {
         $foto = DB::table('kecurangan_foto')->where('id', $id)->first();
@@ -135,6 +152,7 @@ class KecuranganController extends Controller
 
         return back()->with('success', 'Foto bukti berhasil dihapus.');
     }
+
 
     public function edit($id)
     {
@@ -155,108 +173,95 @@ class KecuranganController extends Controller
         return view('kecurangan.edit', compact('kecurangan', 'sales', 'asistenManagers', 'jenisSanksi', 'fotos'));
     }
 
+
     public function update(Request $request, $id)
-{
-    // 🧩 Validasi input (sesuai field di form)
-    $request->validate([
-        'id_sales' => 'required',
-        'nama_sales' => 'required',
-        'distributor' => 'required',
-        'jenis_sanksi' => 'nullable|string|max:100',
-        'deskripsi_sanksi' => 'nullable|string', // ⚙️ pakai nama sesuai form
-        'nilai_sanksi' => 'nullable|string', // karena bisa ada "Rp"
-        'toko' => 'required',
-        'kunjungan' => 'required',
-        'tanggal' => 'required|date_format:d/m/Y',
-        'keterangan' => 'nullable',
-        'bukti.*' => 'image|mimes:jpg,jpeg,png|max:5120',
-    ]);
+    {
+        $request->validate([
+            'id_sales' => 'required',
+            'nama_sales' => 'required',
+            'distributor' => 'required',
+            'jenis_sanksi' => 'nullable|string|max:100',
+            'deskripsi_sanksi' => 'nullable|string',
+            'nilai_sanksi' => 'nullable|string',
+            'toko' => 'required',
+            'kunjungan' => 'required',
+            'tanggal' => 'required|date_format:d/m/Y',
+            'keterangan' => 'nullable',
+            'bukti.*' => 'image|mimes:jpg,jpeg,png|max:5120',
+        ]);
 
-    // 🔍 Ambil data lama & cek validasi
-    $data = DB::table('kecurangan')->where('id', $id)->first();
-    if (!$data) {
-        return redirect()->route('kecurangan.data')->with('error', 'Data tidak ditemukan!');
-    }
-    if ($data->validasi == 1) {
-        return redirect()->route('kecurangan.data')->with('error', 'Data sudah divalidasi dan tidak bisa diedit!');
-    }
+        $data = DB::table('kecurangan')->where('id', $id)->first();
+        if (!$data) return redirect()->route('kecurangan.data')->with('error', 'Data tidak ditemukan!');
+        if ($data->validasi == 1) return redirect()->route('kecurangan.data')->with('error', 'Data sudah divalidasi dan tidak bisa diedit!');
 
-    // 🗑️ Hapus foto yang ditandai untuk dihapus
-    if ($request->filled('deleted_photos')) {
-        foreach ($request->deleted_photos as $fotoId) {
-            $foto = DB::table('kecurangan_foto')->where('id', $fotoId)->first();
-            if ($foto) {
-                if (Storage::disk('public')->exists($foto->path)) {
-                    Storage::disk('public')->delete($foto->path);
+        if ($request->filled('deleted_photos')) {
+            foreach ($request->deleted_photos as $fotoId) {
+                $foto = DB::table('kecurangan_foto')->where('id', $fotoId)->first();
+                if ($foto) {
+                    if (Storage::disk('public')->exists($foto->path)) {
+                        Storage::disk('public')->delete($foto->path);
+                    }
+                    DB::table('kecurangan_foto')->where('id', $fotoId)->delete();
                 }
-                DB::table('kecurangan_foto')->where('id', $fotoId)->delete();
             }
         }
-    }
 
-    // 🗓️ Format tanggal & tentukan kuartal
-    $tanggal = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
-    $bulan = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('m');
-    $tahun = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y');
-    $kuartal = match (true) {
-        $bulan >= 1 && $bulan <= 3 => 'Q1 ' . $tahun,
-        $bulan >= 4 && $bulan <= 6 => 'Q2 ' . $tahun,
-        $bulan >= 7 && $bulan <= 9 => 'Q3 ' . $tahun,
-        default => 'Q4 ' . $tahun,
-    };
+        $tanggal = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
+        $bulan = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('m');
+        $tahun = (int) \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y');
+        $kuartal = match (true) {
+            $bulan >= 1 && $bulan <= 3 => 'Q1 ' . $tahun,
+            $bulan >= 4 && $bulan <= 6 => 'Q2 ' . $tahun,
+            $bulan >= 7 && $bulan <= 9 => 'Q3 ' . $tahun,
+            default => 'Q4 ' . $tahun,
+        };
 
-    // 💰 Bersihkan format nilai sanksi
-    $nilaiSanksi = null;
-    if ($request->filled('nilai_sanksi')) {
-        $nilaiSanksi = (int) str_replace(['Rp', '.', ',', ' '], '', $request->nilai_sanksi);
-    }
-
-    // 🧠 Pastikan field deskripsi_sanksi tidak null saat update
-    $keteranganSanksiBaru = $request->filled('deskripsi_sanksi')
-        ? $request->deskripsi_sanksi
-        : $data->keterangan_sanksi;
-
-    // 🧾 Update data utama
-    DB::table('kecurangan')->where('id', $id)->update([
-        'id_sales' => $request->id_sales,
-        'nama_sales' => $request->nama_sales,
-        'id_asisten_manager' => $request->id_asisten_manager,
-        'nama_asisten_manager' => $request->nama_asisten_manager,
-        'distributor' => $request->distributor,
-        'jenis_sanksi' => $request->jenis_sanksi,
-        'keterangan_sanksi' => $keteranganSanksiBaru, // ✅ fix final
-        'nilai_sanksi' => $nilaiSanksi ?? $data->nilai_sanksi,
-        'toko' => $request->toko,
-        'kunjungan' => $request->kunjungan,
-        'tanggal' => $tanggal,
-        'keterangan' => $request->keterangan,
-        'kuartal' => $kuartal,
-        'updated_at' => now(),
-    ]);
-
-    // 📸 Upload foto baru (maks total 5)
-    if ($request->hasFile('bukti')) {
-        $existingCount = DB::table('kecurangan_foto')->where('id_kecurangan', $id)->count();
-        $newCount = count($request->file('bukti'));
-        if ($existingCount + $newCount > 5) {
-            return back()->with('error', 'Total foto tidak boleh lebih dari 5.');
+        $nilaiSanksi = null;
+        if ($request->filled('nilai_sanksi')) {
+            $nilaiSanksi = (int) str_replace(['Rp', '.', ',', ' '], '', $request->nilai_sanksi);
         }
 
-        foreach ($request->file('bukti') as $file) {
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('kecurangan', $filename, 'public');
-            DB::table('kecurangan_foto')->insert([
-                'id_kecurangan' => $id,
-                'path' => $path,
-                'created_at' => now(),
-            ]);
+        $keteranganSanksiBaru = $request->filled('deskripsi_sanksi')
+            ? $request->deskripsi_sanksi
+            : $data->keterangan_sanksi;
+
+        DB::table('kecurangan')->where('id', $id)->update([
+            'id_sales' => $request->id_sales,
+            'nama_sales' => $request->nama_sales,
+            'id_asisten_manager' => $request->id_asisten_manager,
+            'nama_asisten_manager' => $request->nama_asisten_manager,
+            'distributor' => $request->distributor,
+            'jenis_sanksi' => $request->jenis_sanksi,
+            'keterangan_sanksi' => $keteranganSanksiBaru,
+            'nilai_sanksi' => $nilaiSanksi ?? $data->nilai_sanksi,
+            'toko' => $request->toko,
+            'kunjungan' => $request->kunjungan,
+            'tanggal' => $tanggal,
+            'keterangan' => $request->keterangan,
+            'kuartal' => $kuartal,
+            'updated_at' => now(),
+        ]);
+
+        if ($request->hasFile('bukti')) {
+            $existingCount = DB::table('kecurangan_foto')->where('id_kecurangan', $id)->count();
+            $newCount = count($request->file('bukti'));
+            if ($existingCount + $newCount > 5) {
+                return back()->with('error', 'Total foto tidak boleh lebih dari 5.');
+            }
+
+            foreach ($request->file('bukti') as $file) {
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('kecurangan', $filename, 'public');
+                DB::table('kecurangan_foto')->insert([
+                    'id_kecurangan' => $id,
+                    'path' => $path,
+                    'created_at' => now(),
+                ]);
+            }
         }
+
+        return redirect()->route('kecurangan.data')->with('success', 'Data berhasil diperbarui!');
     }
-
-    return redirect()->route('kecurangan.data')->with('success', 'Data berhasil diperbarui!');
-}
-
-
 
 
     public function getSales($id)
@@ -273,6 +278,7 @@ class KecuranganController extends Controller
         ]);
     }
 
+
     public function getAsistenManager($distributorId)
     {
         return DB::table('asisten_managers')
@@ -281,76 +287,96 @@ class KecuranganController extends Controller
             ->get();
     }
 
+
     public function data(Request $request)
-    {
-        $allowedSorts = [
-            'id_sales',
-            'nama_sales',
-            'distributor',
-            'nama_asisten_manager',
-            'jenis_sanksi',
-            'keterangan_sanksi',
-            'nilai_sanksi',
-            'toko',
-            'kunjungan',
-            'tanggal',
-            'kuartal'
-        ];
+{
+    $allowedSorts = [
+        'id_sales',
+        'nama_sales',
+        'distributor',
+        'nama_asisten_manager',
+        'jenis_sanksi',
+        'keterangan_sanksi',
+        'nilai_sanksi',
+        'toko',
+        'kunjungan',
+        'tanggal',
+        'kuartal'
+    ];
 
-        $sortBy = $request->get('sort_by', 'tanggal');
-        $sortOrder = $request->get('sort_order', 'desc');
+    $sortBy = $request->get('sort_by', 'tanggal');
+    $sortOrder = $request->get('sort_order', 'desc');
 
-        $query = DB::table('kecurangan')
-            ->select(
-                'kecurangan.*',
-                'sales.nama as nama_sales',
-                'distributors.distributor',
-                'asisten_managers.nama as nama_asisten_manager'
-            )
-            ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
-            ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
-            ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+    $query = DB::table('kecurangan')
+        ->select(
+            'kecurangan.*',
+            'sales.nama as nama_sales',
+            'distributors.distributor',
+            'asisten_managers.nama as nama_asisten_manager'
+        )
+        ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
+        ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
+        ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+        // ❗ JOIN sanksi DIHAPUS karena penyebab DUPLIKAT
 
-        // 🔍 Pencarian
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('sales.nama', 'like', "%$search%")
-                    ->orWhere('asisten_managers.nama', 'like', "%$search%")
-                    ->orWhere('distributors.distributor', 'like', "%$search%")
-                    ->orWhere('kecurangan.toko', 'like', "%$search%")
-                    ->orWhere('kecurangan.keterangan', 'like', "%$search%");
-            });
-        }
+    // =============================
+    // SEARCH
+    // =============================
+    if ($request->filled('search')) {
+        $search = $request->search;
 
-        // 📅 Filter Tanggal
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('kecurangan.tanggal', [$request->start_date, $request->end_date]);
-        }
-
-        // 🔽 Urutkan (DIUBAH)
-        if (in_array($sortBy, $allowedSorts)) {
-
-            // mapping kolom join
-            $column = match ($sortBy) {
-                'nama_sales' => 'sales.nama',
-                'distributor' => 'distributors.distributor',
-                'nama_asisten_manager' => 'asisten_managers.nama',
-                default => 'kecurangan.' . $sortBy,
-            };
-
-            $query->orderBy($column, $sortOrder);
-        }
-
-        // ✅ Cek apakah user klik tombol "Tampilkan Semua"
-        if ($request->has('all') && $request->all == true) {
-            $kecurangan = $query->get();
-        } else {
-            $kecurangan = $query->paginate(10)->appends($request->query());
-        }
-
-        return view('kecurangan.data', compact('kecurangan'));
+        $query->where(function ($q) use ($search) {
+            $q->where('sales.nama', 'like', "%$search%")
+                ->orWhere('asisten_managers.nama', 'like', "%$search%")
+                ->orWhere('distributors.distributor', 'like', "%$search%")
+                ->orWhere('kecurangan.toko', 'like', "%$search%");
+        });
     }
+
+    // =============================
+    // FILTER TANGGAL
+    // =============================
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $query->whereBetween('kecurangan.tanggal', [$request->start_date, $request->end_date]);
+    }
+
+    // FILTER JENIS SANKSI
+    if ($request->filled('jenis_sanksi')) {
+        $query->whereRaw("LOWER(TRIM(kecurangan.jenis_sanksi)) = LOWER(TRIM(?))", [$request->jenis_sanksi]);
+    }
+
+    // FILTER KETERANGAN SANKSI
+    if ($request->filled('keterangan_sanksi')) {
+        $query->whereRaw("LOWER(TRIM(kecurangan.keterangan_sanksi)) = LOWER(TRIM(?))", [$request->keterangan_sanksi]);
+    }
+
+    // =============================
+    // SORTING
+    // =============================
+    if (in_array($sortBy, $allowedSorts)) {
+        $column = match ($sortBy) {
+            'nama_sales' => 'sales.nama',
+            'distributor' => 'distributors.distributor',
+            'nama_asisten_manager' => 'asisten_managers.nama',
+            default => 'kecurangan.' . $sortBy,
+        };
+
+        $query->orderBy($column, $sortOrder);
+    }
+
+    // DROPDOWN
+    $jenisSanksi = DB::table('sanksi')->distinct()->pluck('jenis');
+
+    if ($request->boolean('all')) {
+        $kecurangan = $query->get();
+    } else {
+        $kecurangan = $query->paginate(10)->appends($request->query());
+    }
+
+    return view('kecurangan.data', compact('kecurangan', 'jenisSanksi'));
+}
+
+
 
 
 
@@ -370,50 +396,71 @@ class KecuranganController extends Controller
         return redirect()->route('kecurangan.data')->with('success', 'Data dan foto berhasil dihapus!');
     }
 
+
     public function validasi($id)
     {
-        DB::table('kecurangan')->where('id', $id)->update(['validasi' => 1, 'updated_at' => now()]);
+        DB::table('kecurangan')
+            ->where('id', $id)
+            ->update(['validasi' => 1, 'updated_at' => now()]);
+
         return redirect()->route('kecurangan.data')->with('success', 'Data berhasil divalidasi!');
     }
 
-    public function exportExcel()
+
+    public function exportExcel(Request $request)
     {
-        return Excel::download(new KecuranganExport, 'data_kecurangan.xlsx');
+        return Excel::download(
+            new KecuranganExport(
+                $request->mode_pdf,
+                $request->start_date,
+                $request->end_date,
+                $request->jenis_sanksi,
+                $request->keterangan_sanksi
+            ),
+            'Data_Kecurangan.xlsx'
+        );
     }
+
 
     public function exportPDF(Request $request)
-{
-    // Ambil parameter tanggal jika ada (format: yyyy-mm-dd dari input date)
-    $startDate = $request->filled('start_date') ? $request->start_date : null;
-    $endDate   = $request->filled('end_date') ? $request->end_date : null;
+    {
+        $startDate = $request->filled('start_date') ? $request->start_date : null;
+        $endDate   = $request->filled('end_date') ? $request->end_date : null;
 
-    $query = DB::table('kecurangan')
-        ->select(
-            'kecurangan.*',
-            'sales.nama as nama_sales',
-            'distributors.distributor',
-            'asisten_managers.nama as nama_asisten_manager'
-        )
-        ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
-        ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
-        ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+        $query = DB::table('kecurangan')
+            ->where('kecurangan.validasi', 1)
+            ->select(
+                'kecurangan.*',
+                'sales.nama as nama_sales',
+                'distributors.distributor',
+                'asisten_managers.nama as nama_asisten_manager'
+            )
+            ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
+            ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
+            ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
 
-    if ($startDate && $endDate) {
-        // Pastikan format tanggal sesuai kolom DB (yyyy-mm-dd)
-        $query->whereBetween('kecurangan.tanggal', [$startDate, $endDate]);
+        if ($startDate && $endDate) {
+            $query->whereBetween('kecurangan.tanggal', [$startDate, $endDate]);
+        }
+
+        if ($request->filled('jenis_sanksi')) {
+            $query->where('kecurangan.jenis_sanksi', $request->jenis_sanksi);
+        }
+
+        if ($request->filled('keterangan_sanksi')) {
+            $query->where('kecurangan.keterangan_sanksi', $request->keterangan_sanksi);
+        }
+
+        $data = $query->orderBy('kecurangan.tanggal', 'desc')->get();
+
+        $pdf = PDF::loadView('pdf.kecurangan', [
+            'data' => $data,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('Laporan_Kecurangan.pdf');
     }
-
-    $data = $query->orderBy('kecurangan.tanggal', 'desc')->get();
-
-    // Kirim juga startDate & endDate ke view agar tidak undefined
-    $pdf = PDF::loadView('pdf.kecurangan', [
-        'data' => $data,
-        'startDate' => $startDate,
-        'endDate' => $endDate
-    ])->setPaper('a4', 'landscape');
-
-    return $pdf->download('Laporan_Kecurangan.pdf');
-}
 
 
     public function getBukti($id)
@@ -426,4 +473,21 @@ class KecuranganController extends Controller
 
         return response()->json($fotos);
     }
+
+
+    // API untuk dropdown dinamis (jenis -> keterangan)
+    public function getKeteranganByJenis(Request $request)
+{
+    $data = DB::table('sanksi')
+        ->where('jenis', $request->jenis_sanksi)
+        ->pluck('keterangan')     // <-- ambil kolom langsung
+        ->map(function ($item) {
+            return ['keterangan' => $item];
+        });
+
+    return response()->json($data);
+}
+
+
+
 }

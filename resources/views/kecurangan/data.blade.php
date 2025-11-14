@@ -91,41 +91,31 @@
 
                         {{-- ✅ Export Excel & PDF --}}
                         @if (checkAccess('Data', 'Data Kecurangan', 'print'))
-                        <a href="{{ route('kecurangan.exportExcel') }}"
-                            class="btn btn-success btn-round mr-2 d-flex align-items-center"
-                            style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel">
-                            <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
-                        </a>
 
-                        <a href="{{ route('kecurangan.exportPDF') }}"
-                            class="btn btn-danger btn-round d-flex align-items-center"
-                            style="margin-top:10px;background:#e74c3c;border:none;" title="Export PDF">
+                        {{-- Tombol Excel (Open Modal) --}}
+                        <button type="button" class="btn btn-success btn-round mr-2 d-flex align-items-center"
+                            style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel"
+                            data-toggle="modal" data-target="#modalExportExcel">
+                            <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
+                        </button>
+
+                        {{-- Tombol PDF (Open Modal) --}}
+                        <button type="button" class="btn btn-danger btn-round d-flex align-items-center"
+                            style="margin-top:10px;background:#e74c3c;border:none;" title="Export PDF"
+                            data-toggle="modal" data-target="#modalExportPdf">
                             <i class="now-ui-icons files_paper mr-1"></i> PDF
-                        </a>
+                        </button>
                         @endif
                     </div>
                 </div>
+                <button class="btn btn-success btn-round" data-toggle="modal" data-target="#modalFilter">
+                    <i class="now-ui-icons ui-1_zoom-bold"></i> Filter
+                </button>
 
-                {{-- 📅 FILTER TANGGAL --}}
-                <div class="card-header d-flex align-items-center flex-wrap" style="gap: 10px;">
-                    <form action="{{ route('kecurangan.data') }}" method="GET"
-                        class="d-flex align-items-center flex-wrap" style="gap:10px; margin-top:10px;">
-                        <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}"
-                            style="width:200px; height:38px;" title="Tanggal Mulai">
-                        <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}"
-                            style="width:200px; height:38px;" title="Tanggal Akhir">
-
-                        <button type="submit" class="btn btn-success btn-round"
-                            style="height:38px;background:#29b14a;border:none;" title="Filter">
-                            <i class="now-ui-icons ui-1_zoom-bold"></i> Filter
-                        </button>
-
-                        <a href="{{ route('kecurangan.data') }}" class="btn btn-secondary btn-round"
-                            style="height:38px;" title="Reset Filter">
-                            <i class="now-ui-icons arrows-1_refresh-69"></i> Reset
-                        </a>
-                    </form>
-                </div>
+                <a href="{{ route('kecurangan.data') }}" class="btn btn-secondary btn-round" style="height:38px;"
+                    title="Reset Filter">
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Reset
+                </a>
 
                 {{-- 📋 TABEL DATA --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
@@ -179,7 +169,7 @@
                                         </a>
                                     </th>
 
-                                    <th class="col-ket-sanksi" style="width:200px;">
+                                    <th class="col-ket-sanksi" style="width:320px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
                         'sort_by' => 'keterangan_sanksi',
                         'sort_order' => (request('sort_by') === 'keterangan_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
@@ -188,7 +178,7 @@
                                         </a>
                                     </th>
 
-                                    <th class="col-nilai-sanksi" style="width:130px;">
+                                    <th class="col-nilai-sanksi" style="width:160px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
                         'sort_by' => 'nilai_sanksi',
                         'sort_order' => (request('sort_by') === 'nilai_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
@@ -372,6 +362,220 @@
     </div>
 </div>
 
+{{-- Modal Filter --}}
+<div class="modal fade" id="modalFilter" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3); overflow:hidden; border:none !important;">
+
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">Filter Data</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+
+            <form action="{{ route('kecurangan.data') }}" method="GET">
+                <div class="modal-body">
+
+                    {{-- JENIS SANKSI --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                        <select name="jenis_sanksi" id="filter_jenis_sanksi_filter" class="form-control select2">
+                            <option value="">Semua Jenis</option>
+                            @foreach ($jenisSanksi as $row)
+                            <option value="{{ $row }}" {{ request('jenis_sanksi') == $row ? 'selected' : '' }}>
+                                {{ $row }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- KETERANGAN SANKSI --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
+                        <select name="keterangan_sanksi" id="filter_keterangan_sanksi_filter"
+                            class="form-control select2">
+                            <option value="">Semua Keterangan</option>
+
+                            @if(request('jenis_sanksi'))
+                            @foreach(($keteranganSanksi ?? collect())->where('jenis', request('jenis_sanksi')) as $ket)
+
+                            <option value="{{ $ket->keterangan }}"
+                                {{ request('keterangan_sanksi') == $ket->keterangan ? 'selected' : '' }}>
+                                {{ $ket->keterangan }}
+                            </option>
+                            @endforeach
+                            @endif
+                        </select>
+                    </div>
+                    {{-- Tanggal --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Tanggal Mulai</label>
+                        <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Tanggal Akhir</label>
+                        <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success btn-round">Filter</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Export Excel --}}
+<div class="modal fade" id="modalExportExcel" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3); overflow:hidden; border:none !important;">
+
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">Export Excel</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+            </div>
+
+            <form action="{{ route('kecurangan.exportExcel') }}" method="GET" target="_blank">
+                <div class="modal-body">
+
+                    {{-- JENIS SANKSI --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                        <select name="jenis_sanksi" id="filter_jenis_sanksi_excel" class="form-control select2">
+                            <option value="">Semua Jenis</option>
+                            @foreach ($jenisSanksi as $row)
+                            <option value="{{ $row }}">{{ $row }}</option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    {{-- KETERANGAN SANKSI --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
+                        <select name="keterangan_sanksi" id="filter_keterangan_sanksi_excel"
+                            class="form-control select2">
+                            <option value="">Semua Keterangan</option>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    {{-- PILIHAN JENIS CETAK --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Jenis Cetak</label>
+                        <select name="mode_pdf" id="mode_pdf" class="form-control select2" required>
+                            <option value="">-- Pilih Jenis Cetak --</option>
+                            <option value="all">Cetak Semua</option>
+                            <option value="date">Berdasarkan Tanggal</option>
+                        </select>
+                    </div>
+
+                    {{-- RANGE TANGGAL --}}
+                    <div id="pdf_date_range" style="display:none;">
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Dari Tanggal</label>
+                            <input type="date" class="form-control" name="start_date">
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Sampai Tanggal</label>
+                            <input type="date" class="form-control" name="end_date">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger btn-round">Export Excel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+{{-- Modal Export PDF --}}
+<div class="modal fade" id="modalExportPdf" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3); overflow:hidden; border:none !important;">
+
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">Export PDF</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+            </div>
+
+            <form action="{{ route('kecurangan.exportPDF') }}" method="GET" target="_blank">
+                <div class="modal-body">
+
+                    {{-- JENIS SANKSI --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                        <select name="jenis_sanksi" id="filter_jenis_sanksi_pdf" class="form-control select2">
+                            <option value="">Semua Jenis</option>
+                            @foreach ($jenisSanksi as $jenis)
+                            <option value="{{ $jenis }}">{{ $jenis }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- KETERANGAN SANKSI --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
+                        <select name="keterangan_sanksi" id="filter_keterangan_sanksi_pdf" class="form-control select2">
+                            <option value="">Semua Keterangan</option>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    {{-- PILIHAN JENIS CETAK --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Jenis Cetak</label>
+                        <select name="mode_pdf" id="mode_pdf" class="form-control select2" required>
+                            <option value="">-- Pilih Jenis Cetak --</option>
+                            <option value="all">Cetak Semua</option>
+                            <option value="date">Berdasarkan Tanggal</option>
+                        </select>
+                    </div>
+
+                    {{-- RANGE TANGGAL --}}
+                    <div id="pdf_date_range" style="display:none;">
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Dari Tanggal</label>
+                            <input type="date" class="form-control" name="start_date">
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold text-dark">Sampai Tanggal</label>
+                            <input type="date" class="form-control" name="end_date">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger btn-round">Export PDF</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 @endsection
 @push('js')
 <style>
@@ -541,6 +745,119 @@ $(document).ready(function() {
         $('#modalKeterangan').modal('show');
     });
 });
+
+// Fungsi umum untuk show/hide date range
+function toggleDateRange(selectId, rangeId) {
+    $('#' + selectId).on('change', function() {
+        if ($(this).val() === 'date') {
+            $('#' + rangeId).slideDown(150);
+        } else {
+            $('#' + rangeId).slideUp(150);
+        }
+    });
+
+    // Filter keterangan PDF
+    $('#filter_jenis_sanksi_pdf').change(function() {
+        let jenis = $(this).val();
+
+        $('#filter_keterangan_sanksi_pdf').empty()
+            .append('<option value="">Memuat...</option>');
+
+        $.ajax({
+            url: "{{ route('kecurangan.getKeteranganByJenis') }}",
+            type: "GET",
+            data: {
+                jenis_sanksi: jenis
+            },
+            success: function(data) {
+                $('#filter_keterangan_sanksi_pdf').empty()
+                    .append('<option value="">Semua Keterangan</option>');
+
+                data.forEach(function(item) {
+                    $('#filter_keterangan_sanksi_pdf').append(
+                        `<option value="${item.keterangan}">${item.keterangan}</option>`
+                    );
+                });
+            }
+        });
+    });
+
+    $('#filter_jenis_sanksi_excel').change(function() {
+        let jenis = $(this).val();
+
+        $('#filter_keterangan_sanksi_excel').empty()
+            .append('<option value="">Memuat...</option>');
+
+        $.ajax({
+            url: "{{ route('kecurangan.getKeteranganByJenis') }}",
+            type: "GET",
+            data: {
+                jenis_sanksi: jenis
+            },
+            success: function(data) {
+                $('#filter_keterangan_sanksi_excel').empty()
+                    .append('<option value="">Semua Keterangan</option>');
+
+                data.forEach(function(item) {
+                    $('#filter_keterangan_sanksi_excel').append(
+                        `<option value="${item.keterangan}">${item.keterangan}</option>`
+                    );
+                });
+            }
+        });
+    });
+
+    // ========= FIX SELECT2 DI DALAM MODAL FILTER =========
+    $('#modalFilter').on('shown.bs.modal', function() {
+        $('#filter_jenis_sanksi_filter').select2({
+            dropdownParent: $('#modalFilter')
+        });
+
+        $('#filter_keterangan_sanksi_filter').select2({
+            dropdownParent: $('#modalFilter')
+        });
+    });
+
+    // ========= FILTER JENIS -> LOAD KETERANGAN (BENAR) =========
+    $('#filter_jenis_sanksi_filter').change(function() {
+        let jenis = $(this).val();
+
+        $('#filter_keterangan_sanksi_filter')
+            .empty()
+            .append('<option value="">Memuat...</option>')
+            .trigger('change');
+
+        $.ajax({
+            url: "{{ route('kecurangan.getKeteranganByJenis') }}",
+            type: "GET",
+            data: {
+                jenis_sanksi: jenis
+            },
+            success: function(data) {
+                $('#filter_keterangan_sanksi_filter').empty()
+                    .append('<option value="">Semua Keterangan</option>');
+
+                data.forEach(function(item) {
+                    $('#filter_keterangan_sanksi_filter').append(
+                        `<option value="${item.keterangan}">${item.keterangan}</option>`
+                    );
+                });
+
+                $('#filter_keterangan_sanksi_filter').trigger('change');
+            }
+        });
+    });
+}
+
+// Panggil untuk PDF
+toggleDateRange('mode_pdf', 'pdf_date_range');
+
+// Panggil untuk Excel
+toggleDateRange('mode_excel', 'excel_date_range');
+
+// Sembunyikan date range di awal
+$('#pdf_date_range').hide();
+$('#excel_date_range').hide();
 </script>
 
 

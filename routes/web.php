@@ -264,6 +264,10 @@ Route::prefix('kecurangan')->group(function () {
         Route::get('/{id}/bukti', [KecuranganController::class, 'getBukti'])
             ->middleware('check.access:Data,Data Kecurangan,access')
             ->name('kecurangan.getBukti');
+
+            Route::get('/kecurangan/get-keterangan', [KecuranganController::class, 'getKeteranganByJenis'])
+    ->name('kecurangan.getKeteranganByJenis');
+
     });
 });
 

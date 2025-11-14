@@ -354,7 +354,7 @@ $(document).ready(function() {
     // ===================== SELECT2 =====================
     $('#jenis_sanksi, #deskripsi_sanksi, #id_sales, #id_asisten_manager').select2({
         placeholder: "-- Pilih --",
-        allowClear: true,
+        allowClear: false,
         width: '100%'
     });
 

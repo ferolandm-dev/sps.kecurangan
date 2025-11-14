@@ -282,53 +282,76 @@ class KecuranganController extends Controller
     }
 
     public function data(Request $request)
-{
-    $allowedSorts = ['id', 'nama_sales', 'distributor', 'toko', 'tanggal'];
-    $sortBy = $request->get('sort_by', 'tanggal');
-    $sortOrder = $request->get('sort_order', 'desc');
+    {
+        $allowedSorts = [
+            'id_sales',
+            'nama_sales',
+            'distributor',
+            'nama_asisten_manager',
+            'jenis_sanksi',
+            'keterangan_sanksi',
+            'nilai_sanksi',
+            'toko',
+            'kunjungan',
+            'tanggal',
+            'kuartal'
+        ];
 
-    $query = DB::table('kecurangan')
-        ->select(
-            'kecurangan.*',
-            'sales.nama as nama_sales',
-            'distributors.distributor',
-            'asisten_managers.nama as nama_asisten_manager'
-        )
-        ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
-        ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
-        ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+        $sortBy = $request->get('sort_by', 'tanggal');
+        $sortOrder = $request->get('sort_order', 'desc');
 
-    // 🔍 Pencarian
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('sales.nama', 'like', "%$search%")
-                ->orWhere('asisten_managers.nama', 'like', "%$search%")
-                ->orWhere('distributors.distributor', 'like', "%$search%")
-                ->orWhere('kecurangan.toko', 'like', "%$search%")
-                ->orWhere('kecurangan.keterangan', 'like', "%$search%");
-        });
+        $query = DB::table('kecurangan')
+            ->select(
+                'kecurangan.*',
+                'sales.nama as nama_sales',
+                'distributors.distributor',
+                'asisten_managers.nama as nama_asisten_manager'
+            )
+            ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
+            ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
+            ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+
+        // 🔍 Pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('sales.nama', 'like', "%$search%")
+                    ->orWhere('asisten_managers.nama', 'like', "%$search%")
+                    ->orWhere('distributors.distributor', 'like', "%$search%")
+                    ->orWhere('kecurangan.toko', 'like', "%$search%")
+                    ->orWhere('kecurangan.keterangan', 'like', "%$search%");
+            });
+        }
+
+        // 📅 Filter Tanggal
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('kecurangan.tanggal', [$request->start_date, $request->end_date]);
+        }
+
+        // 🔽 Urutkan (DIUBAH)
+        if (in_array($sortBy, $allowedSorts)) {
+
+            // mapping kolom join
+            $column = match ($sortBy) {
+                'nama_sales' => 'sales.nama',
+                'distributor' => 'distributors.distributor',
+                'nama_asisten_manager' => 'asisten_managers.nama',
+                default => 'kecurangan.' . $sortBy,
+            };
+
+            $query->orderBy($column, $sortOrder);
+        }
+
+        // ✅ Cek apakah user klik tombol "Tampilkan Semua"
+        if ($request->has('all') && $request->all == true) {
+            $kecurangan = $query->get();
+        } else {
+            $kecurangan = $query->paginate(10)->appends($request->query());
+        }
+
+        return view('kecurangan.data', compact('kecurangan'));
     }
 
-    // 📅 Filter Tanggal
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereBetween('kecurangan.tanggal', [$request->start_date, $request->end_date]);
-    }
-
-    // 🔽 Urutkan
-    if (in_array($sortBy, $allowedSorts)) {
-        $query->orderBy($sortBy, $sortOrder);
-    }
-
-    // ✅ Cek apakah user klik tombol "Tampilkan Semua"
-    if ($request->has('all') && $request->all == true) {
-        $kecurangan = $query->get(); // tanpa pagination
-    } else {
-        $kecurangan = $query->paginate(10)->appends($request->query()); // dengan pagination
-    }
-
-    return view('kecurangan.data', compact('kecurangan'));
-}
 
 
     public function destroy($id)

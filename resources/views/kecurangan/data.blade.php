@@ -130,136 +130,172 @@
                 {{-- 📋 TABEL DATA --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0"
-                            style="color:#333; table-layout:auto; width:100%; border-collapse:separate; border-spacing:0 4px;">
+                        <table class="table table-hover align-middle mb-0 kecurangan-table" style="color:#333;">
+                            <thead style="color:#29b14a;">
+                                <tr>
+                                    <th class="col-no text-center" style="width:40px;">#</th>
+                                    <th class="col-id-sales" style="width:120px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'id_sales',
+                        'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            ID Sales
+                                        </a>
+                                    </th>
 
-                            <table class="table table-hover text-nowrap align-middle mb-0" style="color:#333;">
-                                <thead style="color:#29b14a;">
-                                    <tr>
-                                        <th style="text-align:center;">#</th>
-                                        <th>
-                                            <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                            'sort_by' => 'id_sales',
-                                            'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                                ID Sales
-                                            </a>
-                                        </th>
-                                        <th>
-                                            <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                            'sort_by' => 'nama_sales',
-                                            'sort_order' => (request('sort_by') === 'nama_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                                Nama Sales
-                                            </a>
-                                        </th>
-                                        <th>Distributor</th>
-                                        <th>Nama ASS</th>
-                                        <th>Jenis Sanksi</th>
-                                        <th>Keterangan Sanksi</th>
-                                        <th>Nilai Sanksi</th>
-                                        <th>Toko</th>
-                                        <th class="text-center">Kunjungan</th>
-                                        <th>
-                                            <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                            'sort_by' => 'tanggal',
-                                            'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                                Tanggal
-                                            </a>
-                                        </th>
-                                        <th style="text-align:center; min-width: 200px; width: 45%;">Keterangan</th>
-                                        <th>Kuartal</th>
-                                        <th class="text-center">Aksi</th>
-                                    </tr>
-                                </thead>
+                                    <th class="col-nama-sales" style="width:200px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'nama_sales',
+                        'sort_order' => (request('sort_by') === 'nama_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Nama Sales
+                                        </a>
+                                    </th>
 
-                                <tbody>
-                                    @forelse ($kecurangan as $index => $item)
-                                    <tr style="vertical-align: top;">
-                                        <td style="text-align:center; vertical-align: top;">
-                                            {{ $loop->iteration + (method_exists($kecurangan, 'firstItem') ? $kecurangan->firstItem() - 1 : 0) }}
-                                        </td>
-                                        <td style="vertical-align: top;">{{ $item->id_sales }}</td>
-                                        <td style="vertical-align: top;">{{ $item->nama_sales }}</td>
-                                        <td style="vertical-align: top;">{{ $item->distributor }}</td>
-                                        <td style="vertical-align: top;">{{ $item->nama_asisten_manager }}</td>
-                                        <td style="vertical-align: top;">{{ $item->jenis_sanksi }}</td>
-                                        <td style="vertical-align: top;">{{ $item->keterangan_sanksi }}</td>
-                                        <td style="vertical-align: top;">
-                                            Rp {{ number_format($item->nilai_sanksi, 0, ',', '.') }}
-                                        </td>
-                                        <td style="vertical-align: top;">{{ $item->toko }}</td>
-                                        <td style="text-align:center; vertical-align: top;">{{ $item->kunjungan }}</td>
-                                        <td style="vertical-align: top;">
-                                            {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
+                                    <th class="col-distributor" style="width:350px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'distributor',
+                        'sort_order' => (request('sort_by') === 'distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Distributor
+                                        </a>
+                                    </th>
 
-                                        <td style="vertical-align: top; text-align: center;">
-                                            @if ($item->keterangan)
-                                            <button type="button"
-                                                class="btn btn-info btn-sm btn-round btn-lihat-keterangan"
-                                                data-keterangan="{{ $item->keterangan }}" title="Lihat Keterangan"
-                                                style="background:#17a2b8;border:none;">
-                                                <i class="now-ui-icons files_paper"></i>
+                                    <th class="col-nama-ass" style="width:300px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'nama_asisten_manager',
+                        'sort_order' => (request('sort_by') === 'nama_asisten_manager' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Nama ASS
+                                        </a>
+                                    </th>
+
+                                    <th class="col-jenis-sanksi" style="width:150px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'jenis_sanksi',
+                        'sort_order' => (request('sort_by') === 'jenis_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Jenis Sanksi
+                                        </a>
+                                    </th>
+
+                                    <th class="col-ket-sanksi" style="width:200px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'keterangan_sanksi',
+                        'sort_order' => (request('sort_by') === 'keterangan_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Keterangan Sanksi
+                                        </a>
+                                    </th>
+
+                                    <th class="col-nilai-sanksi" style="width:130px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'nilai_sanksi',
+                        'sort_order' => (request('sort_by') === 'nilai_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Nilai Sanksi
+                                        </a>
+                                    </th>
+
+                                    <th class="col-toko" style="width:200px;">Toko</th>
+                                    <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
+
+                                    <th class="col-tanggal" style="width:110px;">
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                        'sort_by' => 'tanggal',
+                        'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Tanggal
+                                        </a>
+                                    </th>
+
+                                    <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
+                                    <th class="col-kuartal" style="width:110px;">Kuartal</th>
+                                    <th class="col-aksi text-center" style="width:150px;">Aksi</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @forelse ($kecurangan as $index => $item)
+                                <tr style="vertical-align: top;">
+                                    <td class="text-center">
+                                        {{ $loop->iteration + (method_exists($kecurangan, 'firstItem') ? $kecurangan->firstItem() - 1 : 0) }}
+                                    </td>
+                                    <td>{{ $item->id_sales }}</td>
+                                    <td>{{ $item->nama_sales }}</td>
+                                    <td>{{ $item->distributor }}</td>
+                                    <td>{{ $item->nama_asisten_manager }}</td>
+                                    <td>{{ $item->jenis_sanksi }}</td>
+                                    <td>{{ $item->keterangan_sanksi }}</td>
+                                    <td>Rp {{ number_format($item->nilai_sanksi, 0, ',', '.') }}</td>
+                                    <td>{{ $item->toko }}</td>
+                                    <td class="text-center">{{ $item->kunjungan }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
+
+                                    <td class="text-center">
+                                        @if ($item->keterangan)
+                                        <button class="btn btn-info btn-sm btn-round btn-lihat-keterangan"
+                                            data-keterangan="{{ $item->keterangan }}">
+                                            <i class="now-ui-icons files_paper"></i>
+                                        </button>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $item->kuartal }}</td>
+
+                                    <td class="text-center" style="vertical-align: top;">
+                                        <button class="btn btn-info btn-icon btn-sm btn-round btn-lihat-bukti"
+                                            data-id="{{ $item->id }}" title="Lihat Bukti"
+                                            style="background:#17a2b8;border:none;">
+                                            <i class="now-ui-icons media-1_album"></i>
+                                        </button>
+                                        @if($item->validasi == 0)
+                                        <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
+                                            style="display:inline-block;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success btn-icon btn-sm btn-round"
+                                                title="Validasi Data" onclick="return confirm('Validasi data ini?');"
+                                                style="background:#29b14a;border:none;">
+                                                <i class="now-ui-icons ui-1_check"></i>
                                             </button>
-                                            @else
-                                            <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
+                                        </form>
 
+                                        <a href="{{ route('kecurangan.edit', $item->id) }}"
+                                            class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data"
+                                            style="background:#f39c12;border:none;">
+                                            <i class="now-ui-icons ui-2_settings-90"></i>
+                                        </a>
 
-                                        <td style="vertical-align: top;">{{ $item->kuartal }}</td>
-                                        <td class="text-center" style="vertical-align: top;">
-                                            <button class="btn btn-info btn-icon btn-sm btn-round btn-lihat-bukti"
-                                                data-id="{{ $item->id }}" title="Lihat Bukti"
-                                                style="background:#17a2b8;border:none;">
-                                                <i class="now-ui-icons media-1_album"></i>
+                                        <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
+                                            style="display:inline-block;"
+                                            onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round"
+                                                title="Hapus Data" style="background:#e74c3c;border:none;">
+                                                <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>
-                                            @if($item->validasi == 0)
-                                            <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
-                                                style="display:inline-block;">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-icon btn-sm btn-round"
-                                                    title="Validasi Data"
-                                                    onclick="return confirm('Validasi data ini?');"
-                                                    style="background:#29b14a;border:none;">
-                                                    <i class="now-ui-icons ui-1_check"></i>
-                                                </button>
-                                            </form>
+                                        </form>
+                                        @else
+                                        <span class="badge"
+                                            style="background:#29b14a;color:white;border-radius:10px;padding:6px 10px;">
+                                            Tervalidasi
+                                        </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="15" class="text-center text-muted">Belum ada data kecurangan</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
 
-                                            <a href="{{ route('kecurangan.edit', $item->id) }}"
-                                                class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data"
-                                                style="background:#f39c12;border:none;">
-                                                <i class="now-ui-icons ui-2_settings-90"></i>
-                                            </a>
-
-                                            <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
-                                                style="display:inline-block;"
-                                                onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round"
-                                                    title="Hapus Data" style="background:#e74c3c;border:none;">
-                                                    <i class="now-ui-icons ui-1_simple-remove"></i>
-                                                </button>
-                                            </form>
-                                            @else
-                                            <span class="badge"
-                                                style="background:#29b14a;color:white;border-radius:10px;padding:6px 10px;">
-                                                Tervalidasi
-                                            </span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="11" class="text-center text-muted">Belum ada data kecurangan</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-
-                            </table>
+                        </table>
                     </div>
+
 
                     {{-- 📄 Pagination --}}
                     @if (!request()->has('all'))
@@ -338,6 +374,35 @@
 
 @endsection
 @push('js')
+<style>
+/* TABLE UTAMA */
+.kecurangan-table {
+    table-layout: fixed !important;
+    width: 100%;
+}
+
+/* HEADER TIDAK TERPOTONG & BOLEH BARIS 2 */
+.kecurangan-table thead th {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    vertical-align: middle;
+}
+
+/* BODY TETAP RAPI */
+.kecurangan-table tbody td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* scroll aman */
+.table-responsive {
+    overflow-x: auto;
+}
+</style>
+
+
 <script>
 $(document).ready(function() {
     let fotoList = [];

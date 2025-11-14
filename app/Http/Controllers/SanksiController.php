@@ -11,28 +11,44 @@ class SanksiController extends Controller
      * Tampilkan semua data sanksi.
      */
     public function index(Request $request)
-    {
-        $query = DB::table('sanksi');
+{
+    $query = DB::table('sanksi');
 
-        // 🔍 Pencarian
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('jenis', 'like', "%{$search}%")
-                  ->orWhere('keterangan', 'like', "%{$search}%")
-                  ->orWhere('nilai', 'like', "%{$search}%");
-            });
-        }
-
-        // 🔁 Pagination atau tampil semua
-        if ($request->has('all')) {
-            $sanksi = $query->orderBy('id', 'asc')->get();
-        } else {
-            $sanksi = $query->orderBy('id', 'asc')->paginate(10)->appends($request->query());
-        }
-
-        return view('sanksi.index', compact('sanksi'));
+    // 🔍 Pencarian
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('jenis', 'like', "%{$search}%")
+              ->orWhere('keterangan', 'like', "%{$search}%")
+              ->orWhere('nilai', 'like', "%{$search}%");
+        });
     }
+
+    // 🔁 Sorting
+    $allowedSorts = ['jenis', 'keterangan', 'nilai', 'id'];
+    $sortBy = $request->get('sort_by', 'id');
+    $sortOrder = $request->get('sort_order', 'asc');
+
+    if (!in_array($sortBy, $allowedSorts)) {
+        $sortBy = 'id';
+    }
+
+    if (!in_array($sortOrder, ['asc', 'desc'])) {
+        $sortOrder = 'asc';
+    }
+
+    // 🔁 Pagination atau tampil semua
+    if ($request->has('all')) {
+        $sanksi = $query->orderBy($sortBy, $sortOrder)->get();
+    } else {
+        $sanksi = $query->orderBy($sortBy, $sortOrder)
+                        ->paginate(10)
+                        ->appends($request->query());
+    }
+
+    return view('sanksi.index', compact('sanksi'));
+}
+
 
     /**
      * Form tambah sanksi baru.

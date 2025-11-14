@@ -103,29 +103,28 @@
 
                                     <th style="width:20%;">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                        'sort_by' => 'jenis',
-                        'sort_order' => (request('sort_by') === 'jenis' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                                'sort_by' => 'jenis',
+                                                'sort_order' => (request('sort_by') === 'jenis' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                            ])) }}" class="text-success text-decoration-none">
                                             Jenis
                                         </a>
                                     </th>
 
+
                                     <th style="width:35%;">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                        'sort_by' => 'keterangan',
-                        'sort_order' => (request('sort_by') === 'keterangan' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                                'sort_by' => 'keterangan',
+                                                'sort_order' => (request('sort_by') === 'keterangan' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                            ])) }}" class="text-success text-decoration-none">
                                             Keterangan
-                                        </a>
                                     </th>
 
                                     <th style="width:20%; text-align:center;">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                        'sort_by' => 'nilai',
-                        'sort_order' => (request('sort_by') === 'nilai' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
-                                            Nilai (Rupiah)
-                                        </a>
+                                                'sort_by' => 'nilai',
+                                                'sort_order' => (request('sort_by') === 'nilai' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                            ])) }}" class="text-success text-decoration-none">
+                                            Nilai
                                     </th>
 
                                     <th style="width:20%; text-align:center;">Aksi</th>

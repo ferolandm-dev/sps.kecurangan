@@ -276,7 +276,7 @@
 </div>
 
 {{-- ===================== MODAL PREVIEW FOTO ===================== --}}
-<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:-10px;">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
         <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
             border-radius:15px;
@@ -346,6 +346,21 @@ body.modal-open {
 #modalNext {
     z-index: 2102 !important;
     pointer-events: auto !important;
+}
+
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+    /* warna abu normal */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #4caf50 !important;
+    /* hijau atau sesuai tema */
 }
 </style>
 

@@ -332,7 +332,7 @@
 </div>
 
 {{-- ===================== MODAL LIHAT BUKTI ===================== --}}
-<div class="modal fade" id="modalBukti" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalBukti" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:-10px;">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
         <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
             border-radius:15px;
@@ -399,6 +399,21 @@
 /* scroll aman */
 .table-responsive {
     overflow-x: auto;
+}
+
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+    /* warna abu normal */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #4caf50 !important;
+    /* hijau atau sesuai tema */
 }
 </style>
 

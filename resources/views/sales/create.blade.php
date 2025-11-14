@@ -138,8 +138,7 @@
                             <label for="id">{{ __('ID Sales') }}</label>
                             <input type="text" name="id" id="id" maxlength="6"
                                 class="form-control @error('id') is-invalid @enderror"
-                                oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');"
-                                required>
+                                oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');" required>
                         </div>
 
                         {{-- Nama Sales --}}
@@ -170,6 +169,22 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<style>
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+    /* warna abu normal */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #4caf50 !important;
+    /* hijau atau sesuai tema */
+}
+</style>
 <script>
 $(document).ready(function() {
     $('#id_distributor').select2({

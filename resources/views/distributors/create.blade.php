@@ -137,7 +137,8 @@
 
                         <div class="text-right mt-4">
                             <a href="{{ route('distributors.index') }}" class="btn btn-secondary btn-round">Batal</a>
-                            <button type="submit" class="btn btn-success btn-round" style="background:#29b14a;border:none;">
+                            <button type="submit" class="btn btn-success btn-round"
+                                style="background:#29b14a;border:none;">
                                 <i class="now-ui-icons "></i> Simpan
                             </button>
                         </div>
@@ -149,3 +150,21 @@
     </div>
 </div>
 @endsection
+@push('js')
+<style>
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+    /* warna abu normal */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #4caf50 !important;
+    /* hijau atau sesuai tema */
+}
+</style>
+@endpush

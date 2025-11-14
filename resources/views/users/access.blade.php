@@ -175,8 +175,7 @@
         </div>
     </div>
 </div>
-
-{{-- ✅ CSS --}}
+@push('js')
 <style>
 .menu-access-box {
     border: 1px solid #e4e4e4;
@@ -290,4 +289,5 @@
     border-color: #29b14a;
 }
 </style>
+@endpush
 @endsection

@@ -166,3 +166,21 @@
     </div>
 </div>
 @endsection
+@push ('js')
+<style>
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+    /* warna abu normal */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #4caf50 !important;
+    /* hijau atau sesuai tema */
+}
+</style>
+@endpush

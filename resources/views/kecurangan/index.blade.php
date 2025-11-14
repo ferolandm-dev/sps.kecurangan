@@ -231,7 +231,7 @@
 </div>
 
 {{-- ===================== MODAL PREVIEW FOTO ===================== --}}
-<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:-10px;">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
         <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
             border-radius:15px;
@@ -274,6 +274,20 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
 <style>
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #4caf50 !important;
+    /* hijau atau sesuai tema */
+}
+
 /* === BACKDROP AKTIF DAN TIDAK TRANSPARAN === */
 .modal-backdrop.show {
     opacity: 1 !important;

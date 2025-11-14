@@ -260,12 +260,15 @@
                                             </button>
                                         </form>
 
+                                        @if (checkAccess('Master', 'Master Kecurangan', 'edit'))
                                         <a href="{{ route('kecurangan.edit', $item->id) }}"
                                             class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data"
                                             style="background:#f39c12;border:none;">
                                             <i class="now-ui-icons ui-2_settings-90"></i>
                                         </a>
+                                        @endif
 
+                                        @if (checkAccess('Master', 'Master Kecurangan', 'delete'))
                                         <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
                                             style="display:inline-block;"
                                             onsubmit="return confirm('Yakin ingin menghapus data ini?');">
@@ -276,6 +279,7 @@
                                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>
                                         </form>
+                                        @endif
                                         @else
                                         <span class="badge"
                                             style="background:#29b14a;color:white;border-radius:10px;padding:6px 10px;">
@@ -417,7 +421,7 @@
                             @endif
                         </select>
                     </div>
-                    
+
                     {{-- Tanggal --}}
                     <div class="form-group">
                         <label class="text-dark font-weight-bold">Tanggal Mulai</label>

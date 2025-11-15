@@ -100,10 +100,38 @@
                         <table class="table table-hover align-items-center mb-0" style="color:#333;">
                             <thead style="color:#29b14a">
                                 <tr>
-                                    <th>ID Sales</th>
-                                    <th>Nama</th>
-                                    <th>ID Distributor</th>
-                                    <th class="text-center">Status</th>
+                                    <th style="width:15%;">
+                                        <a href="{{ route('sales.index', array_merge(request()->query(), [
+                                            'sort_by' => 'id',
+                                            'sort_order' => (request('sort_by') === 'id' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
+                                            ID Sales
+                                        </a>
+                                    </th>
+                                    <th style="width:25%;">
+                                        <a href="{{ route('sales.index', array_merge(request()->query(), [
+                                            'sort_by' => 'nama',
+                                            'sort_order' => (request('sort_by') === 'nama' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
+                                            Nama Sales
+                                        </a>
+                                    </th>
+                                    <th style="width:20%; text-align:center;">
+                                        <a href="{{ route('sales.index', array_merge(request()->query(), [
+                                            'sort_by' => 'id_distributor',
+                                            'sort_order' => (request('sort_by') === 'id_distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
+                                            ID Distributor
+                                        </a>
+                                    </th>
+                                    <th style="width:15%; text-align:center;">
+                                        <a href="{{ route('sales.index', array_merge(request()->query(), [
+                                            'sort_by' => 'status',
+                                            'sort_order' => (request('sort_by') === 'status' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
+                                            Status
+                                        </a>
+                                    </th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -113,7 +141,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->nama }}</td>
-                                    <td>{{ $item->id_distributor }}</td>
+                                    <td class="text-center">{{ $item->id_distributor }}</td>
                                     <td class="text-center">
                                         <span
                                             class="badge badge-{{ strtolower($item->status) == 'aktif' ? 'success' : 'danger' }}"

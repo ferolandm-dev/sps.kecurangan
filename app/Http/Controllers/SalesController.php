@@ -27,7 +27,26 @@ class SalesController extends Controller
         });
     }
 
-    // Jika user memilih "Tampilkan Semua"
+    $sortBy = $request->get('sort_by', 'id');
+    $sortOrder = $request->get('sort_order', 'asc');
+
+    $allowedSorts = ['id', 'nama', 'id_distributor', 'total_kecurangan', 'status'];
+    $allowedOrders = ['asc', 'desc'];
+
+    if (!in_array($sortBy, $allowedSorts)) {
+        $sortBy = 'id';
+    }
+    if (!in_array($sortOrder, $allowedOrders)) {
+        $sortOrder = 'asc';
+    }
+
+    // Karena total_kecurangan adalah alias dari subquery, sorting pakai orderByRaw
+    if ($sortBy === 'total_kecurangan') {
+        $query->orderByRaw("total_kecurangan $sortOrder");
+    } else {
+        $query->orderBy($sortBy, $sortOrder);
+    }
+
     if ($request->has('all')) {
         $sales = $query->get();
     } else {
@@ -140,11 +159,9 @@ class SalesController extends Controller
         });
     }
 
-    // 🔽 Sorting (default: urut berdasarkan ID Sales)
     $sortBy = $request->get('sort_by', 'id');
     $sortOrder = $request->get('sort_order', 'asc');
 
-    // Validasi kolom dan arah sorting agar aman
     $allowedSorts = ['id', 'nama', 'id_distributor', 'total_kecurangan', 'status'];
     $allowedOrders = ['asc', 'desc'];
 
@@ -162,7 +179,6 @@ class SalesController extends Controller
         $query->orderBy($sortBy, $sortOrder);
     }
 
-    // 🔁 Jika user memilih "Tampilkan Semua"
     if ($request->has('all')) {
         $sales = $query->get();
     } else {

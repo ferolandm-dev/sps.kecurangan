@@ -98,9 +98,30 @@
                         <table class="table table-hover align-items-center mb-0" style="color:#333;">
                             <thead style="color:#29b14a">
                                 <tr>
-                                    <th>ID Distributor</th>
-                                    <th>Nama Distributor</th>
-                                    <th class="text-center">Status</th>
+                                    <th style="width:15%;">
+                                        <a href="{{ route('distributors.index', array_merge(request()->query(), [
+                                            'sort_by' => 'id',
+                                            'sort_order' => (request('sort_by') === 'id' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
+                                            ID Distributor
+                                        </a>
+                                    </th>
+                                    <th style="width:30%;">
+                                        <a href="{{ route('distributors.index', array_merge(request()->query(), [
+                                            'sort_by' => 'distributor',
+                                            'sort_order' => (request('sort_by') === 'distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
+                                            Nama Distributor
+                                        </a>
+                                    </th>
+                                    <th style="width:15%; text-align:center;">
+                                        <a href="{{ route('distributors.index', array_merge(request()->query(), [
+                                            'sort_by' => 'status',
+                                            'sort_order' => (request('sort_by') === 'status' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
+                                            Status
+                                        </a>
+                                    </th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>

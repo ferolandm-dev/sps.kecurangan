@@ -26,7 +26,20 @@ class AsistenManagerController extends Controller
             });
         }
 
-        // Jika user klik "Tampilkan Semua"
+        $sortBy = $request->get('sort_by', 'id');
+        $sortOrder = $request->get('sort_order', 'asc');
+        $allowedSorts = ['id', 'nama', 'id_distributor', 'total_kecurangan', 'status'];
+        $allowedOrders = ['asc', 'desc'];
+
+        if (!in_array($sortBy, $allowedSorts)) $sortBy = 'id';
+        if (!in_array($sortOrder, $allowedOrders)) $sortOrder = 'asc';
+
+        if ($sortBy === 'total_kecurangan') {
+            $query->orderByRaw("total_kecurangan $sortOrder");
+        } else {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+
         if ($request->has('all')) {
             $asistenManagers = $query->get();
         } else {

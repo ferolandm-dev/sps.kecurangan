@@ -15,19 +15,22 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
     protected $endDate;
     protected $jenis;
     protected $keterangan;
+    protected $sales; // ⬅️ TAMBAHAN
 
     public function __construct(
         $mode = 'all',
         $startDate = null,
         $endDate = null,
         $jenis = null,
-        $keterangan = null
+        $keterangan = null,
+        $sales = null // ⬅️ TERIMA SALES DARI CONTROLLER
     ) {
         $this->mode        = $mode;
         $this->startDate   = $startDate;
         $this->endDate     = $endDate;
         $this->jenis       = $jenis;
         $this->keterangan  = $keterangan;
+        $this->sales       = $sales; // ⬅️ SET SALES
     }
 
     public function collection()
@@ -36,7 +39,7 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
             ->where('kecurangan.validasi', 1)
             ->select(
                 'kecurangan.id_sales',
-                'sales.nama AS nama_sales',
+                'kecurangan.nama_sales',                   // ⬅️ gunakan nama_sales dari tabel kecurangan
                 'distributors.distributor AS distributor',
                 'asisten_managers.nama AS nama_asisten_manager',
                 'kecurangan.jenis_sanksi',
@@ -53,22 +56,20 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
             ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
 
 
-        // MODE CETAK SEMUA
-        if ($this->mode === 'all') {
-
+        // ========== 🔍 FILTER SALES (BARU DITAMBAHKAN) ==========
+        if (!empty($this->sales)) {
+            $query->where('kecurangan.id_sales', $this->sales);
         }
 
-        // MODE CETAK BERDASARKAN TANGGAL
-        if ($this->mode === 'date') {
-            if ($this->startDate && $this->endDate) {
-                $query->whereBetween('kecurangan.tanggal', [
-                    $this->startDate,
-                    $this->endDate
-                ]);
-            }
+        // ========== MODE TANGGAL ==========
+        if ($this->mode === 'date' && $this->startDate && $this->endDate) {
+            $query->whereBetween('kecurangan.tanggal', [
+                $this->startDate,
+                $this->endDate
+            ]);
         }
 
-        // FILTER TAMBAHAN (BERFUNGSI DI KEDUA MODE)
+        // ========== FILTER TAMBAHAN ==========
         if (!empty($this->jenis)) {
             $query->where('kecurangan.jenis_sanksi', $this->jenis);
         }

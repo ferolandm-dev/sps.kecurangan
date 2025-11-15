@@ -1,39 +1,4 @@
     <div class="sidebar" data-color="green" style="background-color: #29b14a; min-height: 100vh; color: #fff;">
-        <style>
-        .sidebar .nav li>a,
-        .sidebar .nav .collapse .nav li>a {
-            position: relative;
-            transition: all 0.25s ease-in-out;
-            border-radius: 10px;
-        }
-
-        .sidebar .nav li>a:hover,
-        .sidebar .nav li.active>a,
-        .sidebar .nav li.active>a:hover,
-        .sidebar .nav .collapse .nav li.active>a,
-        .sidebar .nav .collapse .nav li>a:hover {
-            background: rgba(255, 255, 255, 0.15) !important;
-            backdrop-filter: blur(6px) !important;
-            -webkit-backdrop-filter: blur(6px) !important;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-            color: #fff !important;
-        }
-
-        .sidebar .nav>li>a[aria-expanded="true"],
-        .sidebar .nav>li.active>a[aria-expanded="true"] {
-            background: rgba(255, 255, 255, 0.15) !important;
-            backdrop-filter: blur(6px) !important;
-            -webkit-backdrop-filter: blur(6px) !important;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-            color: #fff !important;
-        }
-
-        .sidebar .nav li>a i,
-        .sidebar .nav li>a p {
-            color: #fff !important;
-            transition: all 0.25s ease-in-out;
-        }
-        </style>
 
         <div class="logo">
             <a href="#" class="simple-text logo-mini" style="font-size: 12px; color: #fff;">
@@ -175,3 +140,40 @@
 
         </div>
     </div>
+@push('css')
+    <style>
+.sidebar .nav li>a,
+.sidebar .nav .collapse .nav li>a {
+    position: relative;
+    transition: all 0.25s ease-in-out;
+    border-radius: 10px;
+}
+
+.sidebar .nav li>a:hover,
+.sidebar .nav li.active>a,
+.sidebar .nav li.active>a:hover,
+.sidebar .nav .collapse .nav li.active>a,
+.sidebar .nav .collapse .nav li>a:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    color: #fff !important;
+}
+
+.sidebar .nav>li>a[aria-expanded="true"],
+.sidebar .nav>li.active>a[aria-expanded="true"] {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    color: #fff !important;
+}
+
+.sidebar .nav li>a i,
+.sidebar .nav li>a p {
+    color: #fff !important;
+    transition: all 0.25s ease-in-out;
+}
+    </style>
+    @end

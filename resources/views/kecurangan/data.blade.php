@@ -52,20 +52,17 @@
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         {{-- 🔍 Form Pencarian --}}
-                        <form action="{{ route('kecurangan.data') }}" method="GET"
-                            class="d-flex align-items-center mr-2" style="margin-top: 10px;">
-                            <div class="input-group" style="width:250px;">
-                                <input type="text" name="search" class="form-control" placeholder="Cari kecurangan..."
-                                    value="{{ request('search') }}"
-                                    style="height:38px;border-radius:30px 0 0 30px;padding-left:15px;margin-top:10px;">
-                                <div class="input-group-append">
-                                    <button class="btn btn-success btn-round" type="submit"
-                                        style="height:38px;border-radius:0 30px 30px 0;background:#29b14a;border:none;">
-                                        <i class="now-ui-icons ui-1_zoom-bold"></i>
-                                    </button>
-                                </div>
+                        <form action="{{ route('kecurangan.data') }}" method="GET" class="mr-2">
+                            <div class="search-group">
+                                <input type="text" name="search" class="form-control search-input"
+                                    placeholder="Cari kecurangan..." value="{{ request('search') }}">
+
+                                <button class="btn search-btn" type="submit">
+                                    <i class="now-ui-icons ui-1_zoom-bold"></i>
+                                </button>
                             </div>
                         </form>
+
 
                         {{-- 🔄 Tombol Tampilkan Semua / Halaman --}}
                         @if (request()->has('all'))
@@ -358,13 +355,29 @@
             <form action="{{ route('kecurangan.data') }}" method="GET">
                 <div class="modal-body">
 
+                    {{-- NAMA SALES --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Nama Sales</label>
+                        <select name="sales" class="form-control select2">
+                            <option value="">Semua Sales</option>
+
+                            @foreach ($sales as $row)
+                            <option value="{{ $row->id_sales }}"
+                                {{ request('sales') == $row->id_sales ? 'selected' : '' }}>
+                                {{ $row->nama_sales }}
+                            </option>
+                            @endforeach
+                        </select>
+
+
+                    </div>
                     {{-- JENIS SANKSI --}}
                     <div class="form-group">
                         <label class="text-dark font-weight-bold">Jenis Sanksi</label>
                         <select name="jenis_sanksi" id="filter_jenis_sanksi_filter" class="form-control select2">
                             <option value="">Semua Jenis</option>
                             @foreach ($jenisSanksi as $row)
-                            <option value="{{ $row }}">
+                            <option value="{{ $row }}" {{ request('jenis_sanksi') == $row ? 'selected' : '' }}>
                                 {{ $row }}
                             </option>
                             @endforeach
@@ -380,7 +393,6 @@
 
                             @if(request('jenis_sanksi'))
                             @foreach(($keteranganSanksi ?? collect())->where('jenis', request('jenis_sanksi')) as $ket)
-
                             <option value="{{ $ket->keterangan }}"
                                 {{ request('keterangan_sanksi') == $ket->keterangan ? 'selected' : '' }}>
                                 {{ $ket->keterangan }}
@@ -413,6 +425,7 @@
     </div>
 </div>
 
+
 {{-- Modal Export Excel --}}
 <div class="modal fade" id="modalExportExcel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -426,6 +439,19 @@
 
             <form action="{{ route('kecurangan.exportExcel') }}" method="GET" target="_blank">
                 <div class="modal-body">
+
+                    {{-- NAMA SALES --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Nama Sales</label>
+                        <select name="sales" id="filter_sales_excel" class="form-control select2">
+                            <option value="">Semua Sales</option>
+                            @foreach ($sales as $row)
+                            <option value="{{ $row->id_sales }}">
+                                {{ $row->nama_sales }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     {{-- JENIS SANKSI --}}
                     <div class="form-group">
@@ -504,6 +530,18 @@
 
             <form action="{{ route('kecurangan.exportPDF') }}" method="GET" target="_blank">
                 <div class="modal-body">
+                    {{-- NAMA SALES --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Nama Sales</label>
+                        <select name="sales" id="filter_sales_pdf" class="form-control select2">
+                            <option value="">Semua Sales</option>
+                            @foreach ($sales as $row)
+                            <option value="{{ $row->id_sales }}">
+                                {{ $row->nama_sales }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     {{-- JENIS SANKSI --}}
                     <div class="form-group">
@@ -564,19 +602,18 @@
     </div>
 </div>
 
-
-
-
 @endsection
+
 @push('js')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <style>
-/* TABLE UTAMA */
 .kecurangan-table {
     table-layout: fixed !important;
     width: 100%;
 }
 
-/* HEADER TIDAK TERPOTONG & BOLEH BARIS 2 */
 .kecurangan-table thead th {
     white-space: normal !important;
     overflow: visible !important;
@@ -584,14 +621,12 @@
     vertical-align: middle;
 }
 
-/* BODY TETAP RAPI */
 .kecurangan-table tbody td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* scroll aman */
 .table-responsive {
     overflow-x: auto;
 }
@@ -601,297 +636,390 @@ textarea:invalid,
 select:invalid {
     box-shadow: none !important;
     border-color: #ced4da !important;
-    /* warna abu normal */
 }
 
 input:focus,
 textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
-    /* hijau atau sesuai tema */
+}
+
+/* =============================== */
+/*   SOFT UI MODERN PAGINATION     */
+/* =============================== */
+
+.pagination {
+    display: flex;
+    gap: 6px;
+}
+
+.pagination .page-item {
+    transition: 0.25s ease;
+}
+
+/* Default */
+.pagination .page-link {
+    color: #29b14a !important;
+    border: none !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    padding: 8px 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.25s ease-in-out;
+}
+
+/* Hover */
+.pagination .page-link:hover {
+    background: #29b14a !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #29b14a, #34d058) !important;
+    color: #fff !important;
+    box-shadow: 0 6px 20px rgba(41, 177, 74, 0.45) !important;
+    transform: translateY(-2px);
+}
+
+/* Disabled */
+.pagination .page-item.disabled .page-link {
+    background: #f1f1f1 !important;
+    color: #b4b4b4 !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+}
+
+/* Hover disabled (tidak berubah) */
+.pagination .page-item.disabled .page-link:hover {
+    background: #f1f1f1 !important;
+    color: #b4b4b4 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ===========================================================
+   GLOBAL SOFT UI BUTTON STYLE
+=========================================================== */
+.btn {
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 8px 18px !important;
+    transition: all 0.25s ease-in-out !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* SUCCESS BUTTON (Hijau) */
+.btn-success {
+    background: linear-gradient(135deg, #29b14a, #34d058) !important;
+    color: #fff !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #25a344, #2fc655) !important;
+}
+
+/* DANGER BUTTON (Merah) */
+.btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
+}
+
+/* SECONDARY BUTTON (Abu) */
+.btn-secondary {
+    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
+    color: #333 !important;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
+}
+
+/* WARNING BUTTON (Kuning lembut) */
+.btn-warning {
+    background: linear-gradient(135deg, #eee733, #faf26b) !important;
+    color: #333 !important;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
+}
+
+/* ROUND STYLE */
+.btn-round {
+    border-radius: 30px !important;
+}
+
+/* ICON ALIGNMENT FIX */
+.btn i {
+    font-size: 15px;
+    margin-right: 6px;
+}
+
+/* DISABLED BUTTON STYLE */
+.btn:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ===========================================================
+   SOFT UI SEARCH BAR
+=========================================================== */
+/* WRAPPER agar semua tombol & search sejajar */
+.action-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* jarak antar elemen */
+    margin-top: 10px;
+}
+
+/* SEARCH WRAPPER */
+.search-group {
+    display: flex;
+    align-items: center;
+    width: 260px;
+    min-width: 260px;
+}
+
+/* SEARCH INPUT */
+.search-input {
+    height: 35px !important;
+    border-radius: 20px 0 0 20px !important;
+    border: 1px solid #cfd3d6 !important;
+    padding-left: 15px !important;
+    background: #fff;
+    transition: all .2s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    font-size: 14px;
+}
+
+/* SEARCH BUTTON */
+.search-btn {
+    height: 35px !important;
+    border-radius: 0 20px 20px 0 !important;
+    background: linear-gradient(135deg, #29b14a, #34d058) !important;
+    border: none !important;
+    color: #fff !important;
+    padding: 0 16px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(41, 177, 74, 0.3) !important;
+    transition: all .2s ease-in-out;
+}
+
+.search-btn:hover {
+    background: linear-gradient(135deg, #25a344, #2fc655) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
 }
 </style>
 
-
 <script>
+/* ===========================================================
+   INIT SELECT2 FOR EACH MODAL
+=========================================================== */
+
+function initSelect2InModal(modalId) {
+    let modal = $(modalId);
+
+    modal.on("shown.bs.modal", function() {
+        modal.find("select.select2").select2({
+            dropdownParent: modal,
+            width: '100%'
+        });
+    });
+}
+
+// Modal Filter
+initSelect2InModal("#modalFilter");
+
+// Modal Export Excel
+initSelect2InModal("#modalExportExcel");
+
+// Modal Export PDF
+initSelect2InModal("#modalExportPdf");
+
+/* ===========================================================
+   LOAD KETERANGAN BERDASARKAN JENIS SANKSI (3 MODAL)
+=========================================================== */
+function loadKeterangan(jenis, targetSelect) {
+    $(targetSelect).empty().append(`<option value="">Memuat...</option>`);
+
+    $.ajax({
+        url: "{{ route('kecurangan.getKeteranganByJenis') }}",
+        type: "GET",
+        data: {
+            jenis_sanksi: jenis
+        },
+        success: function(data) {
+            $(targetSelect).empty().append(`<option value="">Semua Keterangan</option>`);
+            data.forEach(item => {
+                $(targetSelect).append(
+                    `<option value="${item.keterangan}">${item.keterangan}</option>`);
+            });
+            $(targetSelect).trigger('change');
+        }
+    });
+}
+
+// Filter
+$("#filter_jenis_sanksi_filter").change(function() {
+    loadKeterangan($(this).val(), "#filter_keterangan_sanksi_filter");
+});
+
+// Excel
+$("#filter_jenis_sanksi_excel").change(function() {
+    loadKeterangan($(this).val(), "#filter_keterangan_sanksi_excel");
+});
+
+// PDF
+$("#filter_jenis_sanksi_pdf").change(function() {
+    loadKeterangan($(this).val(), "#filter_keterangan_sanksi_pdf");
+});
+
+/* ===========================================================
+   EXPORT DATE RANGE LOGIC (PDF & EXCEL)
+=========================================================== */
+
+function setupDateRange(modeSelect, rangeBox, alertBox, submitButton) {
+
+    $("#" + modeSelect).change(function() {
+        if ($(this).val() === "date") {
+            $("#" + rangeBox).slideDown(150);
+        } else {
+            $("#" + rangeBox).slideUp(150);
+            $(`#${rangeBox} input`).val('');
+            $("#" + alertBox).addClass("d-none");
+        }
+    });
+
+    $("#" + submitButton).on("click", function(e) {
+
+        if ($("#" + modeSelect).val() !== "date") return true;
+
+        let start = $(`#${rangeBox} input[name="start_date"]`).val();
+        let end = $(`#${rangeBox} input[name="end_date"]`).val();
+
+        if (!start || !end) {
+            e.preventDefault();
+            $("#" + alertBox).removeClass("d-none").text("Harap isi kedua tanggal sebelum export.");
+            return false;
+        }
+
+        if (end < start) {
+            e.preventDefault();
+            $("#" + alertBox).removeClass("d-none").text(
+                "Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!");
+            return false;
+        }
+
+        $("#" + alertBox).addClass("d-none");
+        return true;
+    });
+}
+
+// SETUP PDF & EXCEL DATE PICKER
+setupDateRange("mode_pdf", "pdf_date_range", "pdf_error_alert", "btn_export_pdf");
+setupDateRange("mode_excel", "excel_date_range", "excel_error_alert", "btn_export_excel");
+
+$('#pdf_date_range').hide();
+$('#excel_date_range').hide();
+
+/* ===========================================================
+   MODAL BUKTI (GAMBAR SLIDER)
+=========================================================== */
 $(document).ready(function() {
     let fotoList = [];
     let currentIndex = 0;
 
-    // Klik tombol lihat bukti
-    $('.btn-lihat-bukti').on('click', function() {
-        const id = $(this).data('id');
+    $(".btn-lihat-bukti").click(function() {
+        const id = $(this).data("id");
         fotoList = [];
         currentIndex = 0;
 
-        $('#modalBukti').modal({
-            backdrop: 'static',
+        $("#modalBukti").modal({
+            backdrop: "static",
             keyboard: true,
             show: true
         });
 
         $.ajax({
             url: `/kecurangan/${id}/bukti`,
-            method: 'GET',
-            beforeSend: function() {
-                $('#modalImage').attr('src', '').attr('alt', 'Memuat...');
-            },
+            method: "GET",
+            beforeSend: () => $("#modalImage").attr("src", "").attr("alt", "Memuat..."),
             success: function(response) {
                 if (!response.length) {
-                    $('#modalImage').attr('alt', 'Tidak ada foto.');
+                    $("#modalImage").attr("alt", "Tidak ada foto.");
                     return;
                 }
-
                 fotoList = response.map(f => f.url);
                 showModalImage(currentIndex);
-
             },
-            error: function() {
-                $('#modalImage').attr('alt', 'Gagal memuat foto.');
-            }
+            error: () => $("#modalImage").attr("alt", "Gagal memuat foto.")
         });
     });
 
     function showModalImage(index) {
         if (!fotoList.length) return;
 
-        $('#modalImage').addClass('fade-out');
+        $("#modalImage").addClass("fade-out");
         setTimeout(() => {
-            $('#modalImage')
-                .attr('src', fotoList[index])
-                .removeClass('fade-out');
-            updateIndicator();
+            $("#modalImage").attr("src", fotoList[index]).removeClass("fade-out");
         }, 150);
     }
 
-    $('#modalNext').on('click', function() {
+    $("#modalNext").click(() => {
         if (!fotoList.length) return;
         currentIndex = (currentIndex + 1) % fotoList.length;
         showModalImage(currentIndex);
     });
 
-    $('#modalPrev').on('click', function() {
+    $("#modalPrev").click(() => {
         if (!fotoList.length) return;
         currentIndex = (currentIndex - 1 + fotoList.length) % fotoList.length;
         showModalImage(currentIndex);
     });
 
-    // keyboard navigation
-    $(document).on('keydown', function(e) {
-        if (!$('#modalBukti').hasClass('show')) return;
-        if (e.key === 'Escape') $('#modalBukti').modal('hide');
-        else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
-        else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
+    $(document).keydown(function(e) {
+        if (!$("#modalBukti").hasClass("show")) return;
+        if (e.key === "Escape") $("#modalBukti").modal("hide");
+        if (e.key === "ArrowRight") $("#modalNext").click();
+        if (e.key === "ArrowLeft") $("#modalPrev").click();
     });
 
-    // Saat modal tampil: kunci scroll body dan modal
-    $('#modalBukti').on('shown.bs.modal', function() {
-        // kunci page background scroll
-        $('body').css('overflow', 'hidden');
-
-        // pastikan modal & modal-body tidak scroll
-        $('#modalBukti').css({
-            'overflow': 'hidden'
-        });
-        $('#modalBukti .modal-body').css({
-            'overflow': 'hidden',
-            'touch-action': 'none'
-        });
-
-        // cegah touchmove pada modal agar tidak scroll pada mobile
-        $(document).on('touchmove.modalBlock', function(e) {
-            if ($('#modalBukti').hasClass('show')) {
-                // jika target berada di dalam modal (tutup), cegah default
-                if ($(e.target).closest('#modalBukti').length) {
-                    e.preventDefault();
-                }
-            }
-        });
+    $("#modalBukti").on("shown.bs.modal", function() {
+        $("body").css("overflow", "hidden");
     });
 
-    // Saat modal tertutup: pulihkan scroll
-    $('#modalBukti').on('hidden.bs.modal', function() {
-        $('#modalImage').attr('src', '');
+    $("#modalBukti").on("hidden.bs.modal", function() {
+        $("#modalImage").attr("src", "");
         fotoList = [];
-        currentIndex = 0;
-
-        // pulihkan body & modal overflow
-        $('body').css('overflow', 'auto');
-        $('#modalBukti').css({
-            'overflow': ''
-        });
-        $('#modalBukti .modal-body').css({
-            'overflow': '',
-            'touch-action': ''
-        });
-
-        // lepas handler touchmove
-        $(document).off('touchmove.modalBlock');
+        $("body").css("overflow", "auto");
     });
 
-    // ======= MODAL KETERANGAN =======
-    $('.btn-lihat-keterangan').on('click', function() {
-        const isi = $(this).data('keterangan');
-        $('#isiKeterangan').text(isi);
-        $('#modalKeterangan').modal('show');
+    $(".btn-lihat-keterangan").click(function() {
+        $("#isiKeterangan").text($(this).data("keterangan"));
+        $("#modalKeterangan").modal("show");
     });
 });
-
-function toggleDateRange(selectId, rangeId) {
-    $('#' + selectId).on('change', function() {
-        if ($(this).val() === 'date') {
-            $('#' + rangeId).slideDown(150);
-        } else {
-            $('#' + rangeId).slideUp(150);
-        }
-    });
-
-    // Filter keterangan PDF
-    $('#filter_jenis_sanksi_pdf').change(function() {
-        let jenis = $(this).val();
-
-        $('#filter_keterangan_sanksi_pdf').empty()
-            .append('<option value="">Memuat...</option>');
-
-        $.ajax({
-            url: "{{ route('kecurangan.getKeteranganByJenis') }}",
-            type: "GET",
-            data: {
-                jenis_sanksi: jenis
-            },
-            success: function(data) {
-                $('#filter_keterangan_sanksi_pdf').empty()
-                    .append('<option value="">Semua Keterangan</option>');
-                data.forEach(function(item) {
-                    $('#filter_keterangan_sanksi_pdf')
-                        .append(
-                            `<option value="${item.keterangan}">${item.keterangan}</option>`
-                        );
-                });
-            }
-        });
-    });
-
-    // Filter keterangan Excel
-    $('#filter_jenis_sanksi_excel').change(function() {
-        let jenis = $(this).val();
-
-        $('#filter_keterangan_sanksi_excel').empty()
-            .append('<option value="">Memuat...</option>');
-
-        $.ajax({
-            url: "{{ route('kecurangan.getKeteranganByJenis') }}",
-            type: "GET",
-            data: {
-                jenis_sanksi: jenis
-            },
-            success: function(data) {
-                $('#filter_keterangan_sanksi_excel').empty()
-                    .append('<option value="">Semua Keterangan</option>');
-                data.forEach(function(item) {
-                    $('#filter_keterangan_sanksi_excel')
-                        .append(
-                            `<option value="${item.keterangan}">${item.keterangan}</option>`
-                        );
-                });
-            }
-        });
-    });
-
-    // Filter keterangan di modal filter utama
-    $('#modalFilter').on('shown.bs.modal', function() {
-        $('#filter_jenis_sanksi_filter').select2({
-            dropdownParent: $('#modalFilter')
-        });
-        $('#filter_keterangan_sanksi_filter').select2({
-            dropdownParent: $('#modalFilter')
-        });
-    });
-
-    $('#filter_jenis_sanksi_filter').change(function() {
-        let jenis = $(this).val();
-
-        $('#filter_keterangan_sanksi_filter')
-            .empty()
-            .append('<option value="">Memuat...</option>')
-            .trigger('change');
-
-        $.ajax({
-            url: "{{ route('kecurangan.getKeteranganByJenis') }}",
-            type: "GET",
-            data: {
-                jenis_sanksi: jenis
-            },
-            success: function(data) {
-                $('#filter_keterangan_sanksi_filter').empty()
-                    .append('<option value="">Semua Keterangan</option>');
-                data.forEach(function(item) {
-                    $('#filter_keterangan_sanksi_filter')
-                        .append(
-                            `<option value="${item.keterangan}">${item.keterangan}</option>`
-                        );
-                });
-                $('#filter_keterangan_sanksi_filter').trigger('change');
-            }
-        });
-    });
-}
-
-function setupDateRange(modeSelect, rangeBox, alertBox, submitButton) {
-
-    // Tampilkan/sembunyikan box tanggal
-    $('#' + modeSelect).change(function() {
-        if ($(this).val() === 'date') {
-            $('#' + rangeBox).slideDown(150);
-        } else {
-            $('#' + rangeBox).slideUp(150);
-            $(`#${rangeBox} input`).val('');
-            $("#" + alertBox).addClass("d-none");
-        }
-    });
-
-    // Validasi dilakukan hanya saat tombol export ditekan
-    $("#" + submitButton).on("click", function(e) {
-        let start = $(`#${rangeBox} input[name="start_date"]`).val();
-        let end = $(`#${rangeBox} input[name="end_date"]`).val();
-
-        // Jika mode bukan date → langsung submit
-        if ($("#" + modeSelect).val() !== "date") {
-            $("#" + alertBox).addClass("d-none");
-            return true;
-        }
-
-        // Jika tanggal tidak lengkap
-        if (!start || !end) {
-            e.preventDefault();
-            $("#" + alertBox).removeClass("d-none")
-                .text("Harap isi kedua tanggal sebelum export.");
-            return false;
-        }
-
-        // Jika salah (end < start)
-        if (end < start) {
-            e.preventDefault();
-            $("#" + alertBox).removeClass("d-none")
-                .text("Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!");
-            return false;
-        }
-
-        // Valid → sembunyikan error
-        $("#" + alertBox).addClass("d-none");
-        return true;
-    });
-}
-
-toggleDateRange('mode_pdf', 'pdf_date_range');
-toggleDateRange('mode_excel', 'excel_date_range');
-setupDateRange('mode_pdf', 'pdf_date_range', 'pdf_error_alert', 'btn_export_pdf');
-setupDateRange('mode_excel', 'excel_date_range', 'excel_error_alert', 'btn_export_excel');
-
-
-$('#pdf_date_range').hide();
-$('#excel_date_range').hide();
 </script>
-
 
 @endpush

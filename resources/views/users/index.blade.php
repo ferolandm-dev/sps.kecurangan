@@ -168,6 +168,139 @@ select:focus {
     border-color: #4caf50 !important;
     /* hijau atau sesuai tema */
 }
+
+/* =============================== */
+/*   SOFT UI MODERN PAGINATION     */
+/* =============================== */
+
+.pagination {
+    display: flex;
+    gap: 6px;
+}
+
+.pagination .page-item {
+    transition: 0.25s ease;
+}
+
+/* Default */
+.pagination .page-link {
+    color: #29b14a !important;
+    border: none !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    padding: 8px 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.25s ease-in-out;
+}
+
+/* Hover */
+.pagination .page-link:hover {
+    background: #29b14a !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #29b14a, #34d058) !important;
+    color: #fff !important;
+    box-shadow: 0 6px 20px rgba(41, 177, 74, 0.45) !important;
+    transform: translateY(-2px);
+}
+
+/* Disabled */
+.pagination .page-item.disabled .page-link {
+    background: #f1f1f1 !important;
+    color: #b4b4b4 !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+}
+
+/* Hover disabled (tidak berubah) */
+.pagination .page-item.disabled .page-link:hover {
+    background: #f1f1f1 !important;
+    color: #b4b4b4 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ===========================================================
+   GLOBAL SOFT UI BUTTON STYLE
+=========================================================== */
+.btn {
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 8px 18px !important;
+    transition: all 0.25s ease-in-out !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* SUCCESS BUTTON (Hijau) */
+.btn-success {
+    background: linear-gradient(135deg, #29b14a, #34d058) !important;
+    color: #fff !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #25a344, #2fc655) !important;
+}
+
+/* DANGER BUTTON (Merah) */
+.btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
+}
+
+/* SECONDARY BUTTON (Abu) */
+.btn-secondary {
+    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
+    color: #333 !important;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
+}
+
+/* WARNING BUTTON (Kuning lembut) */
+.btn-warning {
+    background: linear-gradient(135deg, #eee733, #faf26b) !important;
+    color: #333 !important;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
+}
+
+/* ROUND STYLE */
+.btn-round {
+    border-radius: 30px !important;
+}
+
+/* ICON ALIGNMENT FIX */
+.btn i {
+    font-size: 15px;
+    margin-right: 6px;
+}
+
+/* DISABLED BUTTON STYLE */
+.btn:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
 </style>
 <script>
 $(document).ready(function() {

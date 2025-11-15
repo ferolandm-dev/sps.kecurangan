@@ -16,9 +16,6 @@
     <div class="card shadow-sm" style="border-radius: 20px;">
         <div class="card-header d-flex justify-content-between align-items-center ">
             <h4 class="card-title mb-0 ">Pengaturan Akses - {{ $user->name }}</h4>
-            <a href="{{ route('user.index') }}" class="btn btn-outline-secondary btn-round">
-                <i class="now-ui-icons arrows-1_minimal-left"></i> Kembali
-            </a>
         </div>
 
         {{-- ✅ Flash Message --}}
@@ -287,6 +284,82 @@
 .custom-checkbox input:checked~.checkmark {
     background-color: #29b14a;
     border-color: #29b14a;
+}
+
+/* ===========================================================
+   GLOBAL SOFT UI BUTTON STYLE
+=========================================================== */
+.btn {
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 8px 18px !important;
+    transition: all 0.25s ease-in-out !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* SUCCESS BUTTON (Hijau) */
+.btn-success {
+    background: linear-gradient(135deg, #29b14a, #34d058) !important;
+    color: #fff !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #25a344, #2fc655) !important;
+}
+
+/* DANGER BUTTON (Merah) */
+.btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
+}
+
+/* SECONDARY BUTTON (Abu) */
+.btn-secondary {
+    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
+    color: #333 !important;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
+}
+
+/* WARNING BUTTON (Kuning lembut) */
+.btn-warning {
+    background: linear-gradient(135deg, #eee733, #faf26b) !important;
+    color: #333 !important;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
+}
+
+/* ROUND STYLE */
+.btn-round {
+    border-radius: 30px !important;
+}
+
+/* ICON ALIGNMENT FIX */
+.btn i {
+    font-size: 15px;
+    margin-right: 6px;
+}
+
+/* DISABLED BUTTON STYLE */
+.btn:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 </style>
 @endpush

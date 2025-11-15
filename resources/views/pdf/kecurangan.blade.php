@@ -23,7 +23,7 @@
     p {
         text-align: center;
         font-size: 13px;
-        margin: 0 0 20px 0;
+        margin: 0 0 10px 0;
     }
 
     table {
@@ -64,18 +64,25 @@
 
     <h2>LAPORAN DATA KECURANGAN</h2>
 
-    {{-- Periode --}}
+    {{-- FILTER SALES --}}
+    @if($sales)
+    <p>
+        Sales:
+        <strong>{{ $sales->nama_sales }} ({{ $sales->id_sales }})</strong>
+    </p>
+    @endif
+
+    {{-- FILTER PERIODE --}}
     @if ($startDate && $endDate)
     <p>
         Periode:
         <strong>{{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }}</strong>
-        &nbsp; s/d &nbsp;
+        s/d
         <strong>{{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</strong>
     </p>
     @else
     <p><strong>Semua Periode</strong></p>
     @endif
-
 
     <table>
         <thead>
@@ -97,9 +104,8 @@
         </thead>
 
         <tbody>
-            @php
-                $totalNilaiSanksi = 0;
-            @endphp
+            @php $totalNilaiSanksi = 0; @endphp
+
             @forelse ($data as $index => $item)
             <tr>
                 <td style="text-align:center;">{{ $index + 1 }}</td>
@@ -108,28 +114,24 @@
                 <td>{{ $item->distributor }}</td>
                 <td>{{ $item->nama_asisten_manager ?? '-' }}</td>
                 <td>{{ $item->jenis_sanksi ?? '-' }}</td>
-
-                {{-- FIX DI SINI --}}
                 <td>{{ $item->keterangan_sanksi ?? '-' }}</td>
 
                 @php
-                    $nilai = !empty($item->nilai_sanksi) ? $item->nilai_sanksi : 0;
-                    $totalNilaiSanksi += $nilai;
+                $nilai = !empty($item->nilai_sanksi) ? $item->nilai_sanksi : 0;
+                $totalNilaiSanksi += $nilai;
                 @endphp
 
                 <td>
                     @if ($nilai > 0)
-                        Rp {{ number_format($nilai, 0, ',', '.') }}
+                    Rp {{ number_format($nilai, 0, ',', '.') }}
                     @else
-                        -
+                    -
                     @endif
                 </td>
 
                 <td>{{ $item->toko }}</td>
 
-                <td style="text-align:center;">
-                    {{ $item->kunjungan }}
-                </td>
+                <td style="text-align:center;">{{ $item->kunjungan }}</td>
 
                 <td style="text-align:center;">
                     {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
@@ -137,9 +139,7 @@
 
                 <td>{{ $item->keterangan ?: '-' }}</td>
 
-                <td style="text-align:center;">
-                    {{ $item->kuartal }}
-                </td>
+                <td style="text-align:center;">{{ $item->kuartal }}</td>
             </tr>
             @empty
             <tr>
@@ -150,7 +150,6 @@
             @endforelse
         </tbody>
 
-        {{-- TOTAL NILAI SANKSI --}}
         <tfoot>
             <tr>
                 <th colspan="7" style="text-align:center;">TOTAL SANKSI</th>

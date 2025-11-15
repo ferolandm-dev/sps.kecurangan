@@ -369,6 +369,13 @@ class KecuranganController extends Controller
     $sortBy = $request->get('sort_by', 'tanggal');
     $sortOrder = $request->get('sort_order', 'desc');
 
+    // 🔥 Tambahkan sales untuk dropdown filter
+    $sales = DB::table('kecurangan')
+        ->select('id_sales', 'nama_sales')
+        ->groupBy('id_sales', 'nama_sales')
+        ->orderBy('nama_sales')
+        ->get();
+
     $query = DB::table('kecurangan')
         ->select(
             'kecurangan.*',
@@ -380,7 +387,6 @@ class KecuranganController extends Controller
         ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
         ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
 
-
     // SEARCH
     if ($request->filled('search')) {
         $search = $request->search;
@@ -391,6 +397,11 @@ class KecuranganController extends Controller
                 ->orWhere('distributors.distributor', 'like', "%$search%")
                 ->orWhere('kecurangan.toko', 'like', "%$search%");
         });
+    }
+
+    // FILTER SALES
+    if ($request->filled('sales')) {
+        $query->where('kecurangan.id_sales', $request->sales);
     }
 
     // FILTER TANGGAL
@@ -422,6 +433,7 @@ class KecuranganController extends Controller
 
     // DROPDOWN
     $jenisSanksi = DB::table('sanksi')->distinct()->pluck('jenis');
+    $keteranganSanksi = DB::table('sanksi')->get();
 
     if ($request->boolean('all')) {
         $kecurangan = $query->get();
@@ -429,8 +441,15 @@ class KecuranganController extends Controller
         $kecurangan = $query->paginate(10)->appends($request->query());
     }
 
-    return view('kecurangan.data', compact('kecurangan', 'jenisSanksi'));
+    // 🔥 Kirim sales ke view!
+    return view('kecurangan.data', compact(
+        'kecurangan',
+        'jenisSanksi',
+        'keteranganSanksi',
+        'sales'
+    ));
 }
+
 
     public function destroy($id)
     {
@@ -467,7 +486,8 @@ class KecuranganController extends Controller
                 $request->start_date,
                 $request->end_date,
                 $request->jenis_sanksi,
-                $request->keterangan_sanksi
+                $request->keterangan_sanksi,
+                $request->sales
             ),
             'Data_Kecurangan.xlsx'
         );
@@ -484,26 +504,24 @@ class KecuranganController extends Controller
     $query = DB::table('kecurangan')
         ->where('kecurangan.validasi', 1)
         ->select(
-            'kecurangan.*',
-            'sales.nama as nama_sales',
-            'distributors.distributor',
-            'asisten_managers.nama as nama_asisten_manager'
-        )
-        ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
-        ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
-        ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+            'kecurangan.*'
+        );
 
-    if ($mode === 'all') {
+    // ========= 🔍 FILTER SALES =========
+    $salesInfo = null;
 
+    if ($request->filled('sales')) {
+
+        $query->where('kecurangan.id_sales', $request->sales);
+
+        // Ambil info sales hanya untuk ditampilkan di PDF
+        $salesInfo = DB::table('kecurangan')
+            ->select('id_sales', 'nama_sales')
+            ->where('id_sales', $request->sales)
+            ->first();
     }
 
-    if ($mode === 'date') {
-        if ($startDate && $endDate) {
-            $query->whereBetween('kecurangan.tanggal', [$startDate, $endDate]);
-        }
-    }
-
-    // FILTER TAMBAHAN (tetap berfungsi di kedua mode)
+    // ========= 🔍 FILTER SANKSI =========
     if ($request->filled('jenis_sanksi')) {
         $query->where('kecurangan.jenis_sanksi', $request->jenis_sanksi);
     }
@@ -512,19 +530,24 @@ class KecuranganController extends Controller
         $query->where('kecurangan.keterangan_sanksi', $request->keterangan_sanksi);
     }
 
-    // GET DATA
+    // ========= 🔍 FILTER TANGGAL =========
+    if ($mode === 'date' && $startDate && $endDate) {
+        $query->whereBetween('kecurangan.tanggal', [$startDate, $endDate]);
+    }
+
+    // ========= 🔄 GET DATA =========
     $data = $query->orderBy('kecurangan.tanggal', 'desc')->get();
 
-    // GENERATE PDF
+    // ========= 📝 GENERATE PDF =========
     $pdf = PDF::loadView('pdf.kecurangan', [
         'data' => $data,
+        'sales' => $salesInfo,         // ⬅⬅ tambahan variabel
         'startDate' => $mode === 'date' ? $startDate : null,
         'endDate'   => $mode === 'date' ? $endDate : null,
     ])->setPaper('a4', 'landscape');
 
     return $pdf->download('Laporan_Kecurangan.pdf');
 }
-
 
 
     public function getBukti($id)

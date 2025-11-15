@@ -1,7 +1,7 @@
 @extends('layouts.app', [
 'namePage' => 'Master Kecurangan',
 'class' => 'sidebar-mini',
-'activePage' => 'kecurangan',
+'activePage' => 'data_kecurangan',
 ])
 
 @section('content')
@@ -17,212 +17,260 @@
         <div class="col-md-12">
 
             {{-- ALERT SUCCESS --}}
-            @if(session('success'))
-            <div class="alert alert-success alert-with-icon alert-dismissible fade show" data-notify="container"
-                role="alert" style="
-                    background: rgba(41,177,74,0.2);
-                    border: 1px solid #29b14a;
-                    color: #155724;
-                    border-radius: 12px;
-                ">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#155724;">
-                    <i class="now-ui-icons ui-1_simple-remove"></i>
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert" style=" background: linear-gradient(135deg, #29b14a 0%, #34d058 100%); color: #fff;
+                border: none;
+                border-radius: 14px;
+                padding: 14px 18px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                box-shadow: 0 4px 12px rgba(41,177,74,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 25px;">
+                <div class="d-flex align-items-center">
+                    <i class="now-ui-icons ui-1_bell-53 mr-2" style="font-size:18px;"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="
+                    color:#fff;
+                    opacity:0.8;
+                    font-size:22px;
+                    margin-left:10px;">
+                    <span aria-hidden="true">&times;</span>
                 </button>
-                <span data-notify="icon" class="now-ui-icons ui-1_bell-53 mr-2"></span>
-                <span data-notify="message">{{ session('success') }}</span>
             </div>
             @endif
 
-            {{-- ALERT ERROR --}}
-            @if(session('error'))
-            <div class="alert alert-danger alert-with-icon alert-dismissible fade show" data-notify="container"
-                role="alert" style="
-                    background: rgba(231,76,60,0.2);
-                    border: 1px solid #e74c3c;
-                    color: #721c24;
-                    border-radius: 12px;
-                ">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#721c24;">
-                    <i class="now-ui-icons ui-1_simple-remove"></i>
-                </button>
-                <span data-notify="icon" class="now-ui-icons ui-1_bell-53"></span>
-                <span data-notify="message">{{ session('error') }}</span>
-            </div>
-            @endif
 
+            {{-- ✅ CARD DATA KECURANGAN --}}
             <div class="card" style="border-radius: 20px;">
-                <div class="card-header d-flex justify-content-between align-items-center flex-wrap"
-                    style="border-radius: 20px 20px 0 0; background: rgba(255,255,255,0.5);">
-                    <h4 class="card-title mb-0 text-dark mt-4">{{ __('Tambah Data Kecurangan') }}</h4>
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                    <h4 class="card-title mb-0 text-dark">{{ __('Data Kecurangan') }}</h4>
+
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        {{-- Tombol Tambah Kecurangan --}}
+                        @if (checkAccess('Master', 'Master Kecurangan', 'create'))
+                        <a href="{{ route('kecurangan.create') }}" class="btn btn-primary btn-icon btn-round"
+                            style="background:#29b14a;border:none; margin-right: 10px;" title="Tambah Distributor">
+                            <i class="now-ui-icons ui-1_simple-add"></i>
+                        </a>
+
+                        @endif
+                        {{-- 🔍 Form Pencarian --}}
+                        <form action="{{ route('kecurangan.index') }}" method="GET"
+                            class="d-flex align-items-center mr-2" style="margin-top: 10px;">
+                            <div class="input-group" style="width:250px;">
+                                <input type="text" name="search" class="form-control" placeholder="Cari kecurangan..."
+                                    value="{{ request('search') }}"
+                                    style="height:38px;border-radius:30px 0 0 30px;padding-left:15px;margin-top:10px;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-success btn-round" type="submit"
+                                        style="height:38px;border-radius:0 30px 30px 0;background:#29b14a;border:none;">
+                                        <i class="now-ui-icons ui-1_zoom-bold"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        {{-- 🔄 Tombol Tampilkan Semua / Halaman --}}
+                        @if (request()->has('all'))
+                        <a href="{{ request()->fullUrlWithoutQuery('all') }}" class="btn btn-warning btn-round mr-2"
+                            style="background:#eee733;color:#000;border:none;margin-top:10px;"
+                            title="Tampilkan Halaman">
+                            <i class="now-ui-icons arrows-1_refresh-69"></i> Tampilkan Halaman
+                        </a>
+                        @else
+                        <a href="{{ request()->fullUrlWithQuery(['all' => true]) }}"
+                            class="btn btn-success btn-round mr-2"
+                            style="background:#29b14a;border:none;margin-top:10px;" title="Tampilkan Semua Data">
+                            <i class="now-ui-icons ui-1_zoom-bold"></i> Tampilkan Semua
+                        </a>
+                        @endif
+                    </div>
                 </div>
 
-                <div class="card-body" style="background: rgba(255,255,255,0.7); border-radius: 0 0 20px 20px;">
-                    <form action="{{ route('kecurangan.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
+                {{-- 📋 TABEL DATA --}}
+                <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 kecurangan-table" style="color:#333;">
+                            <thead style="color:#29b14a;">
+                                <tr>
+                                    <th class="col-no text-center" style="width:40px;">#</th>
+                                    <th class="col-id-sales" style="width:120px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'id_sales',
+                        'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            ID Sales
+                                        </a>
+                                    </th>
 
-                        {{-- ===================== DETAIL SALES ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Sales</h6>
+                                    <th class="col-nama-sales" style="width:200px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'nama_sales',
+                        'sort_order' => (request('sort_by') === 'nama_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Nama Sales
+                                        </a>
+                                    </th>
 
-                        <div class="form-group">
-                            <label for="id_sales" class="text-dark font-weight-bold">{{ __('ID Sales') }}</label>
-                            <select name="id_sales" id="id_sales" class="form-control select2" required
-                                style="border-radius:12px;">
-                                <option value="">-- Pilih ID Sales --</option>
-                                @foreach($sales as $s)
-                                <option value="{{ $s->id }}">{{ $s->id }} - {{ $s->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                                    <th class="col-distributor" style="width:350px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'distributor',
+                        'sort_order' => (request('sort_by') === 'distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Distributor
+                                        </a>
+                                    </th>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Nama Sales') }}</label>
-                                    <input type="text" id="nama_sales" name="nama_sales" class="form-control" readonly
-                                        style="border-radius:12px;">
-                                </div>
-                            </div>
+                                    <th class="col-nama-ass" style="width:300px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'nama_asisten_manager',
+                        'sort_order' => (request('sort_by') === 'nama_asisten_manager' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Nama ASS
+                                        </a>
+                                    </th>
 
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Distributor') }}</label>
-                                    <input type="text" id="distributor" name="distributor" class="form-control" readonly
-                                        style="border-radius:12px;">
-                                </div>
-                            </div>
-                        </div>
+                                    <th class="col-jenis-sanksi" style="width:150px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'jenis_sanksi',
+                        'sort_order' => (request('sort_by') === 'jenis_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Jenis Sanksi
+                                        </a>
+                                    </th>
 
-                        <hr class="my-4" style="border-color:#29b14a;">
+                                    <th class="col-ket-sanksi" style="width:320px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'keterangan_sanksi',
+                        'sort_order' => (request('sort_by') === 'keterangan_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Keterangan Sanksi
+                                        </a>
+                                    </th>
 
-                        {{-- ===================== DETAIL ASISTEN MANAGER ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
+                                    <th class="col-nilai-sanksi" style="width:160px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'nilai_sanksi',
+                        'sort_order' => (request('sort_by') === 'nilai_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Nilai Sanksi
+                                        </a>
+                                    </th>
 
-                        <div class="form-group">
-                            <label for="id_asisten_manager"
-                                class="text-dark font-weight-bold">{{ __('ID Asisten Manager') }}</label>
-                            <select name="id_asisten_manager" id="id_asisten_manager" class="form-control select2"
-                                style="border-radius:12px;">
-                                <option value="">-- Pilih Asisten Manager --</option>
-                            </select>
-                        </div>
+                                    <th class="col-toko" style="width:200px;">Toko</th>
+                                    <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label for="nama_asisten_manager"
-                                        class="text-dark font-weight-bold">{{ __('Nama Asisten Manager') }}</label>
-                                    <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
-                                        class="form-control" readonly style="border-radius:12px;">
-                                </div>
-                            </div>
-                        </div>
+                                    <th class="col-tanggal" style="width:110px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                        'sort_by' => 'tanggal',
+                        'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
+                                            Tanggal
+                                        </a>
+                                    </th>
 
-                        <hr class="my-4" style="border-color:#29b14a;">
+                                    <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
+                                    <th class="col-kuartal" style="width:110px;">Kuartal</th>
+                                    <th class="col-aksi text-center" style="width:150px;">Aksi</th>
+                                </tr>
+                            </thead>
 
-                        {{-- ===================== DETAIL KEJADIAN ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Kejadian</h6>
+                            <tbody>
+                                @forelse ($kecurangan as $index => $item)
+                                <tr style="vertical-align: top;">
+                                    <td class="text-center">
+                                        {{ $loop->iteration + (method_exists($kecurangan, 'firstItem') ? $kecurangan->firstItem() - 1 : 0) }}
+                                    </td>
+                                    <td>{{ $item->id_sales }}</td>
+                                    <td>{{ $item->nama_sales }}</td>
+                                    <td>{{ $item->distributor }}</td>
+                                    <td>{{ $item->nama_asisten_manager }}</td>
+                                    <td>{{ $item->jenis_sanksi }}</td>
+                                    <td>{{ $item->keterangan_sanksi }}</td>
+                                    <td>Rp {{ number_format($item->nilai_sanksi, 0, ',', '.') }}</td>
+                                    <td>{{ $item->toko }}</td>
+                                    <td class="text-center">{{ $item->kunjungan }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
 
-                        <div class="row">
-                            {{-- Dropdown Jenis Sanksi --}}
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="jenis_sanksi"
-                                        class="text-dark font-weight-bold">{{ __('Jenis Sanksi') }}</label>
-                                    <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required
-                                        style="border-radius:12px; border:1px solid #E3E3E3; width:100%;">
-                                        <option value="">-- Pilih Jenis Sanksi --</option>
-                                        @foreach($jenisSanksi as $jenis)
-                                        <option value="{{ $jenis }}">{{ $jenis }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                                    <td class="text-center">
+                                        @if ($item->keterangan)
+                                        <button class="btn btn-info btn-sm btn-round btn-lihat-keterangan"
+                                            data-keterangan="{{ $item->keterangan }}">
+                                            <i class="now-ui-icons files_paper"></i>
+                                        </button>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
 
-                            {{-- Dropdown Deskripsi Sanksi --}}
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="deskripsi_sanksi"
-                                        class="text-dark font-weight-bold">{{ __('Deskripsi Sanksi') }}</label>
-                                    <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
-                                        required style="border-radius:12px; border:1px solid #E3E3E3; width:100%;">
-                                        <option value="">-- Pilih Deskripsi --</option>
-                                    </select>
-                                </div>
-                            </div>
+                                    <td>{{ $item->kuartal }}</td>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="nilai_sanksi"
-                                        class="text-dark font-weight-bold">{{ __('Nilai Sanksi (Rp)') }}</label>
-                                    <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control"
-                                        readonly style="border-radius:12px;">
-                                </div>
-                            </div>
+                                    <td class="text-center" style="vertical-align: top;">
+                                        <button class="btn btn-info btn-icon btn-sm btn-round btn-lihat-bukti"
+                                            data-id="{{ $item->id }}" title="Lihat Bukti"
+                                            style="background:#17a2b8;border:none;">
+                                            <i class="now-ui-icons media-1_album"></i>
+                                        </button>
+                                        @if($item->validasi == 0)
+                                        <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
+                                            style="display:inline-block;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success btn-icon btn-sm btn-round"
+                                                title="Validasi Data" onclick="return confirm('Validasi data ini?');"
+                                                style="background:#29b14a;border:none;">
+                                                <i class="now-ui-icons ui-1_check"></i>
+                                            </button>
+                                        </form>
 
-                        </div>
+                                        @if (checkAccess('Master', 'Master Kecurangan', 'edit'))
+                                        <a href="{{ route('kecurangan.edit', $item->id) }}"
+                                            class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data"
+                                            style="background:#f39c12;border:none;">
+                                            <i class="now-ui-icons ui-2_settings-90"></i>
+                                        </a>
+                                        @endif
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Toko') }}</label>
-                                    <input type="text" name="toko" class="form-control" required
-                                        style="border-radius:12px;">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Kunjungan') }}</label>
-                                    <input type="text" name="kunjungan" class="form-control" required
-                                        style="border-radius:12px;">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group has-label" title="Tanggal Kunjungan">
-                                    <label class="text-dark font-weight-bold">{{ __('Tanggal') }}</label>
-                                    <input type="text" name="tanggal" id="tanggal" class="form-control"
-                                        placeholder="dd/mm/yyyy" required style="border-radius:12px;">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Kuartal') }}</label>
-                                    <input type="text" name="kuartal" id="kuartal" class="form-control" readonly
-                                        style="border-radius:12px;">
-                                </div>
-                            </div>
-                        </div>
+                                        @if (checkAccess('Master', 'Master Kecurangan', 'delete'))
+                                        <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
+                                            style="display:inline-block;"
+                                            onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round"
+                                                title="Hapus Data" style="background:#e74c3c;border:none;">
+                                                <i class="now-ui-icons ui-1_simple-remove"></i>
+                                            </button>
+                                        </form>
+                                        @endif
+                                        @else
+                                        <span class="badge"
+                                            style="background:#29b14a;color:white;border-radius:10px;padding:6px 10px;">
+                                            Tervalidasi
+                                        </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="15" class="text-center text-muted">Belum ada data kecurangan</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
 
-                        <div class="form-group has-label">
-                            <label for="keterangan" class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
-                            <textarea type="text" name="keterangan" id="keterangan" class="form-control" style=" border-radius: 12px; 
-                            width: 40%; height: 100px; padding: 10px 14px; border: 1px solid #E3E3E3; "></textarea>
-                        </div>
+                        </table>
+                    </div>
 
-                        <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== FOTO KEJADIAN ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Bukti Kecurangan (Foto)
-                        </h6>
-
-                        <div class="form-group has-label">
-                            <label
-                                class="text-dark font-weight-bold d-block mb-2">{{ __('Upload Foto (Maksimal 5)') }}</label>
-                            <button type="button" id="btn-upload" class="btn btn-outline-success btn-round mb-3"
-                                style="border-radius:12px;padding:8px 16px;">
-                                <i class="now-ui-icons ui-1_simple-add"></i> Pilih Foto
-                            </button>
-                            <input type="file" name="bukti[]" id="bukti" accept=".jpg,.jpeg,.png" multiple hidden>
-                            <div id="preview-container"
-                                class="mt-2 d-flex flex-wrap gap-2 justify-content-start align-items-start"></div>
-                            <small class="form-text text-muted mt-2">Format: JPG, JPEG, PNG — maksimal 5 foto.</small>
-                        </div>
-
-                        <div class="text-right mt-4">
-                            <button type="submit" class="btn btn-success btn-round">
-                                <i class="now-ui-icons"></i> Simpan
-                            </button>
-                        </div>
-                    </form>
+                    {{-- 📄 Pagination --}}
+                    @if (!request()->has('all'))
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ $kecurangan->links('pagination::bootstrap-4') }}
+                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -230,14 +278,34 @@
     </div>
 </div>
 
-{{-- ===================== MODAL PREVIEW FOTO ===================== --}}
-<div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:-10px;">
+{{-- ===================== MODAL LIHAT KETERANGAN ===================== --}}
+<div class="modal fade" id="modalKeterangan" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+            border-radius:15px;
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="border-bottom:none;">
+                <h5 class="modal-title text-success" style="font-weight:600;">
+                    <i class="now-ui-icons"></i> Keterangan
+                </h5>
+            </div>
+            <div class="modal-body" style="font-size:15px; color:#333; text-align:justify; line-height:1.6em;">
+                <p id="isiKeterangan"></p>
+            </div>
+            <div class="modal-footer" style="border-top:none;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ===================== MODAL LIHAT BUKTI ===================== --}}
+<div class="modal fade" id="modalBukti" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:-10px;">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
         <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
             border-radius:15px;
             box-shadow:0 4px 25px rgba(0,0,0,0.3);
-            overflow:hidden;
-            position:relative;">
+            overflow:hidden;">
 
             {{-- Header --}}
             <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
@@ -248,14 +316,20 @@
 
             {{-- Isi Modal --}}
             <div class="modal-body d-flex justify-content-center align-items-center"
-                style="height:75vh; overflow:hidden; position:relative;">
-                <img id="modalImage" src="" alt="Preview" style="max-width:90%; max-height:90%; object-fit:contain;
-                    border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2);
-                    transition:0.3s;">
+                style="height:75vh; position:relative;">
+                {{-- Gambar utama --}}
+                <img id="modalImage" src="" alt="Preview"
+                    style="max-width:90%; max-height:90%; object-fit:contain; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:0.3s;">
+
+                {{-- Tombol Navigasi --}}
                 <button type="button" id="modalPrev" class="btn btn-link" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);
-                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">‹</button>
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">
+                    ‹
+                </button>
                 <button type="button" id="modalNext" class="btn btn-link" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);
-                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">›</button>
+                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">
+                    ›
+                </button>
             </div>
 
             {{-- Footer --}}
@@ -266,14 +340,35 @@
     </div>
 </div>
 
+@endsection
 @push('js')
-<link href="{{ asset('css/kecurangan.css') }}" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-
 <style>
+/* TABLE UTAMA */
+.kecurangan-table {
+    table-layout: fixed !important;
+    width: 100%;
+}
+
+/* HEADER TIDAK TERPOTONG & BOLEH BARIS 2 */
+.kecurangan-table thead th {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    vertical-align: middle;
+}
+
+/* BODY TETAP RAPI */
+.kecurangan-table tbody td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* scroll aman */
+.table-responsive {
+    overflow-x: auto;
+}
+
 input:invalid,
 textarea:invalid,
 select:invalid {
@@ -285,249 +380,120 @@ input:focus,
 textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
-    /* hijau atau sesuai tema */
-}
-
-/* === BACKDROP AKTIF DAN TIDAK TRANSPARAN === */
-.modal-backdrop.show {
-    opacity: 1 !important;
-    background: rgba(0, 0, 0, 0.7) !important;
-    backdrop-filter: blur(2px);
-}
-
-/* Tombol navigasi modal tetap di atas */
-#modalCloseBtn,
-#modalPrev,
-#modalNext {
-    z-index: 2102 !important;
-    pointer-events: auto !important;
-}
-
-/* Kunci scroll pada body dan modal */
-body.modal-open {
-    overflow: hidden !important;
-}
-
-.modal {
-    overflow: hidden !important;
 }
 </style>
 
 <script>
 $(document).ready(function() {
-    // === Select2 Setup ===
-    $('#id_sales, #id_asisten_manager, #jenis_sanksi, #deskripsi_sanksi').select2({
-        placeholder: "-- Pilih --",
-        width: '100%'
-    });
 
-    let selectedFiles = [];
+    let fotoList = [];
     let currentIndex = 0;
-    const MAX_FILES = 5;
-    const $fileInput = $('#bukti');
-    const $previewContainer = $('#preview-container');
 
-    // === Upload & Preview ===
-    $('#btn-upload').on('click', function() {
-        $fileInput.val('');
-        $fileInput.trigger('click');
-    });
+    // === MODAL LIHAT BUKTI ===
+    $('.btn-lihat-bukti').on('click', function() {
+        const id = $(this).data('id');
+        fotoList = [];
+        currentIndex = 0;
 
-    function syncInputFiles() {
-        const dt = new DataTransfer();
-        selectedFiles.forEach(f => dt.items.add(f));
-        $fileInput[0].files = dt.files;
-    }
-
-    $fileInput.on('change', function() {
-        const incoming = Array.from(this.files || []);
-        const newFiles = incoming.filter(f => !selectedFiles.some(sf => sf.name === f.name && sf
-            .size === f.size));
-        selectedFiles = [...selectedFiles, ...newFiles].slice(0, MAX_FILES);
-        renderPreview();
-        syncInputFiles();
-    });
-
-    function renderPreview() {
-        $previewContainer.empty();
-        selectedFiles.forEach((file, index) => {
-            if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) return;
-            const reader = new FileReader();
-            reader.onload = e => {
-                const html = `
-                    <div class="position-relative m-1" style="display:inline-block;">
-                        <img src="${e.target.result}" class="preview-img" data-index="${index}"
-                             style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
-                        <button type="button" class="btn btn-danger btn-sm btn-remove" data-index="${index}"
-                             style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
-                    </div>`;
-                $previewContainer.append(html);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    $(document).on('click', '.btn-remove', function(e) {
-        e.stopPropagation();
-        const idx = Number($(this).data('index'));
-        selectedFiles.splice(idx, 1);
-        renderPreview();
-        syncInputFiles();
-    });
-
-    // === Modal Preview ===
-    $(document).on('click', '.preview-img', function() {
-        currentIndex = Number($(this).data('index'));
-        showModalImage(currentIndex);
-        $('#modalPreview').modal({
-            backdrop: 'static', // aktifkan overlay, tidak bisa klik luar
+        $('#modalBukti').modal({
+            backdrop: 'static',
             keyboard: true,
             show: true
         });
-    });
 
-    function showModalImage(i) {
-        const file = selectedFiles[i];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => $('#modalImage').attr('src', e.target.result);
-        reader.readAsDataURL(file);
-    }
+        $.ajax({
+            url: `/kecurangan/${id}/bukti`,
+            method: 'GET',
+            beforeSend: function() {
+                $('#modalImage').attr('src', '').attr('alt', 'Memuat...');
+            },
+            success: function(response) {
+                if (!response.length) {
+                    $('#modalImage').attr('alt', 'Tidak ada foto.');
+                    return;
+                }
 
-    $('#modalCloseBtn').on('click', () => $('#modalPreview').modal('hide'));
-    $('#modalNext').on('click', () => {
-        if (!selectedFiles.length) return;
-        currentIndex = (currentIndex + 1) % selectedFiles.length;
-        showModalImage(currentIndex);
-    });
-    $('#modalPrev').on('click', () => {
-        if (!selectedFiles.length) return;
-        currentIndex = (currentIndex - 1 + selectedFiles.length) % selectedFiles.length;
-        showModalImage(currentIndex);
-    });
-
-    // === Navigasi Keyboard ===
-    $(document).on('keydown', e => {
-        if (!$('#modalPreview').hasClass('show')) return;
-        if (e.key === 'Escape') $('#modalPreview').modal('hide');
-        if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
-        if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
-    });
-
-    // === Kunci scroll saat modal terbuka ===
-    $('#modalPreview').on('shown.bs.modal', function() {
-        $('body').css('overflow', 'hidden');
-        $('#modalPreview, #modalPreview .modal-body').css({
-            'overflow': 'hidden',
-            'touch-action': 'none'
-        });
-
-        // ubah backdrop biar gelap elegan
-        $('.modal-backdrop')
-            .addClass('show')
-            .css({
-                'background-color': 'rgba(0,0,0,0.7)',
-                'backdrop-filter': 'blur(2px)'
-            });
-
-        $(document).on('touchmove.modalBlock', function(e) {
-            if ($('#modalPreview').hasClass('show')) e.preventDefault();
-        });
-    });
-
-    // === Pulihkan scroll saat modal tertutup ===
-    $('#modalPreview').on('hidden.bs.modal', function() {
-        $('#modalImage').attr('src', '');
-        $('body').css('overflow', 'auto');
-        $('#modalPreview, #modalPreview .modal-body').css({
-            'overflow': '',
-            'touch-action': ''
-        });
-        $('.modal-backdrop').removeAttr('style');
-        $(document).off('touchmove.modalBlock');
-    });
-
-    // === Datepicker ===
-    $('#tanggal').datepicker({
-        dateFormat: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        onSelect: function(dateText) {
-            const [d, m, y] = dateText.split('/');
-            const bln = parseInt(m);
-            const th = parseInt(y.length === 2 ? '20' + y : y);
-            const kuartal = bln <= 3 ? 'Q1 ' + th : bln <= 6 ? 'Q2 ' + th : bln <= 9 ? 'Q3 ' + th :
-                'Q4 ' + th;
-            $('#kuartal').val(kuartal);
-        }
-    });
-
-    // === Dropdown Dinamis Sales / AM / Sanksi ===
-    $('#id_sales').on('change', function() {
-        const idSales = $(this).val();
-        $('#nama_sales, #distributor, #nama_asisten_manager').val('');
-        $('#id_asisten_manager').html('<option value="">-- Pilih Asisten Manager --</option>').trigger(
-            'change');
-        if (!idSales) return;
-        $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
-            $('#nama_sales').val(data.nama_sales);
-            $('#distributor').val(data.distributor);
-            if (data.distributor_id) {
-                $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
-                    let opt = '<option value="">-- Pilih Asisten Manager --</option>';
-                    res.forEach(a => opt +=
-                        `<option value="${a.id}">${a.id} - ${a.nama}</option>`);
-                    $('#id_asisten_manager').html(opt).trigger('change');
-                });
+                fotoList = response.map(f => f.url);
+                showModalImage(currentIndex);
+            },
+            error: function() {
+                $('#modalImage').attr('alt', 'Gagal memuat foto.');
             }
         });
     });
 
-    $('#id_asisten_manager').on('change', function() {
-        const txt = $(this).find('option:selected').text();
-        const nama = txt.split('-').slice(1).join('-').trim();
-        $('#nama_asisten_manager').val(nama);
+    function showModalImage(index) {
+        if (!fotoList.length) return;
+
+        $('#modalImage').addClass('fade-out');
+        setTimeout(() => {
+            $('#modalImage')
+                .attr('src', fotoList[index])
+                .removeClass('fade-out');
+        }, 150);
+    }
+
+    $('#modalNext').on('click', function() {
+        if (!fotoList.length) return;
+        currentIndex = (currentIndex + 1) % fotoList.length;
+        showModalImage(currentIndex);
     });
 
-    $('#jenis_sanksi').on('change', function() {
-        const jenis = $(this).val();
-        const $deskripsiSelect = $('#deskripsi_sanksi');
-        const $nilaiInput = $('#nilai_sanksi');
-        $deskripsiSelect.html('<option value="">-- Pilih Deskripsi --</option>');
-        $nilaiInput.val('');
-        if (!jenis) return;
-        $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
-            let options = '<option value="">-- Pilih Deskripsi --</option>';
-            data.forEach(item => {
-                options +=
-                    `<option value="${item.keterangan}">${item.keterangan}</option>`;
-            });
-            $deskripsiSelect.html(options);
+    $('#modalPrev').on('click', function() {
+        if (!fotoList.length) return;
+        currentIndex = (currentIndex - 1 + fotoList.length) % fotoList.length;
+        showModalImage(currentIndex);
+    });
+
+    // keyboard
+    $(document).on('keydown', function(e) {
+        if (!$('#modalBukti').hasClass('show')) return;
+        if (e.key === 'Escape') $('#modalBukti').modal('hide');
+        else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
+        else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
+    });
+
+    // Lock scroll saat modal buka
+    $('#modalBukti').on('shown.bs.modal', function() {
+        $('body').css('overflow', 'hidden');
+
+        $('#modalBukti').css('overflow', 'hidden');
+        $('#modalBukti .modal-body').css({
+            'overflow': 'hidden',
+            'touch-action': 'none'
+        });
+
+        $(document).on('touchmove.modalBlock', function(e) {
+            if ($('#modalBukti').hasClass('show') &&
+                $(e.target).closest('#modalBukti').length) {
+                e.preventDefault();
+            }
         });
     });
 
-    $('#deskripsi_sanksi').on('change', function() {
-        const jenis = $('#jenis_sanksi').val();
-        const deskripsi = $(this).val();
-        const $nilaiInput = $('#nilai_sanksi');
-        if (!jenis || !deskripsi) return $nilaiInput.val('');
+    // Reset setelah modal tutup
+    $('#modalBukti').on('hidden.bs.modal', function() {
+        $('#modalImage').attr('src', '');
+        fotoList = [];
+        currentIndex = 0;
 
-        // encode deskripsi supaya karakter khusus (mis. "/") tidak merusak path URL
-        const encodedDeskripsi = encodeURIComponent(deskripsi);
-
-        $.getJSON(`/sanksi/nilai/${jenis}/${encodedDeskripsi}`, function(data) {
-            if (data && data.nilai !== undefined) {
-                const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
-                $nilaiInput.val('Rp ' + formatted);
-            } else $nilaiInput.val('');
-        }).fail(function() {
-            // debug ringan: kosongkan jika gagal
-            $nilaiInput.val('');
+        $('body').css('overflow', 'auto');
+        $('#modalBukti, #modalBukti .modal-body').css({
+            'overflow': '',
+            'touch-action': ''
         });
+
+        $(document).off('touchmove.modalBlock');
+    });
+
+    // === MODAL KETERANGAN ===
+    $('.btn-lihat-keterangan').on('click', function() {
+        const isi = $(this).data('keterangan');
+        $('#isiKeterangan').text(isi);
+        $('#modalKeterangan').modal('show');
     });
 
 });
 </script>
-@endpush
 
-@endsection
+@endpush

@@ -11,7 +11,7 @@ use PDF;
 
 class KecuranganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
 {
     $sales = DB::table('sales')
         ->select('id', 'nama', 'id_distributor')
@@ -21,19 +21,61 @@ class KecuranganController extends Controller
         ->select('id', 'nama', 'id_distributor')
         ->get();
 
-    // Ambil distinct jenis (string)
     $jenisSanksi = DB::table('sanksi')
         ->distinct()
         ->pluck('jenis');
 
-    // Ambil seluruh data sanksi COMPLETE (object)
     $keteranganSanksi = DB::table('sanksi')->get();
 
-    $kecurangan = DB::table('kecurangan')
+    // =============================
+    // QUERY DASAR
+    // =============================
+    $query = DB::table('kecurangan')
         ->join('sales', 'kecurangan.id_sales', '=', 'sales.id')
-        ->select('kecurangan.*', 'sales.nama as nama_sales')
-        ->orderBy('kecurangan.id', 'desc')
-        ->get();
+        ->select('kecurangan.*', 'sales.nama as nama_sales');
+
+    // =============================
+    // SEARCH (opsional)
+    // =============================
+    if ($request->filled('search')) {
+        $query->where(function ($q) use ($request) {
+            $q->where('sales.nama', 'like', '%' . $request->search . '%')
+              ->orWhere('kecurangan.toko', 'like', '%' . $request->search . '%')
+              ->orWhere('kecurangan.kunjungan', 'like', '%' . $request->search . '%');
+        });
+    }
+
+    // =============================
+    // SORTING
+    // =============================
+    $allowedSorts = [
+        'id_sales',
+        'nama_sales',
+        'toko',
+        'kunjungan',
+        'tanggal',
+        'jenis_sanksi',
+    ];
+
+    $sortBy = $request->get('sort_by', 'tanggal');
+    $sortOrder = $request->get('sort_order', 'desc');
+
+    if (in_array($sortBy, $allowedSorts)) {
+        $column = $sortBy === 'nama_sales'
+            ? 'sales.nama'
+            : 'kecurangan.' . $sortBy;
+
+        $query->orderBy($column, $sortOrder);
+    }
+
+    // =============================
+    // TAMPILKAN SEMUA
+    // =============================
+    if ($request->boolean('all')) {
+        $kecurangan = $query->get();
+    } else {
+        $kecurangan = $query->paginate(10)->appends($request->query());
+    }
 
     return view('kecurangan.index', compact(
         'sales',
@@ -43,6 +85,26 @@ class KecuranganController extends Controller
         'keteranganSanksi'
     ));
 }
+    public function create()
+    {
+        $sales = DB::table('sales')
+            ->select('id', 'nama', 'id_distributor')
+            ->get();
+
+        $asistenManagers = DB::table('asisten_managers')
+            ->select('id', 'nama', 'id_distributor')
+            ->get();
+
+        $jenisSanksi = DB::table('sanksi')
+            ->distinct()
+            ->pluck('jenis');
+
+        return view('kecurangan.create', compact(
+            'sales',
+            'asistenManagers',
+            'jenisSanksi'
+        ));
+    }
 
     public function store(Request $request)
     {
@@ -108,7 +170,7 @@ class KecuranganController extends Controller
             }
         }
 
-        return redirect()->route('kecurangan.data')->with('success', 'Data kecurangan berhasil ditambahkan!');
+        return redirect()->route('kecurangan.index')->with('success', 'Data kecurangan berhasil ditambahkan!');
     }
 
 
@@ -260,7 +322,7 @@ class KecuranganController extends Controller
             }
         }
 
-        return redirect()->route('kecurangan.data')->with('success', 'Data berhasil diperbarui!');
+        return redirect()->route('kecurangan.index')->with('success', 'Data berhasil diperbarui!');
     }
 
 
@@ -389,7 +451,7 @@ class KecuranganController extends Controller
         DB::table('kecurangan_foto')->where('id_kecurangan', $id)->delete();
         DB::table('kecurangan')->where('id', $id)->delete();
 
-        return redirect()->route('kecurangan.data')->with('success', 'Data dan foto berhasil dihapus!');
+        return redirect()->route('kecurangan.index')->with('success', 'Data berhasil dihapus!');
     }
 
 
@@ -399,7 +461,7 @@ class KecuranganController extends Controller
             ->where('id', $id)
             ->update(['validasi' => 1, 'updated_at' => now()]);
 
-        return redirect()->route('kecurangan.data')->with('success', 'Data berhasil divalidasi!');
+        return redirect()->route('kecurangan.index')->with('success', 'Data berhasil divalidasi!');
     }
 
 

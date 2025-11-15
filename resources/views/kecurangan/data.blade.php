@@ -46,17 +46,11 @@
 
             {{-- ✅ CARD DATA KECURANGAN --}}
             <div class="card" style="border-radius: 20px;">
-                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <div class="card-header d-flex justify-content-between align-items-start flex-wrap">
+
                     <h4 class="card-title mb-0 text-dark">{{ __('Data Kecurangan') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
-                        {{-- Tombol Tambah Distributor --}}
-                        @if (checkAccess('Master', 'Master Kecurangan', 'create'))
-                        <a href="{{ route('kecurangan.index') }}" class="btn btn-primary btn-icon btn-round"
-                            style="background:#29b14a;border:none; margin-right: 10px;" title="Tambah Distributor">
-                            <i class="now-ui-icons ui-1_simple-add"></i>
-                        </a>
-                        @endif
                         {{-- 🔍 Form Pencarian --}}
                         <form action="{{ route('kecurangan.data') }}" method="GET"
                             class="d-flex align-items-center mr-2" style="margin-top: 10px;">
@@ -105,7 +99,7 @@
                         </button>
                         @endif
                     </div>
-
+                    <div class="w-100"></div>
                     <div class="d-flex justify-content-end align-items-center flex-wrap" style="margin-top:10px;">
 
                         <!-- Filter -->
@@ -253,33 +247,7 @@
                                         <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf
-                                            <button type="submit" class="btn btn-success btn-icon btn-sm btn-round"
-                                                title="Validasi Data" onclick="return confirm('Validasi data ini?');"
-                                                style="background:#29b14a;border:none;">
-                                                <i class="now-ui-icons ui-1_check"></i>
-                                            </button>
                                         </form>
-
-                                        @if (checkAccess('Master', 'Master Kecurangan', 'edit'))
-                                        <a href="{{ route('kecurangan.edit', $item->id) }}"
-                                            class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data"
-                                            style="background:#f39c12;border:none;">
-                                            <i class="now-ui-icons ui-2_settings-90"></i>
-                                        </a>
-                                        @endif
-
-                                        @if (checkAccess('Master', 'Master Kecurangan', 'delete'))
-                                        <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
-                                            style="display:inline-block;"
-                                            onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round"
-                                                title="Hapus Data" style="background:#e74c3c;border:none;">
-                                                <i class="now-ui-icons ui-1_simple-remove"></i>
-                                            </button>
-                                        </form>
-                                        @endif
                                         @else
                                         <span class="badge"
                                             style="background:#29b14a;color:white;border-radius:10px;padding:6px 10px;">
@@ -396,7 +364,7 @@
                         <select name="jenis_sanksi" id="filter_jenis_sanksi_filter" class="form-control select2">
                             <option value="">Semua Jenis</option>
                             @foreach ($jenisSanksi as $row)
-                            <option value="{{ $row }}" {{ request('jenis_sanksi') == $row ? 'selected' : '' }}>
+                            <option value="{{ $row }}">
                                 {{ $row }}
                             </option>
                             @endforeach
@@ -820,7 +788,6 @@ function toggleDateRange(selectId, rangeId) {
         });
     });
 
-    // ========= FIX SELECT2 DI DALAM MODAL FILTER =========
     $('#modalFilter').on('shown.bs.modal', function() {
         $('#filter_jenis_sanksi_filter').select2({
             dropdownParent: $('#modalFilter')
@@ -860,6 +827,7 @@ function toggleDateRange(selectId, rangeId) {
             }
         });
     });
+
 }
 
 // Panggil untuk PDF

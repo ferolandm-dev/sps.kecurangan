@@ -21,10 +21,10 @@
     </div>
 
     {{-- CARDS --}}
-    <div class="row g-3">
-
+    <div class="row">
         {{-- Card 1 --}}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
+
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -42,7 +42,8 @@
         </div>
 
         {{-- Card 2 --}}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
+
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -60,7 +61,8 @@
         </div>
 
         {{-- Card 3 --}}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
+
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -79,7 +81,8 @@
         </div>
 
         {{-- Card 4 --}}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
+
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -98,7 +101,8 @@
         </div>
 
         {{-- Card 5 --}}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
+
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -117,7 +121,8 @@
         </div>
 
         {{-- Card 6 --}}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
+
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -139,7 +144,8 @@
 
     {{-- TABLES — kedua card dibuat sama tinggi (h-100) --}}
     <div class="row mt-4">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4">
+
             <div class="card glass-card fade-up h-100" data-animate>
                 <div class="card-header">
                     <h5 class="card-category">Top 5 Distributor</h5>
@@ -177,7 +183,7 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4">
             <div class="card glass-card fade-up h-100" data-animate>
                 <div class="card-header">
                     <h5 class="card-category">Top 5 Sales Curang</h5>
@@ -220,8 +226,6 @@
 </div>
 
 @endsection
-
-
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>

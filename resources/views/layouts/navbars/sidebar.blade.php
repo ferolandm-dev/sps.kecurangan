@@ -143,7 +143,7 @@
 
         </div>
     </div>
-    @push('css')
+    @push('js')
     <style>
 .sidebar .nav li>a,
 .sidebar .nav .collapse .nav li>a {
@@ -179,4 +179,4 @@
     transition: all 0.25s ease-in-out;
 }
     </style>
-    @end
+    @endpush

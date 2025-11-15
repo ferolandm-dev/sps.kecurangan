@@ -47,8 +47,7 @@
 
                             <input type="email" name="email"
                                 class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Email') }}" value="{{ old('email', 'admin@nowui.com') }}" required
-                                autofocus>
+                                placeholder="{{ __('Email') }}" value="{{ old('email') }}" required autofocus>
                         </div>
 
                         @if ($errors->has('email'))
@@ -68,7 +67,7 @@
 
                             <input type="password" name="password"
                                 class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Password') }}" value="secret" required>
+                                placeholder="{{ __('Password') }}" required>
                         </div>
 
                         @if ($errors->has('password'))
@@ -93,24 +92,50 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-    // ==== Nonaktifkan background bawaan template ====
+    /* ============================================
+       ⛔ KUNCI SCROLL DI SEMUA UKURAN LAYAR
+    ============================================ */
+    document.documentElement.style.setProperty('overflow', 'hidden', 'important');
+    document.documentElement.style.setProperty('height', '100vh', 'important');
+
+    document.body.style.setProperty('overflow', 'hidden', 'important');
+    document.body.style.setProperty('height', '100vh', 'important');
+    document.body.style.setProperty('max-height', '100vh', 'important');
+    document.body.style.setProperty('position', 'fixed', 'important');
+    document.body.style.setProperty('width', '100%', 'important');
+    document.body.style.setProperty('left', '0', 'important');
+    document.body.style.setProperty('top', '0', 'important');
+
+    /* Hapus margin/padding default */
+    document.body.style.setProperty('margin', '0', 'important');
+    document.body.style.setProperty('padding', '0', 'important');
+
+    /* ============================================
+       ⛔ Nonaktifkan background bawaan template
+    ============================================ */
     if (typeof demo !== "undefined" && demo.checkFullPageBackgroundImage) {
         // demo.checkFullPageBackgroundImage();
     }
 
-    // ==== Background Content ====
+    /* ============================================
+       🎨 Background Content
+    ============================================ */
     const content = document.querySelector('.content');
     if (content) {
         content.style.setProperty('background-color', '#ffffff', 'important');
         content.style.setProperty('min-height', '100vh', 'important');
+        content.style.setProperty('width', '100%', 'important');
         content.style.setProperty('display', 'flex', 'important');
         content.style.setProperty('flex-direction', 'column', 'important');
         content.style.setProperty('justify-content', 'center', 'important');
         content.style.setProperty('align-items', 'center', 'important');
         content.style.setProperty('padding', '20px', 'important');
+        content.style.setProperty('overflow', 'hidden', 'important'); /* ⛔ Tambahan */
     }
 
-    // ==== Logo ====
+    /* ============================================
+       🔰 Logo
+    ============================================ */
     const container = document.querySelector('.logo-container');
     const logo = container ? container.querySelector('img') : null;
 
@@ -128,7 +153,9 @@ document.addEventListener("DOMContentLoaded", function() {
         logo.style.setProperty('transform', 'scale(1.3)', 'important');
     }
 
-    // ==== Card Spacing ====
+    /* ============================================
+       📦 Card Spacing
+    ============================================ */
     const cardHeader = document.querySelector('.card-login .card-header');
     const cardBody = document.querySelector('.card-login .card-body');
 
@@ -142,7 +169,9 @@ document.addEventListener("DOMContentLoaded", function() {
         cardBody.style.setProperty('text-align', 'left', 'important');
     }
 
-    // ==== Input Group Styling ====
+    /* ============================================
+       ✏️ Input Group Styling
+    ============================================ */
     const inputGroups = document.querySelectorAll('.input-group');
     inputGroups.forEach(group => {
         group.style.setProperty('display', 'flex', 'important');
@@ -150,8 +179,10 @@ document.addEventListener("DOMContentLoaded", function() {
         group.style.setProperty('align-items', 'center', 'important');
         group.style.setProperty('justify-content', 'flex-start', 'important');
         group.style.setProperty('gap', '10px', 'important');
-        group.style.setProperty('border', '2px solid #f96332', 'important');
+        group.style.setProperty('border', '2px solid #29b14a', 'important');
         group.style.setProperty('border-radius', '10px', 'important');
+       
+
         group.style.setProperty('background-color', '#fff', 'important');
         group.style.setProperty('padding', '8px 12px', 'important');
         group.style.setProperty('margin-bottom', '15px', 'important');
@@ -159,7 +190,9 @@ document.addEventListener("DOMContentLoaded", function() {
         group.style.setProperty('box-sizing', 'border-box', 'important');
     });
 
-    // ==== Icons ====
+    /* ============================================
+       🎯 Icons
+    ============================================ */
     const icons = document.querySelectorAll('.input-group-text');
     icons.forEach(icon => {
         icon.style.setProperty('background', 'transparent', 'important');
@@ -174,7 +207,9 @@ document.addEventListener("DOMContentLoaded", function() {
         icon.style.setProperty('height', '100%', 'important');
     });
 
-    // ==== Input Styling ====
+    /* ============================================
+       🔐 Input Styling
+    ============================================ */
     const inputs = document.querySelectorAll('.input-group input');
     inputs.forEach(input => {
 
@@ -188,16 +223,11 @@ document.addEventListener("DOMContentLoaded", function() {
         input.style.setProperty('outline', 'none', 'important');
         input.style.setProperty('text-align', 'left', 'important');
 
-        // Border group awal
         const group = input.closest('.input-group');
         if (group) {
             group.style.setProperty('border', '2px solid #29b14a', 'important');
-            group.style.setProperty('border-radius', '10px', 'important');
-            group.style.setProperty('padding', '6px 12px', 'important');
-            group.style.setProperty('gap', '8px', 'important');
         }
 
-        // Placeholder
         const style = document.createElement('style');
         style.innerHTML = `
             input[name="${input.name}"]::placeholder {
@@ -207,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
         document.head.appendChild(style);
 
-        // Focus effect
         input.addEventListener('focus', () => {
             const parent = input.closest('.input-group');
             if (parent) parent.style.setProperty('border', '2.5px solid #29b14a', 'important');
@@ -219,7 +248,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // ==== Button Styling ====
+    /* ============================================
+       🟩 BUTTON
+    ============================================ */
     const button = document.querySelector('.btn.btn-primary.btn-round.btn-lg.btn-block');
     if (button) {
         button.style.setProperty('background-color', '#29b14a', 'important');
@@ -227,25 +258,8 @@ document.addEventListener("DOMContentLoaded", function() {
         button.style.setProperty('color', '#fff', 'important');
         button.style.setProperty('font-weight', '600', 'important');
         button.style.setProperty('transition', 'all 0.3s ease', 'important');
-
-        button.addEventListener('mouseenter', () => {
-            button.style.setProperty('background-color', '#1e8e39', 'important');
-            button.style.setProperty('border-color', '#1e8e39', 'important');
-        });
-
-        button.addEventListener('mouseleave', () => {
-            button.style.setProperty('background-color', '#29b14a', 'important');
-            button.style.setProperty('border-color', '#29b14a', 'important');
-        });
-
-        button.addEventListener('mousedown', () => {
-            button.style.setProperty('transform', 'scale(0.97)', 'important');
-        });
-
-        button.addEventListener('mouseup', () => {
-            button.style.setProperty('transform', 'scale(1)', 'important');
-        });
     }
 });
 </script>
+
 @endpush

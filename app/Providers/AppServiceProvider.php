@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
 {
+
+    if (str_contains(request()->getHost(), 'ngrok-free.app')) {
+        URL::forceScheme('https');
+    }
     View::composer('*', function ($view) {
         if (Auth::check()) {
             $access = DB::table('user_access')

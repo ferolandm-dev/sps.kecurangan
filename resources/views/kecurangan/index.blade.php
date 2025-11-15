@@ -172,7 +172,7 @@
 
                                     <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
                                     <th class="col-kuartal" style="width:110px;">Kuartal</th>
-                                    <th class="col-aksi text-center" style="width:150px;">Aksi</th>
+                                    <th class="col-aksi text-center" style="width:200px;">Aksi</th>
                                 </tr>
                             </thead>
 

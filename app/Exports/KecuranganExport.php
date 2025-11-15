@@ -13,21 +13,21 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
     protected $mode;
     protected $startDate;
     protected $endDate;
-    protected $jenis;        // <-- tambah
-    protected $keterangan;   // <-- tambah
+    protected $jenis;
+    protected $keterangan;
 
     public function __construct(
         $mode = 'all',
         $startDate = null,
         $endDate = null,
-        $jenis = null,          // <-- tambah
-        $keterangan = null      // <-- tambah
+        $jenis = null,
+        $keterangan = null
     ) {
         $this->mode        = $mode;
         $this->startDate   = $startDate;
         $this->endDate     = $endDate;
-        $this->jenis       = $jenis;        // <-- string
-        $this->keterangan  = $keterangan;   // <-- string
+        $this->jenis       = $jenis;
+        $this->keterangan  = $keterangan;
     }
 
     public function collection()
@@ -50,19 +50,29 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
             )
             ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
             ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
-            ->leftJoin('asisten_managers', 'sales.id_distributor', '=', 'asisten_managers.id_distributor');
+            ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
 
-        // Filter Tanggal
-        if ($this->startDate && $this->endDate) {
-            $query->whereBetween('kecurangan.tanggal', [$this->startDate, $this->endDate]);
+
+        // MODE CETAK SEMUA
+        if ($this->mode === 'all') {
+
         }
 
-        // Filter Jenis Sanksi
+        // MODE CETAK BERDASARKAN TANGGAL
+        if ($this->mode === 'date') {
+            if ($this->startDate && $this->endDate) {
+                $query->whereBetween('kecurangan.tanggal', [
+                    $this->startDate,
+                    $this->endDate
+                ]);
+            }
+        }
+
+        // FILTER TAMBAHAN (BERFUNGSI DI KEDUA MODE)
         if (!empty($this->jenis)) {
             $query->where('kecurangan.jenis_sanksi', $this->jenis);
         }
 
-        // Filter Keterangan Sanksi
         if (!empty($this->keterangan)) {
             $query->where('kecurangan.keterangan_sanksi', $this->keterangan);
         }

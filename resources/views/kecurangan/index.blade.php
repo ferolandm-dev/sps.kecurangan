@@ -309,7 +309,7 @@
 
             {{-- Header --}}
             <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
-                <h5 class="modal-title text-success" style="font-weight:600;">
+                <h5 class="modal-title" style="font-weight:600;">
                     <i class="now-ui-icons"></i> Bukti Kecurangan
                 </h5>
             </div>

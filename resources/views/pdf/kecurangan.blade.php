@@ -97,6 +97,9 @@
         </thead>
 
         <tbody>
+            @php
+                $totalNilaiSanksi = 0;
+            @endphp
             @forelse ($data as $index => $item)
             <tr>
                 <td style="text-align:center;">{{ $index + 1 }}</td>
@@ -109,11 +112,16 @@
                 {{-- FIX DI SINI --}}
                 <td>{{ $item->keterangan_sanksi ?? '-' }}</td>
 
+                @php
+                    $nilai = !empty($item->nilai_sanksi) ? $item->nilai_sanksi : 0;
+                    $totalNilaiSanksi += $nilai;
+                @endphp
+
                 <td>
-                    @if (!empty($item->nilai_sanksi))
-                    Rp {{ number_format($item->nilai_sanksi, 0, ',', '.') }}
+                    @if ($nilai > 0)
+                        Rp {{ number_format($nilai, 0, ',', '.') }}
                     @else
-                    -
+                        -
                     @endif
                 </td>
 
@@ -141,6 +149,16 @@
             </tr>
             @endforelse
         </tbody>
+
+        {{-- TOTAL NILAI SANKSI --}}
+        <tfoot>
+            <tr>
+                <th colspan="7" style="text-align:center;">TOTAL SANKSI</th>
+                <th colspan="6" style="font-weight:bold;">
+                    Rp {{ number_format($totalNilaiSanksi, 0, ',', '.') }}
+                </th>
+            </tr>
+        </tfoot>
     </table>
 
     <div class="footer">

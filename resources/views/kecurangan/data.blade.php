@@ -101,7 +101,7 @@
                     </div>
                     <div class="w-100"></div>
                     <div class="d-flex justify-content-end align-items-center flex-wrap" style="margin-top:10px;">
-                        
+
                         <!-- Filter -->
                         <button class="btn btn-success btn-round d-flex align-items-center" data-toggle="modal"
                             data-target="#modalFilter"
@@ -311,7 +311,7 @@
 
             {{-- Header --}}
             <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
-                <h5 class="modal-title text-success" style="font-weight:600;">
+                <h5 class="modal-title" style="font-weight:600;">
                     <i class="now-ui-icons"></i> Bukti Kecurangan
                 </h5>
             </div>
@@ -433,7 +433,9 @@
                         <select name="jenis_sanksi" id="filter_jenis_sanksi_excel" class="form-control select2">
                             <option value="">Semua Jenis</option>
                             @foreach ($jenisSanksi as $row)
-                            <option value="{{ $row }}">{{ $row }}</option>
+                            <option value="{{ $row }}">
+                                {{ $row }}
+                            </option>
                             @endforeach
 
                         </select>
@@ -453,7 +455,7 @@
                     {{-- PILIHAN JENIS CETAK --}}
                     <div class="form-group">
                         <label class="text-dark font-weight-bold">Jenis Cetak</label>
-                        <select name="mode_pdf" id="mode_pdf" class="form-control select2" required>
+                        <select name="mode_excel" id="mode_excel" class="form-control select2" required>
                             <option value="">-- Pilih Jenis Cetak --</option>
                             <option value="all">Cetak Semua</option>
                             <option value="date">Berdasarkan Tanggal</option>
@@ -461,7 +463,7 @@
                     </div>
 
                     {{-- RANGE TANGGAL --}}
-                    <div id="pdf_date_range" style="display:none;">
+                    <div id="excel_date_range" style="display:none;">
                         <div class="form-group">
                             <label class="font-weight-bold text-dark">Dari Tanggal</label>
                             <input type="date" class="form-control" name="start_date">
@@ -470,13 +472,17 @@
                             <label class="font-weight-bold text-dark">Sampai Tanggal</label>
                             <input type="date" class="form-control" name="end_date">
                         </div>
+                        <div id="excel_error_alert" class="alert alert-danger d-none mt-2" role="alert"
+                            style="border-radius:20px;">
+                            Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!
+                        </div>
                     </div>
 
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger btn-round">Export Excel</button>
+                    <button type="submit" id="btn_export_excel" class="btn btn-danger btn-round">Export Excel</button>
                 </div>
             </form>
 
@@ -540,13 +546,17 @@
                             <label class="font-weight-bold text-dark">Sampai Tanggal</label>
                             <input type="date" class="form-control" name="end_date">
                         </div>
+                        <div id="pdf_error_alert" class="alert alert-danger d-none mt-2" role="alert"
+                            style="border-radius:20px;">
+                            Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!
+                        </div>
                     </div>
 
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger btn-round">Export PDF</button>
+                    <button type="submit" id="btn_export_pdf" class="btn btn-danger btn-round">Export PDF</button>
                 </div>
             </form>
 
@@ -615,7 +625,7 @@ $(document).ready(function() {
         currentIndex = 0;
 
         $('#modalBukti').modal({
-            backdrop: 'static', // overlay + disable click outside
+            backdrop: 'static',
             keyboard: true,
             show: true
         });
@@ -727,7 +737,6 @@ $(document).ready(function() {
     });
 });
 
-// Fungsi umum untuk show/hide date range
 function toggleDateRange(selectId, rangeId) {
     $('#' + selectId).on('change', function() {
         if ($(this).val() === 'date') {
@@ -753,16 +762,17 @@ function toggleDateRange(selectId, rangeId) {
             success: function(data) {
                 $('#filter_keterangan_sanksi_pdf').empty()
                     .append('<option value="">Semua Keterangan</option>');
-
                 data.forEach(function(item) {
-                    $('#filter_keterangan_sanksi_pdf').append(
-                        `<option value="${item.keterangan}">${item.keterangan}</option>`
-                    );
+                    $('#filter_keterangan_sanksi_pdf')
+                        .append(
+                            `<option value="${item.keterangan}">${item.keterangan}</option>`
+                        );
                 });
             }
         });
     });
 
+    // Filter keterangan Excel
     $('#filter_jenis_sanksi_excel').change(function() {
         let jenis = $(this).val();
 
@@ -778,27 +788,26 @@ function toggleDateRange(selectId, rangeId) {
             success: function(data) {
                 $('#filter_keterangan_sanksi_excel').empty()
                     .append('<option value="">Semua Keterangan</option>');
-
                 data.forEach(function(item) {
-                    $('#filter_keterangan_sanksi_excel').append(
-                        `<option value="${item.keterangan}">${item.keterangan}</option>`
-                    );
+                    $('#filter_keterangan_sanksi_excel')
+                        .append(
+                            `<option value="${item.keterangan}">${item.keterangan}</option>`
+                        );
                 });
             }
         });
     });
 
+    // Filter keterangan di modal filter utama
     $('#modalFilter').on('shown.bs.modal', function() {
         $('#filter_jenis_sanksi_filter').select2({
             dropdownParent: $('#modalFilter')
         });
-
         $('#filter_keterangan_sanksi_filter').select2({
             dropdownParent: $('#modalFilter')
         });
     });
 
-    // ========= FILTER JENIS -> LOAD KETERANGAN (BENAR) =========
     $('#filter_jenis_sanksi_filter').change(function() {
         let jenis = $(this).val();
 
@@ -816,27 +825,70 @@ function toggleDateRange(selectId, rangeId) {
             success: function(data) {
                 $('#filter_keterangan_sanksi_filter').empty()
                     .append('<option value="">Semua Keterangan</option>');
-
                 data.forEach(function(item) {
-                    $('#filter_keterangan_sanksi_filter').append(
-                        `<option value="${item.keterangan}">${item.keterangan}</option>`
-                    );
+                    $('#filter_keterangan_sanksi_filter')
+                        .append(
+                            `<option value="${item.keterangan}">${item.keterangan}</option>`
+                        );
                 });
-
                 $('#filter_keterangan_sanksi_filter').trigger('change');
             }
         });
     });
-
 }
 
-// Panggil untuk PDF
+function setupDateRange(modeSelect, rangeBox, alertBox, submitButton) {
+
+    // Tampilkan/sembunyikan box tanggal
+    $('#' + modeSelect).change(function() {
+        if ($(this).val() === 'date') {
+            $('#' + rangeBox).slideDown(150);
+        } else {
+            $('#' + rangeBox).slideUp(150);
+            $(`#${rangeBox} input`).val('');
+            $("#" + alertBox).addClass("d-none");
+        }
+    });
+
+    // Validasi dilakukan hanya saat tombol export ditekan
+    $("#" + submitButton).on("click", function(e) {
+        let start = $(`#${rangeBox} input[name="start_date"]`).val();
+        let end = $(`#${rangeBox} input[name="end_date"]`).val();
+
+        // Jika mode bukan date → langsung submit
+        if ($("#" + modeSelect).val() !== "date") {
+            $("#" + alertBox).addClass("d-none");
+            return true;
+        }
+
+        // Jika tanggal tidak lengkap
+        if (!start || !end) {
+            e.preventDefault();
+            $("#" + alertBox).removeClass("d-none")
+                .text("Harap isi kedua tanggal sebelum export.");
+            return false;
+        }
+
+        // Jika salah (end < start)
+        if (end < start) {
+            e.preventDefault();
+            $("#" + alertBox).removeClass("d-none")
+                .text("Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!");
+            return false;
+        }
+
+        // Valid → sembunyikan error
+        $("#" + alertBox).addClass("d-none");
+        return true;
+    });
+}
+
 toggleDateRange('mode_pdf', 'pdf_date_range');
-
-// Panggil untuk Excel
 toggleDateRange('mode_excel', 'excel_date_range');
+setupDateRange('mode_pdf', 'pdf_date_range', 'pdf_error_alert', 'btn_export_pdf');
+setupDateRange('mode_excel', 'excel_date_range', 'excel_error_alert', 'btn_export_excel');
 
-// Sembunyikan date range di awal
+
 $('#pdf_date_range').hide();
 $('#excel_date_range').hide();
 </script>

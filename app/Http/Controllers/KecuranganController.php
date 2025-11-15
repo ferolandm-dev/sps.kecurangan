@@ -379,11 +379,9 @@ class KecuranganController extends Controller
         ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
         ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
         ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
-        // ❗ JOIN sanksi DIHAPUS karena penyebab DUPLIKAT
 
-    // =============================
+
     // SEARCH
-    // =============================
     if ($request->filled('search')) {
         $search = $request->search;
 
@@ -395,9 +393,7 @@ class KecuranganController extends Controller
         });
     }
 
-    // =============================
     // FILTER TANGGAL
-    // =============================
     if ($request->filled('start_date') && $request->filled('end_date')) {
         $query->whereBetween('kecurangan.tanggal', [$request->start_date, $request->end_date]);
     }
@@ -412,9 +408,7 @@ class KecuranganController extends Controller
         $query->whereRaw("LOWER(TRIM(kecurangan.keterangan_sanksi)) = LOWER(TRIM(?))", [$request->keterangan_sanksi]);
     }
 
-    // =============================
     // SORTING
-    // =============================
     if (in_array($sortBy, $allowedSorts)) {
         $column = match ($sortBy) {
             'nama_sales' => 'sales.nama',
@@ -469,7 +463,7 @@ class KecuranganController extends Controller
     {
         return Excel::download(
             new KecuranganExport(
-                $request->mode_pdf,
+                $request->mode_excel,
                 $request->start_date,
                 $request->end_date,
                 $request->jenis_sanksi,
@@ -481,44 +475,56 @@ class KecuranganController extends Controller
 
 
     public function exportPDF(Request $request)
-    {
-        $startDate = $request->filled('start_date') ? $request->start_date : null;
-        $endDate   = $request->filled('end_date') ? $request->end_date : null;
+{
+    $mode = $request->mode_pdf; // all / date
 
-        $query = DB::table('kecurangan')
-            ->where('kecurangan.validasi', 1)
-            ->select(
-                'kecurangan.*',
-                'sales.nama as nama_sales',
-                'distributors.distributor',
-                'asisten_managers.nama as nama_asisten_manager'
-            )
-            ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
-            ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
-            ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+    $startDate = $request->filled('start_date') ? $request->start_date : null;
+    $endDate   = $request->filled('end_date') ? $request->end_date : null;
 
+    $query = DB::table('kecurangan')
+        ->where('kecurangan.validasi', 1)
+        ->select(
+            'kecurangan.*',
+            'sales.nama as nama_sales',
+            'distributors.distributor',
+            'asisten_managers.nama as nama_asisten_manager'
+        )
+        ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
+        ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
+        ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+
+    if ($mode === 'all') {
+
+    }
+
+    if ($mode === 'date') {
         if ($startDate && $endDate) {
             $query->whereBetween('kecurangan.tanggal', [$startDate, $endDate]);
         }
-
-        if ($request->filled('jenis_sanksi')) {
-            $query->where('kecurangan.jenis_sanksi', $request->jenis_sanksi);
-        }
-
-        if ($request->filled('keterangan_sanksi')) {
-            $query->where('kecurangan.keterangan_sanksi', $request->keterangan_sanksi);
-        }
-
-        $data = $query->orderBy('kecurangan.tanggal', 'desc')->get();
-
-        $pdf = PDF::loadView('pdf.kecurangan', [
-            'data' => $data,
-            'startDate' => $startDate,
-            'endDate' => $endDate
-        ])->setPaper('a4', 'landscape');
-
-        return $pdf->download('Laporan_Kecurangan.pdf');
     }
+
+    // FILTER TAMBAHAN (tetap berfungsi di kedua mode)
+    if ($request->filled('jenis_sanksi')) {
+        $query->where('kecurangan.jenis_sanksi', $request->jenis_sanksi);
+    }
+
+    if ($request->filled('keterangan_sanksi')) {
+        $query->where('kecurangan.keterangan_sanksi', $request->keterangan_sanksi);
+    }
+
+    // GET DATA
+    $data = $query->orderBy('kecurangan.tanggal', 'desc')->get();
+
+    // GENERATE PDF
+    $pdf = PDF::loadView('pdf.kecurangan', [
+        'data' => $data,
+        'startDate' => $mode === 'date' ? $startDate : null,
+        'endDate'   => $mode === 'date' ? $endDate : null,
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->download('Laporan_Kecurangan.pdf');
+}
+
 
 
     public function getBukti($id)

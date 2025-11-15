@@ -50,7 +50,7 @@
 
             <div class="card" style="border-radius: 20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Master Asisten Manager') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Master ASS') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         {{-- Form Pencarian --}}

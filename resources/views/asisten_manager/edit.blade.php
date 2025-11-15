@@ -114,7 +114,7 @@
             <div class="card" style="border-radius: 20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <h4 class="card-title mb-0 text-dark">
-                        <i class="now-ui-icons"></i> {{ __('Edit Asisten Manager') }}
+                        <i class="now-ui-icons"></i> {{ __('Edit ASS') }}
                     </h4>
                 </div>
 

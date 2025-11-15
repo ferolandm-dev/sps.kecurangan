@@ -40,7 +40,6 @@ class SalesController extends Controller
         $sortOrder = 'asc';
     }
 
-    // Karena total_kecurangan adalah alias dari subquery, sorting pakai orderByRaw
     if ($sortBy === 'total_kecurangan') {
         $query->orderByRaw("total_kecurangan $sortOrder");
     } else {
@@ -141,7 +140,6 @@ class SalesController extends Controller
 
     public function data(Request $request)
 {
-    // 🔹 Mulai query dari tabel sales + subquery total_kecurangan
     $query = DB::table('sales')
         ->select(
             'sales.*',

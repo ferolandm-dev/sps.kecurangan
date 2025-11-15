@@ -99,7 +99,7 @@
 
                         <div class="form-group">
                             <label for="id_asisten_manager"
-                                class="text-dark font-weight-bold">{{ __('ID Asisten Manager') }}</label>
+                                class="text-dark font-weight-bold">{{ __('ID ASS') }}</label>
                             <select name="id_asisten_manager" id="id_asisten_manager" class="form-control select2"
                                 style="border-radius:12px;">
                                 <option value="">-- Pilih Asisten Manager --</option>

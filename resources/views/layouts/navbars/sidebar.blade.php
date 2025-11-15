@@ -5,10 +5,7 @@
                 <img src="{{ asset('assets/img/SPS LOGO.png') }}" alt="SPS Logo"
                     style="height: 50px; width: auto; display: block; margin: 0 auto;">
             </div>
-            <div class="logo-text"
-                style="margin-top: 10px; font-size: 12px; color: #fff; font-weight: 600; line-height: 1.2;">
-                {{ __('SINAR PANGAN SEJAHTERA') }}
-            </div>
+
         </div>
 
 

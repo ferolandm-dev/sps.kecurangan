@@ -11,20 +11,21 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
 {
     /**
-     * Ambil data dari tabel sales dan join ke distributors.
+     * Ambil data dari tabel sales dan join ke distributors + total kecurangan.
      */
     public function collection()
     {
         return DB::table('sales')
+            ->where('status', 'Aktif')
             ->join('distributors', 'sales.id_distributor', '=', 'distributors.id')
             ->select(
                 'sales.id',
                 'sales.nama',
                 'distributors.distributor as nama_distributor',
-                'sales.status',
-                'sales.created_at'
+                DB::raw('(SELECT COUNT(*) FROM kecurangan WHERE kecurangan.id_sales = sales.id) as total_kecurangan'),
+                'sales.status'
             )
-            ->orderBy('sales.created_at', 'desc')
+            ->orderBy('sales.id', 'asc')
             ->get();
     }
 
@@ -37,8 +38,8 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             'ID Sales',
             'Nama Sales',
             'Nama Distributor',
+            'Total Kecurangan',
             'Status',
-            'Tanggal Dibuat',
         ];
     }
 
@@ -51,8 +52,8 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             $row->id,
             $row->nama,
             $row->nama_distributor,
+            $row->total_kecurangan,
             ucfirst($row->status),
-            \Carbon\Carbon::parse($row->created_at)->format('d-m-Y'),
         ];
     }
 }

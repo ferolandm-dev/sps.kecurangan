@@ -153,8 +153,7 @@
                         <div class="text-right mt-4">
                             <a href="{{ route('sales.index') }}" class="btn btn-secondary btn-round">Batal</a>
                             <button type="submit" class="btn btn-success btn-round"
-                                style="background:#29b14a;border:none;">
-                                <i class="now-ui-icons ui-1_check"></i> Simpan
+                                style="background:#29b14a;border:none;">Simpan
                             </button>
                         </div>
                     </form>
@@ -184,15 +183,6 @@ select:focus {
     border-color: #4caf50 !important;
     /* hijau atau sesuai tema */
 }
-</style>
-<script>
-$(document).ready(function() {
-    $('#id_distributor').select2({
-        placeholder: "-- Pilih Distributor --",
-        allowClear: false,
-        width: '100%'
-    });
-});
 
 /* ===========================================================
    GLOBAL SOFT UI BUTTON STYLE
@@ -269,6 +259,15 @@ $(document).ready(function() {
     transform: none !important;
     box-shadow: none !important;
 }
+</style>
+<script>
+$(document).ready(function() {
+    $('#id_distributor').select2({
+        placeholder: "-- Pilih Distributor --",
+        allowClear: false,
+        width: '100%'
+    });
+});
 </script>
 @endpush
 @endsection

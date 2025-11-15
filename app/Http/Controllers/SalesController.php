@@ -12,95 +12,94 @@ class SalesController extends Controller
 {
     // Tampilkan semua data sales
     public function index(Request $request)
-{
-    // Mulai query dari tabel sales
-    $query = DB::table('sales');
+    {
+        // Mulai query dari tabel sales  -------------------- UPDATE
+        $query = DB::table('sales')
+            ->select(
+                'sales.*',
+                DB::raw('(SELECT COUNT(*) FROM kecurangan WHERE kecurangan.id_sales = sales.id) as total_kecurangan')
+            );
 
-    // Jika ada input pencarian
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('id', 'like', "%{$search}%")
-              ->orWhere('nama', 'like', "%{$search}%")
-              ->orWhere('id_distributor', 'like', "%{$search}%")
-              ->orWhere('status', 'like', "%{$search}%");
-        });
+        // Jika ada input pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                ->orWhere('nama', 'like', "%{$search}%")
+                ->orWhere('id_distributor', 'like', "%{$search}%")
+                ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
+
+        $sortBy = $request->get('sort_by', 'id');
+        $sortOrder = $request->get('sort_order', 'asc');
+
+        $allowedSorts = ['id', 'nama', 'id_distributor', 'total_kecurangan', 'status'];
+        $allowedOrders = ['asc', 'desc'];
+
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'id';
+        }
+        if (!in_array($sortOrder, $allowedOrders)) {
+            $sortOrder = 'asc';
+        }
+
+        // Sorting total_kecurangan  ------------------------ UPDATE
+        if ($sortBy === 'total_kecurangan') {
+            $query->orderByRaw("total_kecurangan $sortOrder");
+        } else {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+
+        // Mode Tampilkan Semua atau Paginate
+        if ($request->has('all')) {
+            $sales = $query->get();
+        } else {
+            $sales = $query->paginate(10)->appends($request->query());
+        }
+
+        return view('sales.index', compact('sales'));
     }
-
-    $sortBy = $request->get('sort_by', 'id');
-    $sortOrder = $request->get('sort_order', 'asc');
-
-    $allowedSorts = ['id', 'nama', 'id_distributor', 'total_kecurangan', 'status'];
-    $allowedOrders = ['asc', 'desc'];
-
-    if (!in_array($sortBy, $allowedSorts)) {
-        $sortBy = 'id';
-    }
-    if (!in_array($sortOrder, $allowedOrders)) {
-        $sortOrder = 'asc';
-    }
-
-    if ($sortBy === 'total_kecurangan') {
-        $query->orderByRaw("total_kecurangan $sortOrder");
-    } else {
-        $query->orderBy($sortBy, $sortOrder);
-    }
-
-    if ($request->has('all')) {
-        $sales = $query->get();
-    } else {
-        $sales = $query->paginate(10)->appends($request->query());
-    }
-
-    return view('sales.index', compact('sales'));
-}
-
 
     // Form tambah sales baru
     public function create()
     {
-        $distributors = DB::table('distributors')->get(); // untuk dropdown pilih distributor
+        $distributors = DB::table('distributors')->get();
         return view('sales.create', compact('distributors'));
     }
 
     // Simpan data sales baru
     public function store(Request $request)
-{
-    $request->validate([
-        'id' => 'required|max:6',
-        'nama' => 'required',
-        'id_distributor' => 'required',
-    ]);
+    {
+        $request->validate([
+            'id' => 'required|max:6',
+            'nama' => 'required',
+            'id_distributor' => 'required',
+        ]);
 
-    // Ambil 3 huruf pertama dari ID distributor
-    $prefix = substr($request->id_distributor, 0, 3);
+        $prefix = substr($request->id_distributor, 0, 3);
+        $finalId = strtoupper($prefix . $request->id);
 
-    // Gabungkan prefix + ID sales input
-    $finalId = strtoupper($prefix . $request->id);
+        $exists = DB::table('sales')->where('id', $finalId)->exists();
 
-    // 🔍 Cek apakah finalId sudah ada di database
-    $exists = DB::table('sales')->where('id', $finalId)->exists();
+        if ($exists) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "ID Sales <strong>{$finalId}</strong> sudah terdaftar. Silakan gunakan ID lain.");
+        }
 
-    if ($exists) {
-        // Kirim pesan error ke user
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', "ID Sales <strong>{$finalId}</strong> sudah terdaftar. Silakan gunakan ID lain.");
+        DB::table('sales')->insert([
+            'id' => $finalId,
+            'nama' => $request->nama,
+            'id_distributor' => $request->id_distributor,
+            'status' => 'Aktif',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('sales.index')->with('success', 'Data sales berhasil ditambahkan!');
     }
-
-    // Simpan ke database
-    DB::table('sales')->insert([
-        'id' => $finalId,
-        'nama' => $request->nama,
-        'id_distributor' => $request->id_distributor,
-        'status' => 'Aktif',
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    return redirect()->route('sales.index')->with('success', 'Data sales berhasil ditambahkan!');
-}
 
     // Form edit data sales
     public function edit($id)
@@ -138,69 +137,69 @@ class SalesController extends Controller
         return redirect()->route('sales.index')->with('success', 'Data sales berhasil dihapus!');
     }
 
+    // Halaman data sales dengan total_kecurangan
     public function data(Request $request)
-{
-    $query = DB::table('sales')
-        ->select(
-            'sales.*',
-            DB::raw('(SELECT COUNT(*) FROM kecurangan WHERE kecurangan.id_sales = sales.id) as total_kecurangan')
-        );
+    {
+        $query = DB::table('sales')
+            ->select(
+                'sales.*',
+                DB::raw('(SELECT COUNT(*) FROM kecurangan WHERE kecurangan.id_sales = sales.id) as total_kecurangan')
+            );
 
-    // 🔍 Jika ada input pencarian
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('sales.id', 'like', "%{$search}%")
-              ->orWhere('sales.nama', 'like', "%{$search}%")
-              ->orWhere('sales.id_distributor', 'like', "%{$search}%")
-              ->orWhere('sales.status', 'like', "%{$search}%");
-        });
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('sales.id', 'like', "%{$search}%")
+                ->orWhere('sales.nama', 'like', "%{$search}%")
+                ->orWhere('sales.id_distributor', 'like', "%{$search}%")
+                ->orWhere('sales.status', 'like', "%{$search}%");
+            });
+        }
+
+        // Sorting
+        $sortBy = $request->get('sort_by', 'id');
+        $sortOrder = $request->get('sort_order', 'asc');
+
+        if ($sortBy === 'total_kecurangan') {
+            $query->orderByRaw("total_kecurangan $sortOrder");
+        } else {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+
+        if ($request->has('all')) {
+            $sales = $query->get();
+        } else {
+            $sales = $query->paginate(10)->appends($request->query());
+        }
+
+        return view('sales.data', compact('sales', 'sortBy', 'sortOrder'));
     }
 
-    $sortBy = $request->get('sort_by', 'id');
-    $sortOrder = $request->get('sort_order', 'asc');
-
-    $allowedSorts = ['id', 'nama', 'id_distributor', 'total_kecurangan', 'status'];
-    $allowedOrders = ['asc', 'desc'];
-
-    if (!in_array($sortBy, $allowedSorts)) {
-        $sortBy = 'id';
-    }
-    if (!in_array($sortOrder, $allowedOrders)) {
-        $sortOrder = 'asc';
+    // EXPORT EXCEL ---------------------------------------- UPDATE
+    public function exportExcel()
+    {
+        return Excel::download(new SalesExport, 'data_sales.xlsx');
     }
 
-    // Karena total_kecurangan adalah alias dari subquery, sorting pakai orderByRaw
-    if ($sortBy === 'total_kecurangan') {
-        $query->orderByRaw("total_kecurangan $sortOrder");
-    } else {
-        $query->orderBy($sortBy, $sortOrder);
+    // EXPORT PDF ------------------------------------------ UPDATE
+    public function exportPdf()
+    {
+        $data = DB::table('sales')
+            ->where('status', 'Aktif')
+            ->select(
+                'id',
+                'nama',
+                'id_distributor',
+                'status',
+                'created_at',
+                DB::raw('(SELECT COUNT(*) FROM kecurangan WHERE kecurangan.id_sales = sales.id) as total_kecurangan')
+            )
+            ->get();
+
+        $pdf = PDF::loadView('pdf.sales', ['sales' => $data])
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('data_sales.pdf');
     }
-
-    if ($request->has('all')) {
-        $sales = $query->get();
-    } else {
-        $sales = $query->paginate(10)->appends($request->query());
-    }
-
-    return view('sales.data', compact('sales', 'sortBy', 'sortOrder'));
-}
-
-public function exportExcel()
-{
-    return Excel::download(new SalesExport, 'data_sales.xlsx');
-}
-
-public function exportPdf()
-{
-    $data = DB::table('sales')
-        ->select('id', 'nama', 'id_distributor', 'status', 'created_at')
-        ->get();
-
-    $pdf = Pdf::loadView('pdf.sales', ['sales' => $data])
-        ->setPaper('a4', 'portrait');
-
-    return $pdf->download('data_sales.pdf');
-
-}
 }

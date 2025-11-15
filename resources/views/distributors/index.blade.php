@@ -55,10 +55,10 @@
                     <div class="d-flex align-items-center flex-wrap gap-2">
 
                         {{-- 🔍 Form Pencarian --}}
-                        <form action="{{ route('kecurangan.index') }}" method="GET" class="mr-2">
+                        <form action="{{ route('distributors.index') }}" method="GET" class="mr-2">
                             <div class="search-group">
                                 <input type="text" name="search" class="form-control search-input"
-                                    placeholder="Cari kecurangan..." value="{{ request('search') }}">
+                                    placeholder="Cari distributor..." value="{{ request('search') }}">
 
                                 <button class="btn search-btn" type="submit">
                                     <i class="now-ui-icons ui-1_zoom-bold"></i>

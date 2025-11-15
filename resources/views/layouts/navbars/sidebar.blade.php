@@ -1,13 +1,16 @@
     <div class="sidebar" data-color="green" style="background-color: #29b14a; min-height: 100vh; color: #fff;">
 
-        <div class="logo">
-            <a href="#" class="simple-text logo-mini" style="font-size: 12px; color: #fff;">
-                {{ __('SPS') }}
-            </a>
-            <a href="#" class="simple-text logo-normal" style="font-size: 12px; color: #fff;">
+        <div class="logo" style="text-align: center; padding: 10px 0;">
+            <div class="logo-image">
+                <img src="{{ asset('assets/img/SPS LOGO.png') }}" alt="SPS Logo"
+                    style="height: 50px; width: auto; display: block; margin: 0 auto;">
+            </div>
+            <div class="logo-text"
+                style="margin-top: 10px; font-size: 12px; color: #fff; font-weight: 600; line-height: 1.2;">
                 {{ __('SINAR PANGAN SEJAHTERA') }}
-            </a>
+            </div>
         </div>
+
 
         <div class="sidebar-wrapper" id="sidebar-wrapper" style="color: #fff;">
             @php
@@ -140,7 +143,7 @@
 
         </div>
     </div>
-@push('css')
+    @push('css')
     <style>
 .sidebar .nav li>a,
 .sidebar .nav .collapse .nav li>a {

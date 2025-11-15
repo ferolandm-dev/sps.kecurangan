@@ -3,6 +3,7 @@
 'class' => 'login-page sidebar-mini',
 'activePage' => 'login',
 ])
+
 @section('content')
 <div class="content">
     <div class="container">
@@ -16,24 +17,26 @@
                                     @include('alerts.migrations_check')
                                 </p>
                             </div>
-                            <div class="col-lg-5 col-md-6">
-                            </div>
+                            <div class="col-lg-5 col-md-6"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-4 ml-auto mr-auto">
-            <form role="form" method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}">
                 @csrf
+
                 <div class="card card-login card-plain">
-                    <div class="card-header ">
-                        <div class="logo-container" style="text-align: center;">
+                    <div class="card-header">
+                        <div class="logo-container text-center">
                             <img src="{{ asset('assets/img/SPS.png') }}" alt="">
                         </div>
-
                     </div>
-                    <div class="card-body ">
+
+                    <div class="card-body">
+                        {{-- EMAIL --}}
                         <div
                             class="input-group no-border form-control-lg {{ $errors->has('email') ? ' has-danger' : '' }}">
                             <span class="input-group-prepend">
@@ -41,55 +44,65 @@
                                     <i class="now-ui-icons users_circle-08"></i>
                                 </div>
                             </span>
-                            <input class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Email') }}" type="email" name="email"
-                                value="{{ old('email', 'admin@nowui.com') }}" required autofocus>
+
+                            <input type="email" name="email"
+                                class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
+                                placeholder="{{ __('Email') }}" value="{{ old('email', 'admin@nowui.com') }}" required
+                                autofocus>
                         </div>
+
                         @if ($errors->has('email'))
-                        <span class="invalid-feedback" style="display: block;" role="alert">
+                        <span class="invalid-feedback d-block" role="alert">
                             <strong>{{ $errors->first('email') }}</strong>
                         </span>
                         @endif
+
+                        {{-- PASSWORD --}}
                         <div
                             class="input-group no-border form-control-lg {{ $errors->has('password') ? ' has-danger' : '' }}">
-                            <div class="input-group-prepend">
+                            <span class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <i class="now-ui-icons objects_key-25"></i></i>
+                                    <i class="now-ui-icons objects_key-25"></i>
                                 </div>
-                            </div>
-                            <input placeholder="Password"
-                                class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password"
-                                placeholder="{{ __('Password') }}" type="password" value="secret" required>
+                            </span>
+
+                            <input type="password" name="password"
+                                class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                placeholder="{{ __('Password') }}" value="secret" required>
                         </div>
+
                         @if ($errors->has('password'))
-                        <span class="invalid-feedback" style="display: block;" role="alert">
+                        <span class="invalid-feedback d-block" role="alert">
                             <strong>{{ $errors->first('password') }}</strong>
                         </span>
                         @endif
 
-                        <button type="submit"
-                            class="btn btn-primary btn-round btn-lg btn-block mb-2">{{ __('Get Started') }}</button>
+                        {{-- BUTTON --}}
+                        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block mb-2">
+                            {{ __('Get Started') }}
+                        </button>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
 @endsection
-
 @push('js')
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // === Nonaktifkan background bawaan template ===
+
+    // ==== Nonaktifkan background bawaan template ====
     if (typeof demo !== "undefined" && demo.checkFullPageBackgroundImage) {
         // demo.checkFullPageBackgroundImage();
     }
 
-    // === ATUR BACKGROUND CONTENT ===
+    // ==== Background Content ====
     const content = document.querySelector('.content');
     if (content) {
-        content.style.setProperty('background-color', '#ffffff', 'important'); // putih
-        content.style.setProperty('min-height', '100vh', 'important'); // full tinggi layar
+        content.style.setProperty('background-color', '#ffffff', 'important');
+        content.style.setProperty('min-height', '100vh', 'important');
         content.style.setProperty('display', 'flex', 'important');
         content.style.setProperty('flex-direction', 'column', 'important');
         content.style.setProperty('justify-content', 'center', 'important');
@@ -97,15 +110,17 @@ document.addEventListener("DOMContentLoaded", function() {
         content.style.setProperty('padding', '20px', 'important');
     }
 
-    // === LOGO ===
+    // ==== Logo ====
     const container = document.querySelector('.logo-container');
     const logo = container ? container.querySelector('img') : null;
+
     if (container) {
         container.style.setProperty('display', 'flex', 'important');
         container.style.setProperty('justify-content', 'center', 'important');
         container.style.setProperty('align-items', 'center', 'important');
         container.style.setProperty('height', '200px', 'important');
     }
+
     if (logo) {
         logo.style.setProperty('width', '150px', 'important');
         logo.style.setProperty('height', 'auto', 'important');
@@ -113,19 +128,21 @@ document.addEventListener("DOMContentLoaded", function() {
         logo.style.setProperty('transform', 'scale(1.3)', 'important');
     }
 
-    // === SPASI CARD ===
+    // ==== Card Spacing ====
     const cardHeader = document.querySelector('.card-login .card-header');
     const cardBody = document.querySelector('.card-login .card-body');
+
     if (cardHeader) {
         cardHeader.style.setProperty('padding-bottom', '0', 'important');
         cardHeader.style.setProperty('margin-bottom', '-80px', 'important');
     }
+
     if (cardBody) {
         cardBody.style.setProperty('padding-top', '5px', 'important');
         cardBody.style.setProperty('text-align', 'left', 'important');
     }
 
-    // === INPUT GROUP STYLE (ICON - INPUT, rata kiri & rapi tengah) ===
+    // ==== Input Group Styling ====
     const inputGroups = document.querySelectorAll('.input-group');
     inputGroups.forEach(group => {
         group.style.setProperty('display', 'flex', 'important');
@@ -142,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function() {
         group.style.setProperty('box-sizing', 'border-box', 'important');
     });
 
-    // === ICON ===
+    // ==== Icons ====
     const icons = document.querySelectorAll('.input-group-text');
     icons.forEach(icon => {
         icon.style.setProperty('background', 'transparent', 'important');
@@ -157,9 +174,10 @@ document.addEventListener("DOMContentLoaded", function() {
         icon.style.setProperty('height', '100%', 'important');
     });
 
-    // === INPUT ===
+    // ==== Input Styling ====
     const inputs = document.querySelectorAll('.input-group input');
     inputs.forEach(input => {
+
         input.style.setProperty('border', 'none', 'important');
         input.style.setProperty('box-shadow', 'none', 'important');
         input.style.setProperty('background', 'transparent', 'important');
@@ -170,69 +188,64 @@ document.addEventListener("DOMContentLoaded", function() {
         input.style.setProperty('outline', 'none', 'important');
         input.style.setProperty('text-align', 'left', 'important');
 
-        // === Pastikan border parent input-group awalnya hijau ===
+        // Border group awal
         const group = input.closest('.input-group');
         if (group) {
             group.style.setProperty('border', '2px solid #29b14a', 'important');
             group.style.setProperty('border-radius', '10px', 'important');
-            group.style.setProperty('background-color', '#fff', 'important');
-            group.style.setProperty('display', 'flex', 'important');
-            group.style.setProperty('align-items', 'center', 'important');
             group.style.setProperty('padding', '6px 12px', 'important');
             group.style.setProperty('gap', '8px', 'important');
         }
 
-        // === Placeholder hitam ===
+        // Placeholder
         const style = document.createElement('style');
         style.innerHTML = `
-        input[name="${input.name}"]::placeholder {
-            color: #000 !important;
-            opacity: 0.85 !important;
-        }
-    `;
+            input[name="${input.name}"]::placeholder {
+                color: #000 !important;
+                opacity: 0.85 !important;
+            }
+        `;
         document.head.appendChild(style);
 
-        // === Efek fokus border hijau ===
+        // Focus effect
         input.addEventListener('focus', () => {
             const parent = input.closest('.input-group');
             if (parent) parent.style.setProperty('border', '2.5px solid #29b14a', 'important');
         });
+
         input.addEventListener('blur', () => {
             const parent = input.closest('.input-group');
             if (parent) parent.style.setProperty('border', '2px solid #29b14a', 'important');
         });
     });
 
-    // === UBAH WARNA TOMBOL "GET STARTED" ===
+    // ==== Button Styling ====
     const button = document.querySelector('.btn.btn-primary.btn-round.btn-lg.btn-block');
     if (button) {
-        button.style.setProperty('background-color', '#29b14a', 'important'); // hijau
+        button.style.setProperty('background-color', '#29b14a', 'important');
         button.style.setProperty('border', '2px solid #29b14a', 'important');
         button.style.setProperty('color', '#fff', 'important');
         button.style.setProperty('font-weight', '600', 'important');
         button.style.setProperty('transition', 'all 0.3s ease', 'important');
 
-        // Efek hover
         button.addEventListener('mouseenter', () => {
-            button.style.setProperty('background-color', '#1e8e39',
-                'important'); // lebih gelap saat hover
+            button.style.setProperty('background-color', '#1e8e39', 'important');
             button.style.setProperty('border-color', '#1e8e39', 'important');
         });
+
         button.addEventListener('mouseleave', () => {
             button.style.setProperty('background-color', '#29b14a', 'important');
             button.style.setProperty('border-color', '#29b14a', 'important');
         });
 
-        // Efek klik
         button.addEventListener('mousedown', () => {
             button.style.setProperty('transform', 'scale(0.97)', 'important');
         });
+
         button.addEventListener('mouseup', () => {
             button.style.setProperty('transform', 'scale(1)', 'important');
         });
     }
-
-
 });
 </script>
 @endpush

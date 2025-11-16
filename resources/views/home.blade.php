@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="panel-header panel-header-sm" style="background:#dbd300ff"></div>
+<div class="panel-header panel-header-sm panel-header-sps"></div>
 
 <div class="content">
 
@@ -33,7 +33,6 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mt-2">
                             <div class="stats"><i class="now-ui-icons arrows-1_refresh-69"></i> Updated</div>
-                            <div class="badge-soft">{{ $topDistributors[0]->total_sales ?? 0 }}</div>
                         </div>
                     </div>
                 </div>
@@ -51,7 +50,6 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mt-2">
                             <div class="stats"><i class="now-ui-icons arrows-1_refresh-69"></i> Updated</div>
-                            <div class="badge-soft">{{ $totalSalesAktif }}</div>
                         </div>
                     </div>
                 </div>
@@ -70,7 +68,6 @@
                         <div class="d-flex justify-content-between mt-2">
                             <div class="stats"><i class="now-ui-icons ui-2_time-alarm"></i>
                                 {{ now()->translatedFormat('F Y') }}</div>
-                            <div class="badge-soft">{{ $totalKecuranganBulanIni }}</div>
                         </div>
                     </div>
                 </div>
@@ -89,7 +86,6 @@
                         <div class="d-flex justify-content-between mt-2">
                             <div class="stats"><i class="now-ui-icons ui-2_time-alarm"></i> Kuartal
                                 {{ $currentQuarter }}</div>
-                            <div class="badge-soft">{{ $totalKecuranganKuartalIni }}</div>
                         </div>
                     </div>
                 </div>
@@ -108,7 +104,6 @@
                         <div class="d-flex justify-content-between mt-2">
                             <div class="stats"><i class="now-ui-icons ui-1_calendar-60"></i>
                                 {{ now()->translatedFormat('F Y') }}</div>
-                            <div class="badge-soft">Rp {{ number_format($totalNilaiSanksiBulanIni,0,',','.') }}</div>
                         </div>
                     </div>
                 </div>
@@ -126,7 +121,6 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mt-2">
                             <div class="stats"><i class="now-ui-icons arrows-1_refresh-69"></i> Updated</div>
-                            <div class="badge-soft">{{ $totalUser }}</div>
                         </div>
                     </div>
                 </div>
@@ -226,10 +220,54 @@
 =============================== --}}
 @push('styles')
 <style>
-/* All your CSS moved here. NOTHING in push('js') */
+.panel-header-sps {
+    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
+    height: 120px !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* ========================================
+   NAVBAR MATCHING — SAME GRADIENT AS HEADER
+========================================= */
+
+.navbar-soft {
+    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    /* Tinggi navbar sesuai permintaan */
+    height: 95px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* Brand */
+.navbar-soft .navbar-brand {
+    color: #ffffff !important;
+    font-size: 22px !important;
+    font-weight: 700;
+}
+
+/* Icons */
+.navbar-soft .nav-link i {
+    color: #ffffff !important;
+    font-size: 22px;
+    transition: .2s ease;
+}
+
+.navbar-soft .nav-link:hover i {
+    color: #333 !important;
+}
 
 .content {
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(10px);
     margin-top: -70px;
     padding: 30px;
     color: #333;
@@ -337,7 +375,8 @@ document.addEventListener("DOMContentLoaded", function() {
         type: 'line',
         data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov',
-                'Des'],
+                'Des'
+            ],
             datasets: [{
                 label: 'Jumlah Kecurangan',
                 data: fraudData,

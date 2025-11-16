@@ -1,6 +1,6 @@
-@extends('layouts.app', [
+@extends('layouts.login', [
 'namePage' => 'Login page',
-'class' => 'login-page sidebar-mini',
+'class' => 'login-page',
 'activePage' => 'login',
 ])
 
@@ -19,13 +19,15 @@
             {{-- EMAIL --}}
             <div class="input-group-custom">
                 <i class="now-ui-icons users_circle-08 icon-left"></i>
+
                 <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus>
+
                 <div class="focus-underline"></div>
             </div>
 
-            @if ($errors->has('email'))
-            <span class="error-text">{{ $errors->first('email') }}</span>
-            @endif
+            @error('email')
+            <span class="error-text">{{ $message }}</span>
+            @enderror
 
             {{-- PASSWORD --}}
             <div class="input-group-custom">
@@ -38,9 +40,9 @@
                 <div class="focus-underline"></div>
             </div>
 
-            @if ($errors->has('password'))
-            <span class="error-text">{{ $errors->first('password') }}</span>
-            @endif
+            @error('password')
+            <span class="error-text">{{ $message }}</span>
+            @enderror
 
             {{-- BUTTON --}}
             <button type="submit" class="btn-submit">Login</button>
@@ -51,24 +53,21 @@
 </div>
 @endsection
 
-
-{{-- ================================
-      CUSTOM LOGIN CSS
-================================ --}}
 @push('styles')
 <style>
-/* Hilangkan scroll seluruh halaman */
+/* ============= GLOBAL RESET FOR LOGIN PAGE ============= */
 html,
 body {
     overflow: hidden !important;
-    height: 100vh !important;
+    height: 100dvh !important;  /* fix mobile scroll */
+    max-height: 100dvh !important;
     margin: 0 !important;
     padding: 0 !important;
+    background: #ffffff !important;
 }
 
 /* Wrapper utama */
 .login-wrapper {
-    background: #ffffff !important;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -112,7 +111,7 @@ body {
     margin-right: 10px;
 }
 
-/* Input */
+/* Input field */
 .input-group-custom input {
     border: none !important;
     outline: none !important;
@@ -129,7 +128,7 @@ body {
     opacity: 0.7 !important;
 }
 
-/* Icon mata */
+/* Icon kanan (eye) */
 .icon-right {
     font-size: 20px;
     cursor: pointer;
@@ -137,13 +136,13 @@ body {
     margin-left: 10px;
 }
 
-/* Hover & Focus border */
+/* Hover & Focus Border */
 .input-group-custom:hover,
 .input-group-custom:focus-within {
     border-color: #1f8f3a !important;
 }
 
-/* Error */
+/* Error message */
 .error-text {
     display: block;
     margin-top: -12px;
@@ -172,10 +171,6 @@ body {
 </style>
 @endpush
 
-
-{{-- ================================
-      JS — Toggle Password
-================================ --}}
 @push('js')
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -185,7 +180,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     togglePassword.addEventListener('click', () => {
         const isHidden = passwordInput.type === "password";
+
         passwordInput.type = isHidden ? "text" : "password";
+
         togglePassword.classList.toggle("fa-eye");
         togglePassword.classList.toggle("fa-eye-slash");
     });

@@ -1,3 +1,8 @@
+    {{-- Jangan tampilkan sidebar pada halaman login --}}
+    @if (request()->routeIs('login'))
+    @php return; @endphp
+    @endif
+
     <div class="sidebar" data-color="green" style="background-color: #29b14a; min-height: 100vh; color: #fff;">
 
         <div class="logo" style="text-align: center; padding: 10px 0;">
@@ -142,38 +147,78 @@
     </div>
     @push('js')
     <style>
+/* ---- SIDEBAR BACKGROUND (NEW) ---- */
+.sidebar {
+    background: linear-gradient(180deg,
+            #29b14a 0%,
+            #29b14a 85%,
+            rgba(219, 211, 0, 0.35) 100%) !important;
+    color: #fff !important;
+}
+
+
+/* ---- BASE LINK STYLE ---- */
 .sidebar .nav li>a,
 .sidebar .nav .collapse .nav li>a {
     position: relative;
+    border-radius: 12px;
+    padding: 10px 15px;
     transition: all 0.25s ease-in-out;
-    border-radius: 10px;
+    color: #fff !important;
 }
 
+/* ---- HOVER STATE ---- */
 .sidebar .nav li>a:hover,
-.sidebar .nav li.active>a,
-.sidebar .nav li.active>a:hover,
-.sidebar .nav .collapse .nav li.active>a,
 .sidebar .nav .collapse .nav li>a:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.20) 0%,
+            rgba(255, 255, 255, 0.10) 100%) !important;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
     color: #fff !important;
 }
 
-.sidebar .nav>li>a[aria-expanded="true"],
-.sidebar .nav>li.active>a[aria-expanded="true"] {
-    background: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+/* ---- ACTIVE MENU ---- */
+.sidebar .nav li.active>a,
+.sidebar .nav li.active>a:hover {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.35) 0%,
+            rgba(255, 255, 255, 0.18) 100%) !important;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.40);
+    font-weight: 600;
+}
+
+/* ---- EXPANDED MAIN MENU ---- */
+.sidebar .nav>li>a[aria-expanded="true"] {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.28) 0%,
+            rgba(255, 255, 255, 0.15) 100%) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.30);
     color: #fff !important;
 }
 
+/* ---- ICON & TEXT ---- */
 .sidebar .nav li>a i,
 .sidebar .nav li>a p {
     color: #fff !important;
-    transition: all 0.25s ease-in-out;
+    transition: all .25s ease-in-out;
+}
+
+/* ---- ICON MOVE ON HOVER ---- */
+.sidebar .nav li>a:hover i {
+    transform: translateX(3px);
+}
+
+/* ---- SUBMENU ---- */
+.sidebar .nav .collapse .nav li>a {
+    padding-left: 34px !important;
 }
     </style>
     @endpush

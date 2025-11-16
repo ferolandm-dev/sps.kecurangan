@@ -17,7 +17,13 @@ use App\Http\Controllers\{
 // ===============================
 // 🏠 Halaman awal
 // ===============================
-Route::get('/', fn() => view('auth.login'));
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('home');
+    }
+    return redirect()->route('login');
+});
+
 Auth::routes();
 
 // ===============================

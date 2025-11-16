@@ -5,11 +5,11 @@
 ])
 
 @section('content')
-<div class="panel-header panel-header-sm" style="background: #dbd300ff"></div>
+<div class="panel-header panel-header-sm panel-header-sps"></div>
 
 <div class="content" style="
-    backdrop-filter: blur(12px);
-    margin-top: -70px;
+    backdrop-filter: blur(10px);
+    margin-top: -60px;
     padding: 30px;
     color: #333;
 ">
@@ -192,6 +192,61 @@ textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
     /* hijau atau sesuai tema */
+}
+
+.panel-header-sps {
+    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
+    height: 120px !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* ========================================
+   NAVBAR MATCHING — SAME GRADIENT AS HEADER
+========================================= */
+
+.navbar-soft {
+    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    /* Tinggi navbar sesuai permintaan */
+    height: 95px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* Brand */
+.navbar-soft .navbar-brand {
+    color: #ffffff !important;
+    font-size: 22px !important;
+    font-weight: 700;
+}
+
+/* Icons */
+.navbar-soft .nav-link i {
+    color: #ffffff !important;
+    font-size: 22px;
+    transition: .2s ease;
+}
+
+.navbar-soft .nav-link:hover i {
+    color: #333 !important;
+}
+
+.navbar-soft {
+    transition: none !important; /* matikan transisi container */
+}
+
+.navbar-soft .nav-link i,
+.navbar-soft .navbar-brand {
+    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
 }
 
 /* ===========================================================

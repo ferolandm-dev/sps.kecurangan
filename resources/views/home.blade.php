@@ -24,7 +24,6 @@
     <div class="row">
         {{-- Card 1 --}}
         <div class="col-lg-4 col-md-6 mb-4">
-
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -43,7 +42,6 @@
 
         {{-- Card 2 --}}
         <div class="col-lg-4 col-md-6 mb-4">
-
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -62,7 +60,6 @@
 
         {{-- Card 3 --}}
         <div class="col-lg-4 col-md-6 mb-4">
-
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -82,7 +79,6 @@
 
         {{-- Card 4 --}}
         <div class="col-lg-4 col-md-6 mb-4">
-
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -102,7 +98,6 @@
 
         {{-- Card 5 --}}
         <div class="col-lg-4 col-md-6 mb-4">
-
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -122,7 +117,6 @@
 
         {{-- Card 6 --}}
         <div class="col-lg-4 col-md-6 mb-4">
-
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
@@ -142,10 +136,10 @@
     </div>
 
 
-    {{-- TABLES — kedua card dibuat sama tinggi (h-100) --}}
+    {{-- TABLES --}}
     <div class="row mt-4">
-        <div class="col-md-6 mb-4">
 
+        <div class="col-md-6 mb-4">
             <div class="card glass-card fade-up h-100" data-animate>
                 <div class="card-header">
                     <h5 class="card-category">Top 5 Distributor</h5>
@@ -226,10 +220,14 @@
 </div>
 
 @endsection
-@push('js')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{-- ============================
+     CUSTOM CSS (STYLE)
+=============================== --}}
+@push('styles')
 <style>
-/* CONTENT */
+/* All your CSS moved here. NOTHING in push('js') */
+
 .content {
     backdrop-filter: blur(12px);
     margin-top: -70px;
@@ -238,7 +236,6 @@
     transition: backdrop-filter .3s ease;
 }
 
-/* Sticky chart */
 .sticky-container {
     position: relative;
     isolation: isolate;
@@ -251,7 +248,6 @@
     margin-bottom: 24px;
 }
 
-/* Chart glass panel */
 .glass-panel {
     background: rgba(255, 255, 255, 0.92);
     border-radius: 16px;
@@ -260,13 +256,13 @@
     padding: 18px;
 }
 
-/* CARDS */
 .glass-card {
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(6px);
     border: 1px solid rgba(41, 177, 74, 0.12);
     border-radius: 14px;
-    transition: transform .28s cubic-bezier(.2, .9, .2, 1), box-shadow .28s ease;
+    transition: transform .28s cubic-bezier(.2, .9, .2, 1),
+        box-shadow .28s ease;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
@@ -279,27 +275,14 @@
 .glass-card .card-header h5 {
     color: #29b14a;
     font-weight: 700;
-    margin: 0;
 }
 
-.glass-card .card-header h4 {
-    color: #111;
-    margin-top: 6px;
-}
-
-/* Table */
 .table thead th {
     white-space: nowrap;
     font-weight: 700;
     color: #29b14a;
-    border-bottom: 1px solid rgba(41, 177, 74, 0.12);
 }
 
-.table-hover tbody tr:hover {
-    background: rgba(41, 177, 74, 0.06);
-}
-
-/* Badge */
 .badge-soft {
     background: rgba(41, 177, 74, 0.14);
     color: #29b14a;
@@ -308,7 +291,7 @@
     font-weight: 700;
 }
 
-/* Fade-up */
+/* Animation */
 .fade-up {
     opacity: 0;
     transform: translateY(10px);
@@ -325,7 +308,6 @@
     }
 }
 
-/* Tilt */
 .card-tilt {
     perspective: 1000px;
 }
@@ -335,20 +317,27 @@
     transition: transform .18s ease;
 }
 </style>
+@endpush
+
+
+{{-- ============================
+     CUSTOM JS
+=============================== --}}
+@push('js')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-    /* Data utama chart */
     const fraudData = @json($fraudData ?? array_fill(0, 12, 0));
 
-    /* Big Chart */
     const ctx = document.getElementById('bigDashboardChart').getContext('2d');
+
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov',
-                'Des'
-            ],
+                'Des'],
             datasets: [{
                 label: 'Jumlah Kecurangan',
                 data: fraudData,
@@ -367,25 +356,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 x: {
                     ticks: {
                         color: '#333'
-                    },
-                    grid: {
-                        color: 'rgba(0,0,0,0.03)'
                     }
                 },
                 y: {
                     ticks: {
                         color: '#333'
                     },
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0,0,0,0.03)'
-                    }
+                    beginAtZero: true
                 }
             }
         }
     });
 
-    /* Fade-up animation */
     const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
             if (e.isIntersecting) {
@@ -399,7 +381,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.querySelectorAll('[data-animate]').forEach(el => obs.observe(el));
 
-    /* Tilt */
     document.querySelectorAll('.card-tilt').forEach(card => {
         const inner = card.querySelector('.tilt-inner');
         card.addEventListener('mousemove', e => {

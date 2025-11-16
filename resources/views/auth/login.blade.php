@@ -5,293 +5,191 @@
 ])
 
 @section('content')
-<div class="content">
-    <div class="container">
-        <div class="col-md-12 ml-auto mr-auto">
-            <div class="header bg-gradient-primary py-10 py-lg-2 pt-lg-12">
-                <div class="container">
-                    <div class="header-body text-center mb-7">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-12 col-md-9">
-                                <p class="text-lead text-light mt-3 mb-0">
-                                    @include('alerts.migrations_check')
-                                </p>
-                            </div>
-                            <div class="col-lg-5 col-md-6"></div>
-                        </div>
-                    </div>
-                </div>
+<div class="content login-wrapper">
+
+    <div class="login-card-container">
+
+        <div class="logo-container">
+            <img src="{{ asset('assets/img/SPS.png') }}" alt="Logo">
+        </div>
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+            {{-- EMAIL --}}
+            <div class="input-group-custom">
+                <i class="now-ui-icons users_circle-08 icon-left"></i>
+                <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus>
+                <div class="focus-underline"></div>
             </div>
-        </div>
 
-        <div class="col-md-4 ml-auto mr-auto">
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
+            @if ($errors->has('email'))
+            <span class="error-text">{{ $errors->first('email') }}</span>
+            @endif
 
-                <div class="card card-login card-plain">
-                    <div class="card-header">
-                        <div class="logo-container text-center">
-                            <img src="{{ asset('assets/img/SPS.png') }}" alt="">
-                        </div>
-                    </div>
+            {{-- PASSWORD --}}
+            <div class="input-group-custom">
+                <i class="now-ui-icons objects_key-25 icon-left"></i>
 
-                    <div class="card-body">
-                        {{-- EMAIL --}}
-                        <div
-                            class="input-group no-border form-control-lg {{ $errors->has('email') ? ' has-danger' : '' }}">
-                            <span class="input-group-prepend">
-                                <div class="input-group-text">
-                                    <i class="now-ui-icons users_circle-08"></i>
-                                </div>
-                            </span>
+                <input id="password-input" type="password" name="password" placeholder="Password" required>
 
-                            <input type="email" name="email"
-                                class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Email') }}" value="{{ old('email') }}" required autofocus>
-                        </div>
+                <i class="fas fa-eye icon-right" id="toggle-password"></i>
 
-                        @if ($errors->has('email'))
-                        <span class="invalid-feedback d-block" role="alert">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                        @endif
+                <div class="focus-underline"></div>
+            </div>
 
-                        {{-- PASSWORD --}}
-                        <div
-                            class="input-group no-border form-control-lg {{ $errors->has('password') ? ' has-danger' : '' }}">
-                            <span class="input-group-prepend">
-                                <div class="input-group-text">
-                                    <i class="now-ui-icons objects_key-25"></i>
-                                </div>
-                            </span>
+            @if ($errors->has('password'))
+            <span class="error-text">{{ $errors->first('password') }}</span>
+            @endif
 
-                            <input id="password-input" type="password" name="password"
-                                class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Password') }}" required>
+            {{-- BUTTON --}}
+            <button type="submit" class="btn-submit">Login</button>
+        </form>
 
-                            <span class="input-group-prepend" style="cursor:pointer;">
-                                <div class="input-group-text" id="toggle-password" style="color:#29b14a !important;">
-                                    <i class="fas fa-eye" id="password-icon" style="font-size:20px;"></i>
-                                </div>
-                            </span>
-                        </div>
-
-                        @if ($errors->has('password'))
-                        <span class="invalid-feedback d-block" role="alert">
-                            <strong>{{ $errors->first('password') }}</strong>
-                        </span>
-                        @endif
-
-                        {{-- BUTTON --}}
-                        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block mb-2">
-                            {{ __('Login') }}
-                        </button>
-                    </div>
-                </div>
-
-            </form>
-        </div>
     </div>
+
 </div>
 @endsection
+
+
+{{-- ================================
+      CUSTOM LOGIN CSS
+================================ --}}
+@push('styles')
+<style>
+/* Hilangkan scroll seluruh halaman */
+html,
+body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Wrapper utama */
+.login-wrapper {
+    background: #ffffff !important;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card */
+.login-card-container {
+    width: 380px;
+    background: #fff;
+    padding: 35px 30px;
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Logo */
+.logo-container img {
+    width: 150px;
+    transform: scale(1.2);
+    margin-bottom: 15px;
+}
+
+/* Input Group Modern */
+.input-group-custom {
+    position: relative;
+    margin-bottom: 22px;
+    border: 2px solid #29b14a;
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    transition: .2s ease;
+}
+
+/* Icon kiri */
+.icon-left {
+    font-size: 20px;
+    color: #29b14a;
+    margin-right: 10px;
+}
+
+/* Input */
+.input-group-custom input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    flex: 1;
+    font-size: 16px;
+    color: #29b14a;
+    background: transparent;
+}
+
+/* Placeholder */
+.input-group-custom input::placeholder {
+    color: #555 !important;
+    opacity: 0.7 !important;
+}
+
+/* Icon mata */
+.icon-right {
+    font-size: 20px;
+    cursor: pointer;
+    color: #29b14a;
+    margin-left: 10px;
+}
+
+/* Hover & Focus border */
+.input-group-custom:hover,
+.input-group-custom:focus-within {
+    border-color: #1f8f3a !important;
+}
+
+/* Error */
+.error-text {
+    display: block;
+    margin-top: -12px;
+    margin-bottom: 10px;
+    color: #e60000;
+    font-size: 13px;
+}
+
+/* Button */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #29b14a;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.btn-submit:hover {
+    background: #1e8f39;
+}
+</style>
+@endpush
+
+
+{{-- ================================
+      JS — Toggle Password
+================================ --}}
 @push('js')
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-    /* ============================================
-       ⛔ KUNCI SCROLL DI SEMUA UKURAN LAYAR
-    ============================================ */
-    document.documentElement.style.setProperty('overflow', 'hidden', 'important');
-    document.documentElement.style.setProperty('height', '100vh', 'important');
-
-    document.body.style.setProperty('overflow', 'hidden', 'important');
-    document.body.style.setProperty('height', '100vh', 'important');
-    document.body.style.setProperty('max-height', '100vh', 'important');
-    document.body.style.setProperty('position', 'fixed', 'important');
-    document.body.style.setProperty('width', '100%', 'important');
-    document.body.style.setProperty('left', '0', 'important');
-    document.body.style.setProperty('top', '0', 'important');
-
-    /* Hapus margin/padding default */
-    document.body.style.setProperty('margin', '0', 'important');
-    document.body.style.setProperty('padding', '0', 'important');
-
-    /* ============================================
-       ⛔ Nonaktifkan background bawaan template
-    ============================================ */
-    if (typeof demo !== "undefined" && demo.checkFullPageBackgroundImage) {
-        // demo.checkFullPageBackgroundImage();
-    }
-
-    /* ============================================
-       🎨 Background Content
-    ============================================ */
-    const content = document.querySelector('.content');
-    if (content) {
-        content.style.setProperty('background-color', '#ffffff', 'important');
-        content.style.setProperty('min-height', '100vh', 'important');
-        content.style.setProperty('width', '100%', 'important');
-        content.style.setProperty('display', 'flex', 'important');
-        content.style.setProperty('flex-direction', 'column', 'important');
-        content.style.setProperty('justify-content', 'center', 'important');
-        content.style.setProperty('align-items', 'center', 'important');
-        content.style.setProperty('padding', '20px', 'important');
-        content.style.setProperty('overflow', 'hidden', 'important'); /* ⛔ Tambahan */
-    }
-
-    /* ============================================
-       🔰 Logo
-    ============================================ */
-    const container = document.querySelector('.logo-container');
-    const logo = container ? container.querySelector('img') : null;
-
-    if (container) {
-        container.style.setProperty('display', 'flex', 'important');
-        container.style.setProperty('justify-content', 'center', 'important');
-        container.style.setProperty('align-items', 'center', 'important');
-        container.style.setProperty('height', '200px', 'important');
-    }
-
-    if (logo) {
-        logo.style.setProperty('width', '150px', 'important');
-        logo.style.setProperty('height', 'auto', 'important');
-        logo.style.setProperty('max-width', 'none', 'important');
-        logo.style.setProperty('transform', 'scale(1.3)', 'important');
-    }
-
-    /* ============================================
-       📦 Card Spacing
-    ============================================ */
-    const cardHeader = document.querySelector('.card-login .card-header');
-    const cardBody = document.querySelector('.card-login .card-body');
-
-    if (cardHeader) {
-        cardHeader.style.setProperty('padding-bottom', '0', 'important');
-        cardHeader.style.setProperty('margin-bottom', '-80px', 'important');
-    }
-
-    if (cardBody) {
-        cardBody.style.setProperty('padding-top', '5px', 'important');
-        cardBody.style.setProperty('text-align', 'left', 'important');
-    }
-
-    /* ============================================
-       ✏️ Input Group Styling
-    ============================================ */
-    const inputGroups = document.querySelectorAll('.input-group');
-    inputGroups.forEach(group => {
-        group.style.setProperty('display', 'flex', 'important');
-        group.style.setProperty('flex-direction', 'row', 'important');
-        group.style.setProperty('align-items', 'center', 'important');
-        group.style.setProperty('justify-content', 'flex-start', 'important');
-        group.style.setProperty('gap', '10px', 'important');
-        group.style.setProperty('border', '2px solid #29b14a', 'important');
-        group.style.setProperty('border-radius', '10px', 'important');
-
-
-        group.style.setProperty('background-color', '#fff', 'important');
-        group.style.setProperty('padding', '8px 12px', 'important');
-        group.style.setProperty('margin-bottom', '15px', 'important');
-        group.style.setProperty('width', '100%', 'important');
-        group.style.setProperty('box-sizing', 'border-box', 'important');
-    });
-
-    /* ============================================
-       🎯 Icons
-    ============================================ */
-    const icons = document.querySelectorAll('.input-group-text');
-    icons.forEach(icon => {
-        icon.style.setProperty('background', 'transparent', 'important');
-        icon.style.setProperty('color', '#29b14a', 'important');
-        icon.style.setProperty('border', 'none', 'important');
-        icon.style.setProperty('font-size', '20px', 'important');
-        icon.style.setProperty('display', 'flex', 'important');
-        icon.style.setProperty('align-items', 'center', 'important');
-        icon.style.setProperty('justify-content', 'center', 'important');
-        icon.style.setProperty('padding', '0', 'important');
-        icon.style.setProperty('margin-right', '5px', 'important');
-        icon.style.setProperty('height', '100%', 'important');
-    });
-
-    /* ============================================
-       🔐 Input Styling
-    ============================================ */
-    const inputs = document.querySelectorAll('.input-group input');
-    inputs.forEach(input => {
-
-        input.style.setProperty('border', 'none', 'important');
-        input.style.setProperty('box-shadow', 'none', 'important');
-        input.style.setProperty('background', 'transparent', 'important');
-        input.style.setProperty('padding', '6px', 'important');
-        input.style.setProperty('font-size', '16px', 'important');
-        input.style.setProperty('color', '#29b14a', 'important');
-        input.style.setProperty('flex', '1', 'important');
-        input.style.setProperty('outline', 'none', 'important');
-        input.style.setProperty('text-align', 'left', 'important');
-
-        const group = input.closest('.input-group');
-        if (group) {
-            group.style.setProperty('border', '2px solid #29b14a', 'important');
-        }
-
-        const style = document.createElement('style');
-        style.innerHTML = `
-            input[name="${input.name}"]::placeholder {
-                color: #000 !important;
-                opacity: 0.85 !important;
-            }
-        `;
-        document.head.appendChild(style);
-
-        input.addEventListener('focus', () => {
-            const parent = input.closest('.input-group');
-            if (parent) parent.style.setProperty('border', '2.5px solid #29b14a', 'important');
-        });
-
-        input.addEventListener('blur', () => {
-            const parent = input.closest('.input-group');
-            if (parent) parent.style.setProperty('border', '2px solid #29b14a', 'important');
-        });
-    });
-
-    /* ============================================
-       🟩 BUTTON
-    ============================================ */
-    const button = document.querySelector('.btn.btn-primary.btn-round.btn-lg.btn-block');
-    if (button) {
-        button.style.setProperty('background-color', '#29b14a', 'important');
-        button.style.setProperty('border', '2px solid #29b14a', 'important');
-        button.style.setProperty('color', '#fff', 'important');
-        button.style.setProperty('font-weight', '600', 'important');
-        button.style.setProperty('transition', 'all 0.3s ease', 'important');
-    }
-    /* ============================================
-   👁️ Toggle Show/Hide Password (with eye icon)
-============================================ */
-    const passwordInput = document.getElementById('password-input');
     const togglePassword = document.getElementById('toggle-password');
-    const passwordIcon = document.getElementById('password-icon');
+    const passwordInput = document.getElementById('password-input');
 
-    if (togglePassword && passwordInput) {
-        togglePassword.addEventListener('click', function() {
-
-            const isHidden = passwordInput.getAttribute('type') === 'password';
-
-            // Toggle type
-            passwordInput.setAttribute('type', isHidden ? 'text' : 'password');
-
-            // Toggle icon
-            if (isHidden) {
-                passwordIcon.classList.remove('fa-eye');
-                passwordIcon.classList.add('fa-eye-slash'); // Mata tertutup
-            } else {
-                passwordIcon.classList.remove('fa-eye-slash');
-                passwordIcon.classList.add('fa-eye'); // Mata terbuka
-            }
-        });
-    }
+    togglePassword.addEventListener('click', () => {
+        const isHidden = passwordInput.type === "password";
+        passwordInput.type = isHidden ? "text" : "password";
+        togglePassword.classList.toggle("fa-eye");
+        togglePassword.classList.toggle("fa-eye-slash");
+    });
 
 });
 </script>
-
 @endpush

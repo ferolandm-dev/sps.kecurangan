@@ -253,10 +253,44 @@
                 <img id="modalImage" src="" alt="Preview" style="max-width:90%; max-height:90%; object-fit:contain;
                     border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2);
                     transition:0.3s;">
-                <button type="button" id="modalPrev" class="btn btn-link" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);
-                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">‹</button>
-                <button type="button" id="modalNext" class="btn btn-link" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);
-                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">›</button>
+                <button type="button" id="modalPrev" class="btn btn-link" style="
+    position:absolute;
+    left:0;
+    top:0;
+    height:100%;
+    width:120px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    padding-left:25px;
+    font-size:42px;
+    color:#333;
+    text-decoration:none;
+    opacity:0.7;
+    background:transparent;
+    border:none;
+">
+                    ‹
+                </button>
+                <button type="button" id="modalNext" class="btn btn-link" style="
+    position:absolute;
+    right:0;
+    top:0;
+    height:100%;
+    width:120px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    padding-right:25px;
+    font-size:42px;
+    color:#333;
+    text-decoration:none;
+    opacity:0.7;
+    background:transparent;
+    border:none;
+">
+                    ›
+                </button>
             </div>
 
             {{-- Footer --}}
@@ -388,6 +422,118 @@ body.modal-open {
     transform: none !important;
     box-shadow: none !important;
 }
+
+/* Pastikan ditempatkan terakhir agar menimpa Bootstrap */
+#modalPrev,
+#modalNext {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    color: #333 !important;
+    /* sesuaikan warna */
+    text-decoration: none !important;
+}
+
+/* Hilangkan efek hover / fokus / aktif sepenuhnya */
+#modalPrev:hover,
+#modalNext:hover,
+#modalPrev:focus,
+#modalNext:focus,
+#modalPrev:active,
+#modalNext:active,
+#modalPrev:focus-visible,
+#modalNext:focus-visible {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    opacity: 0.6 !important;
+    /* atur sesuai kebutuhan, atau 1 */
+    transform: none !important;
+}
+
+/* Khusus untuk tombol bootstrap .btn-link yang mungkin menambahkan inner focus di Firefox */
+#modalPrev::-moz-focus-inner,
+#modalNext::-moz-focus-inner {
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+/* Jika masih muncul garis biru di Chrome pada focus, override ring color */
+#modalPrev:focus,
+#modalNext:focus {
+    box-shadow: 0 0 0 0 transparent !important;
+}
+
+/* OPTIONAL: jika tetap ada style dari .btn-link atau .btn, paksa prioritas lebih tinggi */
+button#modalPrev.btn,
+button#modalNext.btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* ============================================================
+   TOMBOL HAPUS FOTO (X) — SUPER RAPIH & PRESISI
+=========================================================== */
+
+#preview-container .btn-remove,
+.existing-photo .btn-delete-existing {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50% !important;
+    background: #e74c3c !important;
+    color: #fff !important;
+
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    font-size: 18px !important;
+    font-weight: bold !important;
+    line-height: 0 !important;
+
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
+    transition: 0.18s ease-in-out;
+    z-index: 99;
+}
+
+/* Hover lebih smooth */
+#preview-container .btn-remove:hover,
+.existing-photo .btn-delete-existing:hover {
+    background: #c0392b !important;
+    transform: scale(1.10);
+}
+
+/* Active klik */
+#preview-container .btn-remove:active,
+.existing-photo .btn-delete-existing:active {
+    transform: scale(0.92);
+}
+
+/* Hilangkan efek fokus biru */
+#preview-container .btn-remove:focus,
+.existing-photo .btn-delete-existing:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 </style>
 
 <script>

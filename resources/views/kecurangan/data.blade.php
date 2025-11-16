@@ -284,7 +284,7 @@
             border-radius:15px;
             box-shadow:0 4px 25px rgba(0,0,0,0.3);">
             <div class="modal-header" style="border-bottom:none;">
-                <h5 class="modal-title text-success" style="font-weight:600;">
+                <h5 class="modal-title" style="font-weight:600;">
                     <i class="now-ui-icons"></i> Keterangan
                 </h5>
             </div>
@@ -321,14 +321,46 @@
                     style="max-width:90%; max-height:90%; object-fit:contain; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:0.3s;">
 
                 {{-- Tombol Navigasi --}}
-                <button type="button" id="modalPrev" class="btn btn-link" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);
-                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">
+                <button type="button" id="modalPrev" class="btn btn-link" style="
+    position:absolute;
+    left:0;
+    top:0;
+    height:100%;
+    width:120px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    padding-left:25px;
+    font-size:42px;
+    color:#333;
+    text-decoration:none;
+    opacity:0.7;
+    background:transparent;
+    border:none;
+">
                     ‹
                 </button>
-                <button type="button" id="modalNext" class="btn btn-link" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);
-                    font-size:40px;color:#333;text-decoration:none;opacity:0.6;">
+
+                <button type="button" id="modalNext" class="btn btn-link" style="
+    position:absolute;
+    right:0;
+    top:0;
+    height:100%;
+    width:120px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    padding-right:25px;
+    font-size:42px;
+    color:#333;
+    text-decoration:none;
+    opacity:0.7;
+    background:transparent;
+    border:none;
+">
                     ›
                 </button>
+
             </div>
 
             {{-- Footer --}}
@@ -347,9 +379,6 @@
 
             <div class="modal-header">
                 <h5 class="modal-title font-weight-bold">Filter Data</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>×</span>
-                </button>
             </div>
 
             <form action="{{ route('kecurangan.data') }}" method="GET">
@@ -434,7 +463,6 @@
 
             <div class="modal-header">
                 <h5 class="modal-title font-weight-bold">Export Excel</h5>
-                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
             </div>
 
             <form action="{{ route('kecurangan.exportExcel') }}" method="GET" target="_blank">
@@ -525,7 +553,6 @@
 
             <div class="modal-header">
                 <h5 class="modal-title font-weight-bold">Export PDF</h5>
-                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
             </div>
 
             <form action="{{ route('kecurangan.exportPDF') }}" method="GET" target="_blank">
@@ -829,6 +856,62 @@ select:focus {
     background: linear-gradient(135deg, #25a344, #2fc655) !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
+}
+
+/* Pastikan ditempatkan terakhir agar menimpa Bootstrap */
+#modalPrev,
+#modalNext {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    color: #333 !important;
+    /* sesuaikan warna */
+    text-decoration: none !important;
+}
+
+/* Hilangkan efek hover / fokus / aktif sepenuhnya */
+#modalPrev:hover,
+#modalNext:hover,
+#modalPrev:focus,
+#modalNext:focus,
+#modalPrev:active,
+#modalNext:active,
+#modalPrev:focus-visible,
+#modalNext:focus-visible {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    opacity: 0.6 !important;
+    /* atur sesuai kebutuhan, atau 1 */
+    transform: none !important;
+}
+
+/* Khusus untuk tombol bootstrap .btn-link yang mungkin menambahkan inner focus di Firefox */
+#modalPrev::-moz-focus-inner,
+#modalNext::-moz-focus-inner {
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+/* Jika masih muncul garis biru di Chrome pada focus, override ring color */
+#modalPrev:focus,
+#modalNext:focus {
+    box-shadow: 0 0 0 0 transparent !important;
+}
+
+/* OPTIONAL: jika tetap ada style dari .btn-link atau .btn, paksa prioritas lebih tinggi */
+button#modalPrev.btn,
+button#modalNext.btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 </style>
 

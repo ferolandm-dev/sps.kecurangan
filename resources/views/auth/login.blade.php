@@ -65,9 +65,15 @@
                                 </div>
                             </span>
 
-                            <input type="password" name="password"
+                            <input id="password-input" type="password" name="password"
                                 class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
                                 placeholder="{{ __('Password') }}" required>
+
+                            <span class="input-group-prepend" style="cursor:pointer;">
+                                <div class="input-group-text" id="toggle-password" style="color:#29b14a !important;">
+                                    <i class="fas fa-eye" id="password-icon" style="font-size:20px;"></i>
+                                </div>
+                            </span>
                         </div>
 
                         @if ($errors->has('password'))
@@ -78,7 +84,7 @@
 
                         {{-- BUTTON --}}
                         <button type="submit" class="btn btn-primary btn-round btn-lg btn-block mb-2">
-                            {{ __('Get Started') }}
+                            {{ __('Login') }}
                         </button>
                     </div>
                 </div>
@@ -181,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function() {
         group.style.setProperty('gap', '10px', 'important');
         group.style.setProperty('border', '2px solid #29b14a', 'important');
         group.style.setProperty('border-radius', '10px', 'important');
-       
+
 
         group.style.setProperty('background-color', '#fff', 'important');
         group.style.setProperty('padding', '8px 12px', 'important');
@@ -259,6 +265,32 @@ document.addEventListener("DOMContentLoaded", function() {
         button.style.setProperty('font-weight', '600', 'important');
         button.style.setProperty('transition', 'all 0.3s ease', 'important');
     }
+    /* ============================================
+   👁️ Toggle Show/Hide Password (with eye icon)
+============================================ */
+    const passwordInput = document.getElementById('password-input');
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordIcon = document.getElementById('password-icon');
+
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function() {
+
+            const isHidden = passwordInput.getAttribute('type') === 'password';
+
+            // Toggle type
+            passwordInput.setAttribute('type', isHidden ? 'text' : 'password');
+
+            // Toggle icon
+            if (isHidden) {
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash'); // Mata tertutup
+            } else {
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye'); // Mata terbuka
+            }
+        });
+    }
+
 });
 </script>
 

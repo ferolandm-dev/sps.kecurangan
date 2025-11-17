@@ -417,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 'Des'
             ],
             datasets: [{
-                label: 'Jumlah Kecurangan',
+                label: 'Jumlah Kasus',
                 data: fraudData,
                 borderColor: '#29b14a',
                 backgroundColor: 'rgba(41,177,74,0.12)',

@@ -1,10 +1,9 @@
 {{-- Jangan tampilkan sidebar pada halaman login --}}
 @if (request()->routeIs('login'))
-    @php return; @endphp
+@php return; @endphp
 @endif
 
-<div class="sidebar" data-color="green" style="background-color: #29b14a; min-height: 100vh; color: #fff;">
-
+<div class="sidebar">
     <div class="logo" style="text-align: center; padding: 10px 0;">
         <div class="logo-image">
             <img src="{{ asset('assets/img/SPS LOGO.png') }}" alt="SPS Logo"
@@ -15,34 +14,34 @@
     <div class="sidebar-wrapper" id="sidebar-wrapper" style="color: #fff;">
 
         @php
-            use Illuminate\Support\Facades\DB;
-            use Illuminate\Support\Facades\Auth;
+        use Illuminate\Support\Facades\DB;
+        use Illuminate\Support\Facades\Auth;
 
-            // Ambil daftar menu utama dan sub-menu
-            $menus = DB::table('menus')
-                ->select('id', 'main_menu', 'sub_menu', 'icon', 'route', 'order', 'main_order')
-                ->orderBy('main_order')
-                ->orderBy('main_menu')
-                ->orderBy('order')
-                ->get()
-                ->groupBy('main_menu');
+        // Ambil daftar menu utama dan sub-menu
+        $menus = DB::table('menus')
+        ->select('id', 'main_menu', 'sub_menu', 'icon', 'route', 'order', 'main_order')
+        ->orderBy('main_order')
+        ->orderBy('main_menu')
+        ->orderBy('order')
+        ->get()
+        ->groupBy('main_menu');
 
-            $userId = Auth::id();
+        $userId = Auth::id();
 
-            // Ambil menu yang boleh diakses user dari tabel user_access
-            $userAccess = DB::table('user_access')
-                ->where('user_id', $userId)
-                ->where('can_access', 1)
-                ->get()
-                ->map(fn($row) => [
-                    'main' => $row->main_menu,
-                    'sub' => $row->sub_menu,
-                ]);
+        // Ambil menu yang boleh diakses user dari tabel user_access
+        $userAccess = DB::table('user_access')
+        ->where('user_id', $userId)
+        ->where('can_access', 1)
+        ->get()
+        ->map(fn($row) => [
+        'main' => $row->main_menu,
+        'sub' => $row->sub_menu,
+        ]);
 
-            // Mapping akses untuk memudahkan pengecekan
-            $accessMap = $userAccess->groupBy('main')->map(fn($group) =>
-                $group->pluck('sub')->filter()->toArray()
-            );
+        // Mapping akses untuk memudahkan pengecekan
+        $accessMap = $userAccess->groupBy('main')->map(fn($group) =>
+        $group->pluck('sub')->filter()->toArray()
+        );
         @endphp
 
         <ul class="nav" id="sidebar-menu" style="color:#fff;">
@@ -59,50 +58,50 @@
                 MENU SISTEM SESUAI AKSES USER
                ===================== --}}
             @foreach ($menus as $mainMenu => $subs)
-                @php
-                    $mainAccess = $accessMap->has($mainMenu);
-                @endphp
+            @php
+            $mainAccess = $accessMap->has($mainMenu);
+            @endphp
 
-                {{-- Jika user tidak punya akses, skip --}}
-                @if (!$mainAccess)
-                    @continue
-                @endif
+            {{-- Jika user tidak punya akses, skip --}}
+            @if (!$mainAccess)
+            @continue
+            @endif
 
-                {{-- =======================
+            {{-- =======================
                       MENU TANPA SUBMENU
                    ======================= --}}
-                @if ($subs->count() === 1 && empty($subs->first()->sub_menu))
-                    @php $menu = $subs->first(); @endphp
+            @if ($subs->count() === 1 && empty($subs->first()->sub_menu))
+            @php $menu = $subs->first(); @endphp
 
-                    <li class="{{ $activePage == $menu->route ? 'active' : '' }}">
-                        <a href="{{ $menu->route ? route($menu->route) : '#' }}" style="color:#fff;">
-                            <i class="{{ $menu->icon ?? 'now-ui-icons design_bullet-list-67' }}"></i>
-                            <p style="color:#fff;">{{ __($menu->main_menu) }}</p>
-                        </a>
-                    </li>
+            <li class="{{ $activePage == $menu->route ? 'active' : '' }}">
+                <a href="{{ $menu->route ? route($menu->route) : '#' }}" style="color:#fff;">
+                    <i class="{{ $menu->icon ?? 'now-ui-icons design_bullet-list-67' }}"></i>
+                    <p style="color:#fff;">{{ __($menu->main_menu) }}</p>
+                </a>
+            </li>
 
-                @else
-                    {{-- =======================
+            @else
+            {{-- =======================
                           PERSIAPAN SUB MENU
                        ======================= --}}
-                    @php
-                        $visibleSubs = collect($subs)->filter(function ($sub) use ($accessMap, $mainMenu) {
-                            if (!isset($accessMap[$mainMenu])) return false;
-                            return in_array($sub->sub_menu, $accessMap[$mainMenu]);
-                        });
+            @php
+            $visibleSubs = collect($subs)->filter(function ($sub) use ($accessMap, $mainMenu) {
+            if (!isset($accessMap[$mainMenu])) return false;
+            return in_array($sub->sub_menu, $accessMap[$mainMenu]);
+            });
 
-                        $collapseId = 'menu_' . ($subs->first()->id ?? crc32($mainMenu));
+            $collapseId = 'menu_' . ($subs->first()->id ?? crc32($mainMenu));
 
-                        $isActive = $visibleSubs->pluck('route')->contains(function ($r) use ($activePage) {
-                            return $r === $activePage || request()->routeIs($r . '*');
-                        });
-                    @endphp
+            $isActive = $visibleSubs->pluck('route')->contains(function ($r) use ($activePage) {
+            return $r === $activePage || request()->routeIs($r . '*');
+            });
+            @endphp
 
-                    @if ($visibleSubs->count() > 0)
-                        <li>
-                            <a href="javascript:void(0);" class="menu-toggle {{ $isActive ? '' : 'collapsed' }}"
-                                data-target="#{{ $collapseId }}" style="color:#fff;">
-                                <i class="
+            @if ($visibleSubs->count() > 0)
+            <li>
+                <a href="javascript:void(0);" class="menu-toggle {{ $isActive ? '' : 'collapsed' }}"
+                    data-target="#{{ $collapseId }}" style="color:#fff;">
+                    <i class="
                                     @switch($mainMenu)
                                         @case('Master') now-ui-icons education_agenda-bookmark @break
                                         @case('Data') now-ui-icons files_single-copy-04 @break
@@ -111,37 +110,37 @@
                                     @endswitch
                                 "></i>
 
+                    <p style="color:#fff;">
+                        {{ __($mainMenu) }}
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse {{ $isActive ? 'show' : '' }}" id="{{ $collapseId }}">
+                    <ul class="nav">
+
+                        @foreach ($visibleSubs as $sub)
+                        @php
+                        $subIsActive =
+                        $activePage == $sub->route ||
+                        request()->routeIs($sub->route . '*');
+                        @endphp
+
+                        <li class="{{ $subIsActive ? 'active' : '' }}">
+                            <a href="{{ route($sub->route) }}" style="color:#fff;">
+                                <i class="{{ $sub->icon ?? 'now-ui-icons design_bullet-list-67' }}"></i>
                                 <p style="color:#fff;">
-                                    {{ __($mainMenu) }}
-                                    <b class="caret"></b>
+                                    {{ __($sub->sub_menu ?? $sub->main_menu) }}
                                 </p>
                             </a>
-
-                            <div class="collapse {{ $isActive ? 'show' : '' }}" id="{{ $collapseId }}">
-                                <ul class="nav">
-
-                                    @foreach ($visibleSubs as $sub)
-                                        @php
-                                            $subIsActive =
-                                                $activePage == $sub->route ||
-                                                request()->routeIs($sub->route . '*');
-                                        @endphp
-
-                                        <li class="{{ $subIsActive ? 'active' : '' }}">
-                                            <a href="{{ route($sub->route) }}" style="color:#fff;">
-                                                <i class="{{ $sub->icon ?? 'now-ui-icons design_bullet-list-67' }}"></i>
-                                                <p style="color:#fff;">
-                                                    {{ __($sub->sub_menu ?? $sub->main_menu) }}
-                                                </p>
-                                            </a>
-                                        </li>
-                                    @endforeach
-
-                                </ul>
-                            </div>
                         </li>
-                    @endif
-                @endif
+                        @endforeach
+
+                    </ul>
+                </div>
+            </li>
+            @endif
+            @endif
 
             @endforeach
         </ul>
@@ -175,39 +174,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {{-- ========== CSS SIDEBAR ========== --}}
 <style>
-.sidebar {
-    background: linear-gradient(180deg,
-            #29b14a 0%,
-            #29b14a 85%,
-            rgba(219, 211, 0, 0.35) 100%) !important;
-    color: #fff !important;
+/* ====== MATIKAN BACKGROUND OVERRIDE NOW UI ====== */
+.sidebar::before,
+.sidebar::after {
+    background: none !important;
 }
+
+/* Sidebar punya background sendiri */
+.sidebar {
+    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
+}
+
+
+
+/* ICON */
 .sidebar .nav li a i {
     color: #ffffff !important;
-    opacity: 1 !important;
 }
+
+/* MENU ITEM */
 .sidebar .nav li>a,
 .sidebar .nav .collapse .nav li>a {
-    position: relative;
     border-radius: 12px;
     padding: 10px 15px;
-    transition: all 0.25s ease-in-out;
+    transition: 0.25s ease-in-out;
     color: #fff !important;
 }
 
+/* HOVER */
 .sidebar .nav li>a:hover,
 .sidebar .nav .collapse .nav li>a:hover {
     background: rgba(255, 255, 255, 0.15) !important;
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
 }
 
+/* ACTIVE */
 .sidebar .nav li.active>a {
     background: rgba(255, 255, 255, 0.30) !important;
     font-weight: 600;
 }
 
+/* SUBMENU PADDING */
 .sidebar .nav .collapse .nav li>a {
     padding-left: 34px !important;
 }
+</style>
+
+
+
 </style>

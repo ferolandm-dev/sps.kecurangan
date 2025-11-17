@@ -1,5 +1,5 @@
 @extends('layouts.login', [
-    'namePage' => 'Login page',
+    'namePage' => 'LOGIN SPS',
     'class' => 'login-page',
     'activePage' => 'login',
 ])
@@ -49,6 +49,8 @@
 @endsection
 
 @push('styles')
+<link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/SPS LOGO.png') }}">
+<link rel="icon" type="image/png" href="{{ asset('assets/img/SPS LOGO.png') }}">
 <style>
 /* ========= BACKGROUND LOGIN (override template) ========= */
 html, body {

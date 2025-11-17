@@ -1,8 +1,9 @@
 @extends('layouts.app', [
 'namePage' => '',
-'class' => 'sidebar-mini',
+'class' => 'sidebar-mini background-none',
 'activePage' => 'welcome',
 ])
+
 
 @section('content')
 
@@ -13,10 +14,15 @@
         <img src="{{ asset('assets/img/SPS LOGO.png') }}" class="welcome-logo-img">
     </div>
 
-    {{-- TITLE --}}
-    <h1 class="welcome-title fadeUp fade-delay-2">
-        WELCOME, {{ strtoupper(auth()->user()->name) }}!
+
+    {{-- JAM WAKTU INDONESIA BARAT --}}
+    <div id="wibClock" class="welcome-clock fadeUp fade-delay-2"></div>
+
+
+    <h1 class="welcome-title fadeUp fade-delay-4">
+        <span id="greetingText"></span>, {{ strtoupper(auth()->user()->name) }}!
     </h1>
+
 
     {{-- CARD CONTAINER --}}
     <div class="welcome-card-container fadeUp fade-delay-3">
@@ -219,5 +225,92 @@
         border-radius: 18px;
     }
 }
+
+/* CLOCK */
+.welcome-clock {
+    font-size: clamp(16px, 3.2vw, 22px);
+    font-weight: 600;
+    color: #ffffff;
+    margin-top: 5px;
+    letter-spacing: 1px;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.20),
+        0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.welcome-greet {
+    font-size: clamp(18px, 4vw, 28px);
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 5px;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.20),
+        0 4px 8px rgba(0, 0, 0, 0.18);
+}
 </style>
+@endpush
+
+@push('js')
+<script>
+function updateWIBClock() {
+    const now = new Date();
+
+    // Konversi ke WIB (GMT+7)
+    const wibTime = new Date(now.toLocaleString("en-US", {
+        timeZone: "Asia/Jakarta"
+    }));
+
+    let h = String(wibTime.getHours()).padStart(2, '0');
+    let m = String(wibTime.getMinutes()).padStart(2, '0');
+    let s = String(wibTime.getSeconds()).padStart(2, '0');
+
+    document.getElementById("wibClock").textContent = `${h}:${m}:${s} WIB`;
+}
+
+// Update awal
+updateWIBClock();
+
+// Update setiap 1 detik untuk menampilkan detik
+setInterval(updateWIBClock, 1000);
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    function setGreeting() {
+        const now = new Date();
+
+        // Waktu WIB
+        const wib = new Date(
+            now.toLocaleString("en-US", {
+                timeZone: "Asia/Jakarta"
+            })
+        );
+        const hour = wib.getHours();
+
+        let greeting = "";
+
+        if (hour >= 5 && hour < 11) greeting = "PAGI";
+        else if (hour >= 11 && hour < 15) greeting = "SIANG";
+        else if (hour >= 15 && hour < 18) greeting = "SORE";
+        else greeting = "MALAM";
+
+        // Tempat menampilkan greeting
+        const target = document.getElementById("greetingText");
+        if (target) {
+            target.textContent = greeting;
+        }
+    }
+
+    // Jalankan saat halaman dimuat
+    setGreeting();
+
+    // Update setiap 30 menit
+    setInterval(setGreeting, 30 * 60 * 1000);
+
+});
+</script>
+
+
 @endpush

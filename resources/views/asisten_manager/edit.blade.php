@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Edit Asisten Manager',
+'namePage' => 'Edit ASS',
 'class' => 'sidebar-mini',
 'activePage' => 'asisten_managers',
 ])

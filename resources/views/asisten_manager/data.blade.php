@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Data Asisten Manager',
+'namePage' => 'Data ASS',
 'class' => 'sidebar-mini',
 'activePage' => 'data_asisten_managers',
 ])

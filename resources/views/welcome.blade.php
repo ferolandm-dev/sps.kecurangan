@@ -246,6 +246,8 @@
         0 16px 32px rgba(41, 177, 74, 0.10);
 
     backdrop-filter: none !important;
+
+    text-align: center;
     /* 🔥 matikan blur */
 }
 

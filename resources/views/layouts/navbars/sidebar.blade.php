@@ -50,7 +50,7 @@
             <li class="{{ $activePage == 'welcome' ? 'active' : '' }}">
                 <a href="{{ route('welcome') }}" style="color:#fff;">
                     <i class="now-ui-icons emoticons_satisfied"></i>
-                    <p style="color:#fff;">Welcome</p>
+                    <p style="color:#fff;">Home</p>
                 </a>
             </li>
 

@@ -11,12 +11,11 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
 {
     /**
-     * Ambil data dari tabel sales dan join ke distributors + total kecurangan.
+     * Ambil data sales + distributor + total kecurangan.
      */
     public function collection()
     {
         return DB::table('sales')
-            ->where('status', 'Aktif')
             ->join('distributors', 'sales.id_distributor', '=', 'distributors.id')
             ->select(
                 'sales.id',
@@ -25,6 +24,7 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
                 DB::raw('(SELECT COUNT(*) FROM kecurangan WHERE kecurangan.id_sales = sales.id) as total_kecurangan'),
                 'sales.status'
             )
+            ->where('sales.status', 'Aktif')   // FIX AMBIGUOUS COLUMN
             ->orderBy('sales.id', 'asc')
             ->get();
     }
@@ -44,7 +44,7 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
     }
 
     /**
-     * Mapping isi data per baris.
+     * Mapping tiap baris data.
      */
     public function map($row): array
     {
@@ -53,7 +53,7 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             $row->nama,
             $row->nama_distributor,
             $row->total_kecurangan,
-            ucfirst($row->status),
+            ucfirst(strtolower($row->status)),
         ];
     }
 }

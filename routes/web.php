@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     KecuranganController,
@@ -8,7 +9,7 @@ use App\Http\Controllers\{
     UserController,
     ProfileController,
     PageController,
-    HomeController,
+    DashboardController,
     AsistenManagerController,
     MenuController,
     SanksiController
@@ -18,20 +19,37 @@ use App\Http\Controllers\{
 // 🏠 Halaman awal
 // ===============================
 Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('home');
+
+    if (!auth()->check()) {
+        return redirect()->route('login');
     }
-    return redirect()->route('login');
+
+    // cek apakah user punya akses menu apa pun
+    $hasAccess = DB::table('user_access')
+        ->where('user_id', auth()->id())
+        ->exists();
+
+    if ($hasAccess) {
+        return redirect()->route('dashboard');
+    }
+
+    // jika user tidak punya akses sama sekali
+    return view('welcome');
 });
 
 Auth::routes();
 
+Route::get('/welcome', function () {
+    return view('welcome');
+})->middleware('auth')->name('welcome');
+
+
 // ===============================
-// 🏠 Home
+// 🏠 Dashboard
 // ===============================
-Route::get('/home', [HomeController::class, 'index'])
-    ->middleware('auth')
-    ->name('home');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'check.access:Dashboard,null,access'])
+    ->name('dashboard');
 
 // ===============================
 // 🔐 Group halaman setelah login

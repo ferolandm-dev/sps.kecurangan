@@ -50,14 +50,6 @@
                     <h4 class="card-title mb-0 text-dark">{{ __('Master Kecurangan') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
-                        {{-- Tombol Tambah Kecurangan --}}
-                        @if (checkAccess('Master', 'Master Kecurangan', 'create'))
-                        <a href="{{ route('kecurangan.create') }}" class="btn btn-primary btn-icon btn-round"
-                            style="background:#29b14a;border:none; margin-right: 10px;" title="Tambah Distributor">
-                            <i class="now-ui-icons ui-1_simple-add"></i>
-                        </a>
-
-                        @endif
                         {{-- 🔍 Form Pencarian --}}
                         <form action="{{ route('kecurangan.index') }}" method="GET" class="mr-2">
                             <div class="search-group">
@@ -83,6 +75,14 @@
                             class="btn btn-success btn-round mr-2"
                             style="background:#29b14a;border:none;margin-top:10px;" title="Tampilkan Semua Data">
                             <i class="now-ui-icons ui-1_zoom-bold"></i> Tampilkan Semua
+                        </a>
+                        @endif
+
+                        {{-- Tombol Tambah Asisten Manager (akses: create) --}}
+                        @if (checkAccess('Master', 'Master Kecurangan', 'create'))
+                        <a href="{{ route('kecurangan.create') }}" class="btn btn-primary btn-icon btn-round"
+                            style="background:#29b14a;border:none;" title="Tambah Kecurangan">
+                            <i class="now-ui-icons ui-1_simple-add"></i>
                         </a>
                         @endif
                     </div>
@@ -410,9 +410,6 @@ select:focus {
 
 .panel-header-sps {
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
-    height: 120px !important;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
 }
 
 /* ========================================
@@ -455,12 +452,14 @@ select:focus {
 }
 
 .navbar-soft {
-    transition: none !important; /* matikan transisi container */
+    transition: none !important;
+    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
+    transition: color .25s ease, transform .25s ease !important;
+    /* biarkan hover tetap smooth */
 }
 
 /* =============================== */

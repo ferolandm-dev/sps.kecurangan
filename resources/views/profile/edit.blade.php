@@ -162,9 +162,6 @@
 /* PANEL HEADER GRADIENT */
 .panel-header-sps {
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
-    height: 120px !important;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
 }
 
 /* ========================================

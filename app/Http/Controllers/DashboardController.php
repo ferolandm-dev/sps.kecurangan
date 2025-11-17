@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     public function __construct()
     {
@@ -123,12 +123,14 @@ class HomeController extends Controller
             ->whereYear('tanggal', date('Y'))
             ->count();
 
+        // ======================================
+        // 💰 Total nilai sanksi bulan ini
+        // ======================================
         $totalNilaiSanksiBulanIni = DB::table('kecurangan')
             ->where('validasi', 1)
             ->whereMonth('tanggal', date('m'))
             ->whereYear('tanggal', date('Y'))
             ->sum('nilai_sanksi');
-
 
         // ======================================
         // 👥 Total User
@@ -138,7 +140,7 @@ class HomeController extends Controller
         // ======================================
         // 🔁 Kirim semua data ke view
         // ======================================
-        return view('home', compact(
+        return view('dashboard', compact(
             'totalDistributorAktif',
             'totalSalesAktif',
             'fraudData',

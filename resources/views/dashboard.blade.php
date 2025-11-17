@@ -1,8 +1,7 @@
 @extends('layouts.app', [
 'namePage' => 'Dashboard',
 'class' => 'login-page sidebar-mini',
-'activePage' => 'home',
-'backgroundImage' => asset('now') . "/img/bg14.jpg",
+'activePage' => 'dashboard',
 ])
 
 @section('content')
@@ -222,9 +221,6 @@
 <style>
 .panel-header-sps {
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
-    height: 120px !important;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
 }
 
 /* ========================================

@@ -9,12 +9,7 @@
 {{-- HEADER GRADIENT --}}
 <div class="panel-header panel-header-sm panel-header-sps"></div>
 
-<div class="content" style="
-    backdrop-filter: blur(10px);
-    margin-top: -60px;
-    padding: 30px;
-    color: #333;
-">
+<div class="content">
 
     <div class="row justify-content-center align-items-stretch">
 
@@ -160,8 +155,23 @@
 @push('styles')
 <style>
 /* PANEL HEADER GRADIENT */
+body,
+.wrapper,
+.main-panel {
+    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
+    background-attachment: fixed !important;
+    /* supaya smooth */
+}
+
+
 .panel-header-sps {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+
+.content {
+    background: transparent !important;
 }
 
 /* ========================================
@@ -204,12 +214,14 @@
 }
 
 .navbar-soft {
-    transition: none !important; /* matikan transisi container */
+    transition: none !important;
+    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
+    transition: color .25s ease, transform .25s ease !important;
+    /* biarkan hover tetap smooth */
 }
 
 
@@ -278,6 +290,5 @@ select:focus {
     outline: none !important;
     box-shadow: none !important;
 }
-
 </style>
 @endpush

@@ -7,12 +7,7 @@
 @section('content')
 <div class="panel-header panel-header-sm panel-header-sps"></div>
 
-<div class="content" style="
-    backdrop-filter: blur(10px);
-    margin-top: -60px;
-    padding: 30px;
-    color: #333;
-">
+<div class="content">
     <div class="card shadow-sm" style="border-radius: 20px;">
         <div class="card-header d-flex justify-content-between align-items-center ">
             <h4 class="card-title mb-0 ">Pengaturan Akses - {{ $user->name }}</h4>
@@ -175,8 +170,23 @@
 @endsection
 @push('styles')
 <style>
+body,
+.wrapper,
+.main-panel {
+    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
+    background-attachment: fixed !important;
+    /* supaya smooth */
+}
+
+
 .panel-header-sps {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+
+.content {
+    background: transparent !important;
 }
 
 /* ========================================

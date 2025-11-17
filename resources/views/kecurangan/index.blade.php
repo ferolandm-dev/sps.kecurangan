@@ -7,12 +7,7 @@
 @section('content')
 <div class="panel-header panel-header-sm panel-header-sps"></div>
 
-<div class="content" style="
-    backdrop-filter: blur(10px);
-    margin-top: -60px;
-    padding: 30px;
-    color: #333;
-">
+<div class="content">
     <div class="row">
         <div class="col-md-12">
 
@@ -408,8 +403,23 @@ select:focus {
     border-color: #4caf50 !important;
 }
 
+body,
+.wrapper,
+.main-panel {
+    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
+    background-attachment: fixed !important;
+    /* supaya smooth */
+}
+
+
 .panel-header-sps {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+
+.content {
+    background: transparent !important;
 }
 
 /* ========================================

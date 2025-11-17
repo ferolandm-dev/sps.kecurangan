@@ -41,3 +41,7 @@
         </div>
     </div>
 </nav>
+<style>
+    background: transparent !important;
+    box-shadow: none !important;
+</style>

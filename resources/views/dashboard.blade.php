@@ -11,17 +11,61 @@
 <div class="content">
 
     {{-- Sticky chart --}}
-    <div class="sticky-container">
-        <div class="chart-sticky-wrapper fade-up" data-animate>
-            <div class="glass-panel">
-                <canvas id="bigDashboardChart" style="width:100%;height:320px;"></canvas>
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="sticky-container">
+                <div class="chart-sticky-wrapper fade-up" data-animate>
+                    <div class="glass-panel">
+                        <canvas id="bigDashboardChart" style="width:100%;height:320px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- CHART: Sanksi Per Kuartal --}}
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card glass-card fade-up" data-animate>
+                <div class="card-header pb-0">
+                    <h5 class="card-category">Analisis Kuartal</h5>
+                    <h4 class="card-title">Sanksi Per Kuartal</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="quarterSanksiChart" style="width:100%; height:280px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Card: Progress Harian Kuartal --}}
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card glass-card fade-up" data-animate>
+                <div class="p-4">
+                    <h5 class="card-category">Progress Harian Kuartal {{ $currentQuarter }}</h5>
+                    <h4 class="card-title">{{ $progressQuarterDay }}%</h4>
+
+                    <div class="progress mt-3"
+                        style="height: 18px; border-radius: 12px; background: rgba(41,177,74,0.12);">
+                        <div class="progress-bar" role="progressbar"
+                            style="width: {{ $progressQuarterDay }}%; background: linear-gradient(90deg,#29b14a,#c7c500); border-radius:12px;"
+                            aria-valuenow="{{ $progressQuarterDay }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+
+                    <p class="mt-3 text-muted" style="font-size: 13px;">
+                        <i class="now-ui-icons arrows-1_refresh-69"></i> Updated
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
     {{-- CARDS --}}
     <div class="row">
-        {{-- Card 1 --}}
+
+        {{-- Card: Distributor Aktif --}}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
@@ -38,7 +82,7 @@
             </div>
         </div>
 
-        {{-- Card 2 --}}
+        {{-- Card: Sales Aktif --}}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
@@ -55,7 +99,7 @@
             </div>
         </div>
 
-        {{-- Card 3 --}}
+        {{-- Card: Kecurangan Bulan Ini --}}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
@@ -73,25 +117,7 @@
             </div>
         </div>
 
-        {{-- Card 4 --}}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card glass-card card-tilt fade-up" data-animate>
-                <div class="tilt-inner p-3">
-                    <div class="card-header">
-                        <h5 class="card-category">Kecurangan Kuartal {{ $currentQuarter }}</h5>
-                        <h4 class="card-title">{{ $totalKecuranganKuartalIni }}</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mt-2">
-                            <div class="stats"><i class="now-ui-icons ui-2_time-alarm"></i> Kuartal
-                                {{ $currentQuarter }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Card 5 --}}
+        {{-- Card: Nilai Sanksi Bulan Ini --}}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
@@ -109,25 +135,74 @@
             </div>
         </div>
 
-        {{-- Card 6 --}}
+        {{-- Card: Rata-Rata Sanksi Bulan Ini --}}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card glass-card card-tilt fade-up" data-animate>
+                <div class="tilt-inner p-3">
+
+                    <div class="card-header">
+                        <h5 class="card-category">Rata-Rata Sanksi Bulan Ini</h5>
+                        <h4 class="card-title">
+                            Rp {{ number_format($avgSanksiBulanIni, 0, ',', '.') }}
+                        </h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mt-2">
+                            <div class="stats">
+                                <i class="now-ui-icons ui-1_calendar-60"></i>
+                                {{ now()->translatedFormat('F Y') }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{-- Card: Tren Kecurangan Bulan Ini --}}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card glass-card card-tilt fade-up" data-animate>
                 <div class="tilt-inner p-3">
                     <div class="card-header">
-                        <h5 class="card-category">Total User</h5>
-                        <h4 class="card-title">{{ $totalUser }}</h4>
+                        <h5 class="card-category">Tren Kecurangan Bulan Ini</h5>
+
+                        @php
+                        $isUp = $trendFraud > 0;
+                        $isDown = $trendFraud < 0; $isSame=$trendFraud==0; @endphp
+                            {{-- TITLE (warna 100% mengikuti template SPS) --}} <h4 class="card-title"
+                            style="font-weight: 700;">
+
+                            @if($isUp)
+                            <span style="color:#e63946;">
+                                ↑ {{ $trendFraud }}%
+                            </span>
+                            @elseif($isDown)
+                            <span style="color:#29b14a;">
+                                ↓ {{ abs($trendFraud) }}%
+                            </span>
+                            @else
+                            <span style="color:#555;">
+                                0% (Stabil)
+                            </span>
+                            @endif
+
+                            </h4>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between mt-2">
-                            <div class="stats"><i class="now-ui-icons arrows-1_refresh-69"></i> Updated</div>
+                            <div class="stats">
+                                <i class="now-ui-icons arrows-1_refresh-69"></i>
+                                Dibanding Bulan Lalu
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
 
     </div>
-
 
     {{-- TABLES --}}
     <div class="row mt-4">
@@ -219,55 +294,23 @@
 =============================== --}}
 @push('styles')
 <style>
+body,
+.wrapper,
+.main-panel {
+    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
+    background-attachment: fixed !important;
+    /* supaya smooth */
+}
+
+
 .panel-header-sps {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
-}
-
-/* ========================================
-   NAVBAR MATCHING — SAME GRADIENT AS HEADER
-========================================= */
-
-.navbar-soft {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    border: none !important;
+    background: transparent !important;
     box-shadow: none !important;
-
-    /* Tinggi navbar sesuai permintaan */
-    height: 95px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
 }
 
-/* Brand */
-.navbar-soft .navbar-brand {
-    color: #ffffff !important;
-    font-size: 22px !important;
-    font-weight: 700;
-}
-
-/* Icons */
-.navbar-soft .nav-link i {
-    color: #ffffff !important;
-    font-size: 22px;
-    transition: .2s ease;
-}
-
-.navbar-soft .nav-link:hover i {
-    color: #333 !important;
-}
 
 .content {
-    backdrop-filter: blur(10px);
-    margin-top: -70px;
-    padding: 30px;
-    color: #333;
-    transition: backdrop-filter .3s ease;
+    background: transparent !important;
 }
 
 .sticky-container {
@@ -428,6 +471,68 @@ document.addEventListener("DOMContentLoaded", function() {
         card.addEventListener('mouseleave', () => inner.style.transform = 'none');
     });
 
+});
+
+// ===== Chart: Sanksi Per Kuartal =====
+const qtCtx = document.getElementById('quarterSanksiChart').getContext('2d');
+
+new Chart(qtCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [{
+                label: 'Jumlah Kasus',
+                data: @json($kasusPerQuarter),
+                backgroundColor: 'rgba(41,177,74,0.55)',
+                borderColor: '#29b14a',
+                borderWidth: 2,
+                yAxisID: 'y'
+            },
+            {
+                label: 'Total Nilai Sanksi',
+                data: @json($sanksiPerQuarter),
+                backgroundColor: 'rgba(219,211,0,0.55)',
+                borderColor: '#c7c500',
+                borderWidth: 2,
+                type: 'line',
+                tension: 0.3,
+                yAxisID: 'y1'
+            }
+        ]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                position: 'left',
+                ticks: {
+                    color: '#333'
+                }
+            },
+            y1: {
+                beginAtZero: true,
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false
+                },
+                ticks: {
+                    color: '#333'
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#333',
+                    font: {
+                        size: 13,
+                        weight: '600'
+                    }
+                }
+            }
+        }
+    }
 });
 </script>
 @endpush

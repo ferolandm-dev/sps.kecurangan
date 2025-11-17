@@ -1,7 +1,7 @@
 @extends('layouts.login', [
-    'namePage' => 'LOGIN SPS',
-    'class' => 'login-page',
-    'activePage' => 'login',
+'namePage' => 'LOGIN SPS',
+'class' => 'login-page',
+'activePage' => 'login',
 ])
 
 @section('content')
@@ -9,7 +9,7 @@
 
     <div class="login-card-container fadeUp fade-delay-1">
 
-        <div class="logo-container fadeUp fade-delay-2">
+        <div class="logo-container fadeUp fade-delay-1">
             <img src="{{ asset('assets/img/SPS.png') }}" alt="Logo">
         </div>
 
@@ -18,28 +18,28 @@
             @csrf
 
             {{-- EMAIL --}}
-            <div class="input-group-custom fadeUp fade-delay-3">
+            <div class="input-group-custom fadeUp fade-delay-1">
                 <i class="now-ui-icons users_circle-08 icon-left"></i>
                 <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus>
             </div>
 
             @error('email')
-            <span class="error-text fadeUp fade-delay-3">{{ $message }}</span>
+            <span class="error-text fadeUp fade-delay-1">{{ $message }}</span>
             @enderror
 
             {{-- PASSWORD --}}
-            <div class="input-group-custom fadeUp fade-delay-4">
+            <div class="input-group-custom fadeUp fade-delay-1">
                 <i class="now-ui-icons objects_key-25 icon-left"></i>
                 <input id="password-input" type="password" name="password" placeholder="Password" required>
                 <i class="fas fa-eye icon-right" id="toggle-password"></i>
             </div>
 
             @error('password')
-            <span class="error-text fadeUp fade-delay-4">{{ $message }}</span>
+            <span class="error-text fadeUp fade-delay-1">{{ $message }}</span>
             @enderror
 
             {{-- BUTTON --}}
-            <button type="submit" class="btn-submit fadeUp fade-delay-5">Login</button>
+            <button type="submit" class="btn-submit fadeUp fade-delay-1">Login</button>
 
         </form>
 
@@ -53,7 +53,8 @@
 <link rel="icon" type="image/png" href="{{ asset('assets/img/SPS LOGO.png') }}">
 <style>
 /* ========= BACKGROUND LOGIN (override template) ========= */
-html, body {
+html,
+body {
     margin: 0 !important;
     padding: 0 !important;
     height: 100vh !important;
@@ -82,17 +83,32 @@ html, body {
     animation: fadeUp 0.7s ease-out forwards;
 }
 
-.fade-delay-1 { animation-delay: .1s; }
-.fade-delay-2 { animation-delay: .2s; }
-.fade-delay-3 { animation-delay: .3s; }
-.fade-delay-4 { animation-delay: .4s; }
-.fade-delay-5 { animation-delay: .5s; }
+.fade-delay-1 {
+    animation-delay: .1s;
+}
+
+.fade-delay-2 {
+    animation-delay: .2s;
+}
+
+.fade-delay-3 {
+    animation-delay: .3s;
+}
+
+.fade-delay-4 {
+    animation-delay: .4s;
+}
+
+.fade-delay-5 {
+    animation-delay: .5s;
+}
 
 @keyframes fadeUp {
     0% {
         opacity: 0;
         transform: translateY(25px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -114,7 +130,7 @@ html, body {
 .logo-container img {
     width: 150px;
     margin-bottom: 15px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
 /* Input group */
@@ -193,7 +209,6 @@ select:focus {
     outline: none !important;
     box-shadow: none !important;
 }
-
 </style>
 @endpush
 

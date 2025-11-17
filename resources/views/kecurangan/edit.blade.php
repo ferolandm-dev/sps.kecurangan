@@ -346,17 +346,8 @@
         </div>
     </div>
 </div>
-
-
-@push('js')
-{{-- Custom css --}}
-<link href="{{ asset('css/kecurangan.css') }}" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-
+@endsection
+@push('styles')
 <style>
 /* ===================== BACKDROP (ELEGAN) ===================== */
 .modal-backdrop.show {
@@ -444,12 +435,14 @@ select:focus {
 }
 
 .navbar-soft {
-    transition: none !important; /* matikan transisi container */
+    transition: none !important;
+    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
+    transition: color .25s ease, transform .25s ease !important;
+    /* biarkan hover tetap smooth */
 }
 
 /* ===========================================================
@@ -612,7 +605,7 @@ button#modalNext.btn {
     font-weight: bold !important;
     line-height: 0 !important;
 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
     transition: 0.2s ease-in-out;
     z-index: 50 !important;
 }
@@ -629,9 +622,14 @@ button#modalNext.btn {
 .position-relative .btn-remove-new:active {
     transform: scale(0.95);
 }
-
 </style>
-
+@endpush
+@push('js')
+<link href="{{ asset('css/kecurangan.css') }}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
 $(document).ready(function() {
     // ===================== SELECT2 =====================
@@ -880,5 +878,3 @@ $(document).ready(function() {
 });
 </script>
 @endpush
-
-@endsection

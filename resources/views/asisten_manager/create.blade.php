@@ -160,10 +160,8 @@
         </div>
     </div>
 </div>
-
-@push('js')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endsection
+@push('styles')
 <style>
 input:invalid,
 textarea:invalid,
@@ -227,12 +225,14 @@ select:focus {
 }
 
 .navbar-soft {
-    transition: none !important; /* matikan transisi container */
+    transition: none !important;
+    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
+    transition: color .25s ease, transform .25s ease !important;
+    /* biarkan hover tetap smooth */
 }
 
 /* ===========================================================
@@ -311,6 +311,10 @@ select:focus {
     box-shadow: none !important;
 }
 </style>
+@endpush
+@push('js')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 $(document).ready(function() {
     $('#id_distributor').select2({
@@ -321,4 +325,3 @@ $(document).ready(function() {
 });
 </script>
 @endpush
-@endsection

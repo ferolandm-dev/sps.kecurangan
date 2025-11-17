@@ -172,7 +172,8 @@
         </div>
     </div>
 </div>
-@push('js')
+@endsection
+@push('styles')
 <style>
 .panel-header-sps {
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%);
@@ -221,12 +222,14 @@
 }
 
 .navbar-soft {
-    transition: none !important; /* matikan transisi container */
+    transition: none !important;
+    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
+    transition: color .25s ease, transform .25s ease !important;
+    /* biarkan hover tetap smooth */
 }
 
 
@@ -419,4 +422,3 @@
 }
 </style>
 @endpush
-@endsection

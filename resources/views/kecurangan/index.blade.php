@@ -368,9 +368,8 @@
 </div>
 
 @endsection
-@push('js')
+@push('styles')
 <style>
-
 .kecurangan-table {
     table-layout: fixed !important;
     width: 100%;
@@ -707,7 +706,9 @@ button#modalNext.btn {
     outline: none !important;
 }
 </style>
+@endpush
 
+@push('js')
 <script>
 $(document).ready(function() {
 
@@ -820,5 +821,4 @@ $(document).ready(function() {
 
 });
 </script>
-
 @endpush

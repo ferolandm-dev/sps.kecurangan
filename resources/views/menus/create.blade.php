@@ -235,7 +235,7 @@
     </div>
 </div>
 @endsection
-@push('js')
+@push('styles')
 <style>
 input:invalid,
 textarea:invalid,
@@ -299,12 +299,14 @@ select:focus {
 }
 
 .navbar-soft {
-    transition: none !important; /* matikan transisi container */
+    transition: none !important;
+    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
+    transition: color .25s ease, transform .25s ease !important;
+    /* biarkan hover tetap smooth */
 }
 
 

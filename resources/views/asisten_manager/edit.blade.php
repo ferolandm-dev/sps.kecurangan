@@ -177,7 +177,7 @@
     </div>
 </div>
 @endsection
-@push('js')
+@push('styles')
 <style>
 input:invalid,
 textarea:invalid,

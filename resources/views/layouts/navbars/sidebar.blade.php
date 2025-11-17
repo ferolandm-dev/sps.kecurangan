@@ -8,7 +8,7 @@
         <div class="logo" style="text-align: center; padding: 10px 0;">
             <div class="logo-image">
                 <img src="{{ asset('assets/img/SPS LOGO.png') }}" alt="SPS Logo"
-                    style="height: 50px; width: auto; display: block; margin: 0 auto;">
+                    style="height: 70px; width: auto; display: block; margin: 0 auto;">
             </div>
 
         </div>

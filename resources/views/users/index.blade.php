@@ -152,7 +152,7 @@
 </div>
 @endsection
 
-@push('js')
+@push('styles')
 <style>
 input:invalid,
 textarea:invalid,
@@ -357,6 +357,8 @@ select:focus {
     box-shadow: none !important;
 }
 </style>
+@endpush
+@push('scripts')
 <script>
 $(document).ready(function() {
     $('#datatable').DataTable({

@@ -211,12 +211,15 @@
                                         <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf
-                                            <button type="submit" class="btn btn-success btn-icon btn-sm btn-round"
-                                                title="Validasi Data" onclick="return confirm('Validasi data ini?');"
-                                                style="background:#29b14a;border:none;">
+                                            <button type="button"
+                                                class="btn btn-success btn-icon btn-sm btn-round btn-confirm"
+                                                data-action="validasi"
+                                                data-url="{{ route('kecurangan.validasi', $item->id) }}"
+                                                title="Validasi Data" style="background:#29b14a;border:none;">
                                                 <i class="now-ui-icons ui-1_check"></i>
                                             </button>
                                         </form>
+
 
                                         @if (checkAccess('Master', 'Master Kecurangan', 'edit'))
                                         <a href="{{ route('kecurangan.edit', $item->id) }}"
@@ -228,11 +231,13 @@
 
                                         @if (checkAccess('Master', 'Master Kecurangan', 'delete'))
                                         <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
-                                            style="display:inline-block;"
-                                            onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                            style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-icon btn-sm btn-round"
+                                            <button type="button"
+                                                class="btn btn-danger btn-icon btn-sm btn-round btn-confirm"
+                                                data-action="delete"
+                                                data-url="{{ route('kecurangan.destroy', $item->id) }}"
                                                 title="Hapus Data" style="background:#e74c3c;border:none;">
                                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>
@@ -361,6 +366,41 @@
         </div>
     </div>
 </div>
+
+{{-- ===================== MODAL KONFIRMASI ===================== --}}
+<div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:420px;">
+        <div class="modal-content" style="
+            background:white;
+            border-radius:18px;
+            box-shadow:0 6px 20px rgba(0,0,0,0.25);
+        ">
+            <div class="modal-body text-center p-4">
+
+                <i id="confirmIcon" class="now-ui-icons ui-1_alert" style="font-size:48px;color:#e74c3c;"></i>
+
+                <h4 class="mt-3 mb-2" id="confirmTitle" style="font-weight:700;">Konfirmasi</h4>
+                <p class="text-muted" id="confirmMessage" style="font-size:15px;"></p>
+
+                <div class="mt-4 d-flex justify-content-center gap-2">
+                    <button class="btn btn-secondary btn-round" data-dismiss="modal">
+                        Batal
+                    </button>
+
+                    <form id="confirmForm" method="POST" class="m-0">
+                        @csrf
+                        @method("POST")
+                        <button type="submit" class="btn btn-danger btn-round">
+                            Lanjutkan
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection
 @push('styles')
@@ -828,6 +868,37 @@ $(document).ready(function() {
         $('#modalKeterangan').modal('show');
     });
 
+});
+
+// =============================
+//      MODAL KONFIRMASI
+// =============================
+$(document).on('click', '.btn-confirm', function() {
+
+    let action = $(this).data('action');
+    let url = $(this).data('url');
+
+    // Atur form action
+    $('#confirmForm').attr('action', url);
+
+    // Default method POST
+    $('#confirmForm input[name="_method"]').remove();
+
+    if (action === 'delete') {
+        $('#confirmIcon').css('color', '#e74c3c');
+        $('#confirmTitle').text('Hapus Data?');
+        $('#confirmMessage').text('Data yang dihapus tidak dapat dikembalikan.');
+
+        // Tambah _method DELETE
+        $('#confirmForm').append('<input type="hidden" name="_method" value="DELETE">');
+
+    } else if (action === 'validasi') {
+        $('#confirmIcon').css('color', '#29b14a');
+        $('#confirmTitle').text('Validasi Data?');
+        $('#confirmMessage').text('Pastikan data sudah benar sebelum divalidasi.');
+    }
+
+    $('#modalConfirm').modal('show');
 });
 </script>
 @endpush

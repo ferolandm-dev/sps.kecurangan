@@ -183,12 +183,14 @@ document.addEventListener('DOMContentLoaded', function() {
 /* ====== MATIKAN BACKGROUND OVERRIDE NOW UI ====== */
 .sidebar::before,
 .sidebar::after {
-    background: none !important;
+    background: transparent !important;
+    opacity: 0 !important;
 }
 
 /* Sidebar punya background sendiri */
 .sidebar {
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
+    background-color: transparent !important;
 }
 
 

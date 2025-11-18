@@ -590,15 +590,25 @@ body,
 
     font-weight: 700;
     font-size: 15px;
-    /* teks lebih besar */
     color: #29b14a !important;
 
     padding-left: 12px;
-    /* jarak dari icon */
     cursor: pointer;
-    height: 100%;
-    appearance: none;
+
+    /* ==== FIX VERTICAL CENTER ==== */
+    height: 35px !important;
+    line-height: 35px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    display: flex;
+    align-items: center;
+
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
 }
+
 
 /* Wrapper alignment supaya sejajar dengan judul */
 .align-select {

@@ -296,11 +296,11 @@
 
 /* Hover effect */
 .welcome-btn:hover {
-    background: #29b14a !important;
+    background: #ff1e00ff !important;
     /* hijau */
     color: #ffffff !important;
     /* icon putih */
-    border-color: #29b14a;
+    border-color: #ff1e00ff;
 
     transform: translateY(-2px);
     box-shadow: 0 10px 22px rgba(41, 177, 74, 0.35);

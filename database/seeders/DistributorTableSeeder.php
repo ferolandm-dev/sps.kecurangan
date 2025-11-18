@@ -9,7 +9,7 @@ class DistributorTableSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('distributors')->truncate();
+        DB::table('distributors')->delete();
 
         DB::table('distributors')->insert([
             ['id' => 'ABT01', 'distributor' => 'ABTI SERANG', 'status' => 'aktif', 'created_at' => '2025-11-05 08:17:45', 'updated_at' => '2025-11-13 02:51:16'],

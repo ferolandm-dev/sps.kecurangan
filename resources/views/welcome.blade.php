@@ -21,14 +21,14 @@
     <div id="wibClock" class="welcome-clock fadeUp fade-delay-2"></div>
 
 
-    <h1 class="welcome-title fadeUp fade-delay-4">
+    <h1 class="welcome-title fadeUp fade-delay-3">
         <span id="greetingText"></span>, {{ strtoupper(auth()->user()->name) }}!
     </h1>
 
     <p id="greetingMood" class="welcome-mood fadeUp fade-delay-4"></p>
 
     {{-- QUICK MENU RANDOM 5 ITEM SESUAI AKSES + ROUTE OTOMATIS (FIXED) --}}
-    <div class="quick-menu fadeUp fade-delay-3">
+    <div class="quick-menu fadeUp fade-delay-4">
         @php
         use Illuminate\Support\Str;
         use Illuminate\Support\Facades\Route;

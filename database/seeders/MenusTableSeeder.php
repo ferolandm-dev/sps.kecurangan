@@ -17,7 +17,7 @@ class MenusTableSeeder extends Seeder
                 'main_menu'  => 'Dashboard',
                 'sub_menu'   => null,
                 'icon'       => 'now-ui-icons business_chart-pie-36',
-                'route'      => 'home',
+                'route'      => 'dashboard',
                 'main_order' => 1,
                 'order'      => 0,
                 'can_crud'   => 0,

@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->string('id', 12)->primary();
             $table->string('distributor');
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
-            $table->timestamp('nonaktif_at')->nullable()->after('status');
+            $table->timestamp('nonaktif_at')->nullable();
             $table->timestamps();
         });
     }

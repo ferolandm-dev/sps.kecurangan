@@ -15,9 +15,6 @@ use App\Http\Controllers\{
     SanksiController
 };
 
-// ===============================
-// 🏠 Halaman awal
-// ===============================
 Route::get('/', function () {
 
     if (!auth()->check()) {
@@ -30,7 +27,7 @@ Route::get('/', function () {
         ->exists();
 
     if ($hasAccess) {
-        return redirect()->route('dashboard');
+        return redirect()->route('welcome');
     }
 
     // jika user tidak punya akses sama sekali

@@ -17,6 +17,12 @@
         use Illuminate\Support\Facades\DB;
         use Illuminate\Support\Facades\Auth;
 
+        // AUTO FIX ACTIVE PAGE — cegah sidebar flick
+        if (!isset($activePage) || empty($activePage)) {
+        $activePage = \Illuminate\Support\Facades\Route::currentRouteName();
+        }
+
+
         // Ambil daftar menu utama dan sub-menu
         $menus = DB::table('menus')
         ->select('id', 'main_menu', 'sub_menu', 'icon', 'route', 'order', 'main_order')

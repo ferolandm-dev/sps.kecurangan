@@ -14,14 +14,14 @@ class DistributorExport implements FromCollection, WithHeadings
             ->select(
                 'ID_DISTRIBUTOR',
                 'NAMA_DISTRIBUTOR',
-                'ID_KOTA',
-                'ID_REGION',
-                'ID_SPV',
-                'ID_LOGISTIC',
-                'ID_PROV',
-                'LATITUDE_DIST',
-                'LONGITUDE_DIST',
-                'ACCURACY_DIST'
+                // 'ID_KOTA',
+                // 'ID_REGION',
+                // 'ID_SPV',
+                // 'ID_LOGISTIC',
+                // 'ID_PROV',
+                // 'LATITUDE_DIST',
+                // 'LONGITUDE_DIST',
+                // 'ACCURACY_DIST'
             )
             ->get();
     }
@@ -31,14 +31,14 @@ class DistributorExport implements FromCollection, WithHeadings
         return [
             'ID Distributor',
             'Nama Distributor',
-            'Kota',
-            'Region',
-            'SPV',
-            'Logistic',
-            'Provinsi',
-            'Latitude',
-            'Longitude',
-            'Accuracy'
+            // 'Kota',
+            // 'Region',
+            // 'SPV',
+            // 'Logistic',
+            // 'Provinsi',
+            // 'Latitude',
+            // 'Longitude',
+            // 'Accuracy'
         ];
     }
 } 

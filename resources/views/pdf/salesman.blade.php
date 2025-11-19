@@ -48,7 +48,7 @@
                 <th>ID Sales</th>
                 <th>Nama Sales</th>
                 <th>ID Distributor</th>
-                <th>Type Sales</th>
+                <!-- <th>Type Sales</th> -->
             </tr>
         </thead>
         <tbody>
@@ -58,7 +58,7 @@
                 <td>{{ $s->ID_SALESMAN }}</td>
                 <td>{{ $s->NAMA_SALESMAN }}</td>
                 <td>{{ $s->ID_DISTRIBUTOR }}</td>
-                <td class="text-center">{{ $s->TYPE_SALESMAN }}</td>
+                <!-- <td class="text-center">{{ $s->TYPE_SALESMAN }}</td> -->
             </tr>
             @endforeach
         </tbody>

@@ -81,14 +81,14 @@
                 <th>No</th>
                 <th>ID Distributor</th>
                 <th>Nama Distributor</th>
-                <th>Kota</th>
+                <!-- <th>Kota</th>
                 <th>Region</th>
                 <th>SPV</th>
                 <th>Logistic</th>
                 <th>Provinsi</th>
                 <th>Latitude</th>
                 <th>Longitude</th>
-                <th>Accuracy</th>
+                <th>Accuracy</th> -->
             </tr>
         </thead>
 
@@ -98,7 +98,7 @@
                 <td style="text-align:center;">{{ $index + 1 }}</td>
                 <td>{{ $d->ID_DISTRIBUTOR }}</td>
                 <td>{{ $d->NAMA_DISTRIBUTOR }}</td>
-                <td>{{ $d->ID_KOTA ?? '-' }}</td>
+                <!-- <td>{{ $d->ID_KOTA ?? '-' }}</td>
                 <td>{{ $d->ID_REGION ?? '-' }}</td>
                 <td>{{ $d->ID_SPV ?? '-' }}</td>
                 <td>{{ $d->ID_LOGISTIC ?? '-' }}</td>
@@ -106,7 +106,7 @@
 
                 <td class="coords">{{ $d->LATITUDE_DIST ?? '-' }}</td>
                 <td class="coords">{{ $d->LONGITUDE_DIST ?? '-' }}</td>
-                <td>{{ $d->ACCURACY_DIST ?? '-' }}</td>
+                <td>{{ $d->ACCURACY_DIST ?? '-' }}</td> -->
             </tr>
             @endforeach
         </tbody>

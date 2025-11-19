@@ -75,7 +75,9 @@ class SalesmanController extends Controller
     // =========================================================================================
     public function exportPdf()
     {
-        $data = DB::table('salesman')->get();
+        $data = DB::table('salesman')
+            ->where('TYPE_SALESMAN', 1)
+            ->get();
 
         $pdf = PDF::loadView('pdf.salesman', ['salesman' => $data])
             ->setPaper('a4', 'portrait');

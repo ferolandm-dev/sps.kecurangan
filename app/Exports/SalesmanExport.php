@@ -16,6 +16,7 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
     public function collection()
     {
         return DB::table('salesman')
+            ->where('TYPE_SALESMAN', 1)
             ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
             ->select(
                 'salesman.ID_SALESMAN',
@@ -41,8 +42,8 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
             'Nama Salesman',
             'ID Distributor',
             'Nama Distributor',
-            'Total Kecurangan (Valid)',
-            'Tipe Salesman',
+            // 'Total Kecurangan (Valid)',
+            // 'Tipe Salesman',
         ];
     }
 
@@ -56,8 +57,8 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
             $row->NAMA_SALESMAN,
             $row->ID_DISTRIBUTOR,
             $row->NAMA_DISTRIBUTOR ?? '-',
-            $row->total_kecurangan,
-            $row->TYPE_SALESMAN,
+            // $row->total_kecurangan,
+            // $row->TYPE_SALESMAN,
         ];
     }
 }

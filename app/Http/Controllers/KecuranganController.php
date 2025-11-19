@@ -367,20 +367,19 @@ public function data(Request $request)
     | UPDATE
     ========================================================== */
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'id_sales' => 'required',
-        'nama_sales' => 'required',
-        'distributor' => 'required',
-        'toko' => 'required',
-        'kunjungan' => 'required',
-        'tanggal' => 'required|date_format:d/m/Y',
-        'jenis_sanksi' => 'required',
-        'deskripsi_sanksi' => 'required',
-        'bukti.*' => 'image|mimes:jpg,jpeg,png|max:5120'
-    ]);
+    {
+        $request->validate([
+            'id_sales' => 'required',
+            'nama_sales' => 'required',
+            'distributor' => 'required',
+            'toko' => 'required',
+            'kunjungan' => 'required',
+            'tanggal' => 'required|date_format:d/m/Y',
+            'jenis_sanksi' => 'required',
+            'deskripsi_sanksi' => 'required',
+            'bukti.*' => 'image|mimes:jpg,jpeg,png|max:5120'
+        ]);
 
-    // --- FORMAT TANGGAL ---
     $tanggal = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
 
     /* ============================================================

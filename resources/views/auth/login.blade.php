@@ -58,7 +58,13 @@ body {
     margin: 0 !important;
     padding: 0 !important;
     height: 100vh !important;
+    width: 100% !important;
+
+    /* NO SCROLL */
     overflow: hidden !important;
+    position: fixed !important;
+    inset: 0 !important;
+
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
 }
 
@@ -67,14 +73,19 @@ body {
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
 }
 
-
 /* Wrapper */
 .login-wrapper {
-    min-height: 100vh;
+    height: 100vh !important;
+    width: 100vw !important;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    overflow: hidden !important;
+    padding: 0;
 }
+
 
 /* ========= ANIMASI FADEUP GLOBAL ========= */
 .fadeUp {
@@ -83,39 +94,19 @@ body {
     animation: fadeUp 0.7s ease-out forwards;
 }
 
-.fade-delay-1 {
-    animation-delay: .1s;
-}
-
-.fade-delay-2 {
-    animation-delay: .2s;
-}
-
-.fade-delay-3 {
-    animation-delay: .3s;
-}
-
-.fade-delay-4 {
-    animation-delay: .4s;
-}
-
-.fade-delay-5 {
-    animation-delay: .5s;
-}
+.fade-delay-1 { animation-delay: .1s; }
+.fade-delay-2 { animation-delay: .2s; }
+.fade-delay-3 { animation-delay: .3s; }
+.fade-delay-4 { animation-delay: .4s; }
+.fade-delay-5 { animation-delay: .5s; }
 
 @keyframes fadeUp {
-    0% {
-        opacity: 0;
-        transform: translateY(25px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Card */
+
+/* ========= CARD ========= */
 .login-card-container {
     width: 380px;
     background: rgba(255, 255, 255, 0.92);
@@ -124,16 +115,49 @@ body {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     text-align: center;
     backdrop-filter: blur(10px);
+
+    transition: transform .25s ease-out;
 }
 
-/* Logo */
+
+/* ========= MOBILE RESPONSIVE (PERFECT FIT) ========= */
+@media (max-width: 480px) {
+
+    /* auto zoom in */
+    .login-card-container {
+        width: 310px !important;
+        padding: 28px 22px !important;
+        transform: scale(1.15); /* ZOOM */
+    }
+
+    .logo-container img {
+        width: 120px !important;
+    }
+
+    .input-group-custom {
+        padding: 9px 12px !important;
+    }
+
+    .input-group-custom input {
+        font-size: 15px !important;
+    }
+
+    .btn-submit {
+        font-size: 15px !important;
+        padding: 11px !important;
+    }
+}
+
+
+/* ========= LOGO ========= */
 .logo-container img {
     width: 150px;
     margin-bottom: 15px;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
-/* Input group */
+
+/* ========= INPUT GROUP ========= */
 .input-group-custom {
     position: relative;
     margin-bottom: 22px;
@@ -146,14 +170,12 @@ body {
     transition: .2s ease;
 }
 
-/* Icons */
 .icon-left,
 .icon-right {
     font-size: 20px;
     color: #29b14a;
 }
 
-/* Input field */
 .input-group-custom input {
     border: none;
     flex: 1;
@@ -162,7 +184,6 @@ body {
     background: transparent;
 }
 
-/* Placeholder */
 .input-group-custom input::placeholder {
     color: #555 !important;
     opacity: 0.7 !important;
@@ -174,7 +195,8 @@ body {
     border-color: #1f8f3a !important;
 }
 
-/* Error text */
+
+/* ========= ERROR ========= */
 .error-text {
     display: block;
     margin-top: -10px;
@@ -183,7 +205,8 @@ body {
     font-size: 13px;
 }
 
-/* Button */
+
+/* ========= BUTTON ========= */
 .btn-submit {
     width: 100%;
     padding: 12px;
@@ -201,7 +224,8 @@ body {
     background: #1e8f39;
 }
 
-/* Hapus border biru bawaan browser */
+
+/* ========= REMOVE BROWSER OUTLINE ========= */
 input:focus,
 button:focus,
 textarea:focus,
@@ -213,6 +237,7 @@ select:focus {
 @endpush
 
 @push('js')
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const togglePassword = document.getElementById('toggle-password');

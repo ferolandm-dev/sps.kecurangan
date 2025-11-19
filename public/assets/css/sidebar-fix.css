@@ -1,0 +1,100 @@
+/* ============================================
+   FIX SIDEBAR MOBILE NOW UI DASHBOARD
+============================================ */
+
+/* Default sidebar (desktop) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%);
+    z-index: 1030;
+    transition: transform .26s ease-in-out;
+}
+
+/* ============================================
+   FIX TOMBOL SIDEBAR KIRI (PALING PENTING)
+============================================ */
+.navbar-toggle,
+.navbar-toggle .navbar-toggler {
+    position: relative;
+    z-index: 1500; /* Paling tinggi dari semua layer */
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* ============================================
+   MOBILE BEHAVIOR
+============================================ */
+@media (max-width: 991px) {
+
+    /* Sidebar default: hidden */
+    .sidebar {
+        transform: translateX(-260px);
+    }
+
+    /* Sidebar open */
+    body.nav-open .sidebar {
+        transform: translateX(0);
+    }
+
+    /* Sidebar scroll */
+    .sidebar .sidebar-wrapper {
+        height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Jangan lock body */
+    body.nav-open {
+        overflow: hidden;
+    }
+
+    /* ============================================
+       FIX OVERLAY (jangan nutup tombol kiri)
+    ============================================= */
+    .close-layer {
+        display: block;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 1200; /* Di bawah tombol kiri (1500), di atas sidebar (1030) */
+        pointer-events: auto;
+    }
+
+    /* ============================================
+       FIX COLLAPSE NAVBAR (jangan nutup tombol kiri)
+    ============================================= */
+    .navbar-collapse {
+        width: 100%;
+        z-index: 1300; /* di atas overlay (1200) tapi DI BAWAH tombol kiri (1500) */
+        position: relative;
+        pointer-events: auto;
+    }
+
+    .navbar-collapse.collapse.show {
+        display: block !important;
+        background: #ffffff;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        border-radius: 14px;
+        padding: 15px 10px;
+    }
+}
+
+/* ============================================
+   FIX DROPDOWN DI DESKTOP
+============================================ */
+
+.navbar,
+.navbar .dropdown-menu {
+    z-index: 1055;
+}
+
+.navbar .dropdown-menu.show {
+    position: absolute;
+    display: block;
+}
+
+#navbarDropdownMenuLink {
+    position: relative;
+    z-index: 1060;
+}

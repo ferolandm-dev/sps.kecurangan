@@ -176,58 +176,100 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function fixSidebarHeight() {
+    const realVh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--sidebar-height', `${realVh * 100}px`);
+}
+
+document.addEventListener("DOMContentLoaded", fixSidebarHeight);
+window.addEventListener("resize", fixSidebarHeight);
+window.addEventListener("orientationchange", fixSidebarHeight);
 </script>
 
 {{-- ========== CSS SIDEBAR ========== --}}
 <style>
-/* ====== MATIKAN BACKGROUND OVERRIDE NOW UI ====== */
+/* ======================================
+   FIX NOW UI BACKGROUND & OVERLAY
+====================================== */
 .sidebar::before,
 .sidebar::after {
-    background: transparent !important;
-    opacity: 0 !important;
+    display: none !important;
 }
 
-/* Sidebar punya background sendiri */
+/* ======================================
+   SIDEBAR — FULL HEIGHT FIX (ALL DEVICES)
+====================================== */
 .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 260px;
+
+    /* GUNAKAN HEIGHT DINAMIS REAL VIEWPORT */
+    height: var(--sidebar-height);
+
+    overflow: hidden;
+    z-index: 1030 !important;
+
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-color: transparent !important;
 }
 
+/* ======================================
+   SIDEBAR WRAPPER — SCROLL SAFE
+====================================== */
+.sidebar .sidebar-wrapper {
+    height: calc(var(--sidebar-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    color: #fff;
+}
 
-/* ICON */
+/* ======================================
+   ICON STYLE
+====================================== */
 .sidebar .nav li a i {
     color: #ffffff !important;
+    font-size: 18px;
 }
 
-/* MENU ITEM */
-.sidebar .nav li>a,
-.sidebar .nav .collapse .nav li>a {
+/* ======================================
+   MENU ITEM STYLE
+====================================== */
+.sidebar .nav li > a,
+.sidebar .nav .collapse .nav li > a {
     border-radius: 12px;
     padding: 10px 15px;
+    color: #ffffff !important;
     transition: 0.25s ease-in-out;
-    color: #fff !important;
 }
 
-/* HOVER */
-.sidebar .nav li>a:hover,
-.sidebar .nav .collapse .nav li>a:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
+/* ======================================
+   HOVER EFFECT
+====================================== */
+.sidebar .nav li > a:hover,
+.sidebar .nav .collapse .nav li > a:hover {
+    background: rgba(255,255,255,0.15) !important;
     backdrop-filter: blur(8px);
 }
 
-/* ACTIVE */
-.sidebar .nav li.active>a {
-    background: rgba(255, 255, 255, 0.30) !important;
+/* ======================================
+   ACTIVE ITEM
+====================================== */
+.sidebar .nav li.active > a {
+    background: rgba(255,255,255,0.30) !important;
     font-weight: 600;
 }
 
-/* SUBMENU PADDING */
-.sidebar .nav .collapse .nav li>a {
+/* ======================================
+   SUBMENU PADDING
+====================================== */
+.sidebar .nav .collapse .nav li > a {
     padding-left: 34px !important;
 }
-</style>
-
 
 
 </style>

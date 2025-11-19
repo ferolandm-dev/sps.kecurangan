@@ -404,6 +404,10 @@
 
 @endsection
 @push('styles')
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
 <style>
 .kecurangan-table {
     table-layout: fixed !important;

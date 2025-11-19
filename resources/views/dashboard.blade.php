@@ -11,22 +11,33 @@
 <div class="content">
 
     {{-- ===========================
-        DASHBOARD VIEW SELECTOR
+        DASHBOARD VIEW NAVBAR-STYLE SELECTOR (A4)
     =========================== --}}
     <div class="row fade-up" data-animate>
-        <div class="col-lg-3 col-md-6">
-            <div class="dashboard-select-wrapper align-select">
-                <i class="now-ui-icons ui-1_dashboard select-icon"></i>
+        <div class="col-12">
+            <div class="view-selector-bar-wrapper">
+                <div class="view-selector-bar" role="tablist" aria-label="Dashboard views">
+                    <button class="view-btn active" data-view="overview" role="tab" aria-selected="true">
+                        <i class="now-ui-icons business_chart-bar-32"></i>
+                        <span class="label">Overview</span>
+                    </button>
 
-                <select id="dashboardSelector" class="form-control dashboard-select">
-                    <option value="overview">📊 Overview</option>
-                    <option value="summary">📈 Ringkasan</option>
-                    <option value="tables">📋 Tabel Data</option>
-                    <option value="calendar">📅 Heatmap Kecurangan</option>
-                </select>
+                    <button class="view-btn" data-view="summary" role="tab" aria-selected="false">
+                        <i class="now-ui-icons business_bulb-63"></i>
+                        <span class="label">Ringkasan</span>
+                    </button>
 
+                    <button class="view-btn" data-view="tables" role="tab" aria-selected="false">
+                        <i class="now-ui-icons design_bullet-list-67"></i>
+                        <span class="label">Tabel Data</span>
+                    </button>
+
+                    <button class="view-btn" data-view="calendar" role="tab" aria-selected="false">
+                        <i class="now-ui-icons ui-1_calendar-60"></i>
+                        <span class="label">Heatmap Kecurangan</span>
+                    </button>
+                </div>
             </div>
-
         </div>
     </div>
 
@@ -488,6 +499,7 @@
 =============================== --}}
 @push('styles')
 <style>
+/* PAGE BACKGROUND */
 body,
 .wrapper,
 .main-panel {
@@ -521,6 +533,7 @@ body,
     }
 }
 
+/* GLASS CARDS */
 .glass-panel,
 .glass-card {
     background: rgba(255, 255, 255, 0.92);
@@ -528,6 +541,7 @@ body,
     border: 1px solid rgba(41, 177, 74, 0.12);
 }
 
+/* TILT */
 .card-tilt {
     perspective: 1000px;
 }
@@ -537,12 +551,14 @@ body,
     transition: transform .2s;
 }
 
+/* TABLE HEAD */
 .table thead th {
     color: #29b14a;
     font-weight: 700;
     white-space: nowrap;
 }
 
+/* BADGE SOFT */
 .badge-soft {
     background: rgba(41, 177, 74, 0.14);
     color: #29b14a;
@@ -550,88 +566,74 @@ body,
     border-radius: 8px;
 }
 
-/* ===== ALIGN DROPDOWN DENGAN JUDUL ===== */
-.align-select {
-    margin-top: -10px !important;
-    /* naikkan biar sejajar */
-    margin-bottom: 20px !important;
+/* =========================
+   VIEW SELECTOR BAR (A4)
+   ========================= */
+.view-selector-bar-wrapper {
+    margin-bottom: 18px;
 }
 
-/* ====== WRAPPER BOX ====== */
-.dashboard-select-wrapper {
-    position: relative;
+.view-selector-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 14px;
-    border: 1px solid rgba(41, 177, 74, 0.25);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    transition: .25s ease;
-    display: flex;
-    align-items: center;
-    height: 35px;
-}
-
-/* ===== ICON KIRI ===== */
-.select-icon {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #29b14a;
-    font-size: 18px;
-    /* icon lebih besar */
-}
-
-/* ===== SELECT ===== */
-.dashboard-select {
-    width: 100%;
-    border: none !important;
-    outline: none !important;
-    background: transparent !important;
-
-    font-weight: 700;
-    font-size: 15px;
-    color: #29b14a !important;
-
-    padding-left: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(41, 177, 74, 0.12);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
     cursor: pointer;
-
-    /* ==== FIX VERTICAL CENTER ==== */
-    height: 35px !important;
-    line-height: 35px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
-    display: flex;
-    align-items: center;
-
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
+    font-weight: 700;
+    color: #2f2f2f;
+    transition: all .18s ease;
+    min-width: 140px;
+    justify-content: center;
 }
 
-
-/* Wrapper alignment supaya sejajar dengan judul */
-.align-select {
-    margin-top: -5px !important;
-    margin-bottom: 25px !important;
+.view-btn i {
+    font-size: 18px;
+    color: rgba(41, 177, 74, 0.9);
 }
 
-/* ===== CUSTOM ARROW (kanan) ===== */
-.dashboard-select-wrapper::after {
-    content: "▾";
-    /* tanda panah */
-    position: absolute;
-    right: 15px;
-    top: 16px;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #29b14a;
-    pointer-events: none;
-    /* tidak ganggu klik */
+/* active state */
+.view-btn.active {
+    background: linear-gradient(135deg, #29b14a, #34d058);
+    color: #fff;
+    border: none;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(41, 177, 74, 0.22);
 }
+
+.view-btn.active i {
+    color: #fff;
+}
+
+/* hover */
+.view-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* small screens: make buttons shrink / full-width stack */
+@media (max-width: 576px) {
+    .view-btn {
+        flex: 1 1 100%;
+        min-width: auto;
+        justify-content: flex-start;
+        padding-left: 12px;
+    }
+}
+
+/* Remaining styles (heatmap, tooltip, legend) kept same as original */
 
 /* ====== CALENDAR HEATMAP (Responsive) ====== */
-
 .calendar-heatmap {
     display: grid;
     grid-template-columns: repeat(53, 14px);
@@ -641,11 +643,8 @@ body,
     background: rgba(255, 255, 255, 0.92);
     border-radius: 14px;
     width: max-content;
-    /* wajib supaya bisa scroll */
     overflow-x: auto;
-    /* aktifkan scroll */
     max-width: 100%;
-    /* tidak melewati layar */
 }
 
 .calendar-day {
@@ -656,7 +655,6 @@ body,
     transition: .2s ease;
 }
 
-/* Warna level */
 .calendar-day.level-1 {
     background: rgba(41, 177, 74, 0.25);
 }
@@ -673,72 +671,14 @@ body,
     background: rgba(41, 177, 74, 1);
 }
 
-/* Hover */
 .calendar-day:hover {
     transform: scale(1.25);
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
 }
 
-/* ===== RESPONSIVE MODE ===== */
-@media (max-width: 992px) {
-
-    /* Tablet */
-    .calendar-heatmap {
-        grid-template-columns: repeat(53, 12px);
-        grid-gap: 2.5px;
-        padding: 16px;
-    }
-
-    .calendar-day {
-        width: 12px;
-        height: 12px;
-    }
-}
-
-@media (max-width: 768px) {
-
-    /* Mobile landscape */
-    .calendar-heatmap {
-        grid-template-columns: repeat(53, 10px);
-        grid-gap: 2px;
-        padding: 14px;
-    }
-
-    .calendar-day {
-        width: 10px;
-        height: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-
-    /* Mobile kecil */
-    .calendar-heatmap {
-        grid-template-columns: repeat(53, 8px);
-        grid-gap: 1.8px;
-        padding: 10px;
-    }
-
-    .calendar-day {
-        width: 8px;
-        height: 8px;
-    }
-}
-
-/* Center semua isi card-body khusus heatmap */
-#section-calendar .card-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* biar legend tetap di bawah */
-}
-
-
-/* === TOOLTIP CUSTOM UNTUK HEATMAP === */
+/* TOOLTIP */
 .heatmap-tooltip {
     position: fixed;
-    /* WAJIB untuk posisi tepat di cursor */
     background: rgba(0, 0, 0, 0.80);
     color: white;
     padding: 6px 10px;
@@ -778,6 +718,15 @@ body,
     font-weight: 600;
     color: #333;
 }
+
+/* Hilangkan border biru ketika button di-klik */
+.view-btn:focus,
+.view-btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+
 </style>
 @endpush
 
@@ -786,12 +735,15 @@ body,
      CUSTOM JS
 =============================== --}}
 @push('js')
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// ===== DASHBOARD VIEW SELECTOR =====
+// ===== VIEW SELECTOR (A4) + SECTION SWITCH =====
 document.addEventListener("DOMContentLoaded", function() {
-
-    const select = document.getElementById('dashboardSelector');
+    const viewButtons = document.querySelectorAll('.view-btn');
 
     const sections = {
         overview: document.getElementById('section-overview'),
@@ -800,21 +752,56 @@ document.addEventListener("DOMContentLoaded", function() {
         calendar: document.getElementById('section-calendar')
     };
 
-
     function showSection(key) {
         Object.keys(sections).forEach(k => {
             sections[k].style.display = (k === key) ? 'block' : 'none';
         });
     }
 
-    select.addEventListener('change', function() {
-        showSection(this.value);
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // toggle active classes and aria
+            viewButtons.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+
+            const view = btn.dataset.view;
+            showSection(view);
+
+            // if calendar selected, render heatmap slightly delayed for layout
+            if (view === 'calendar') {
+                setTimeout(renderHeatmap, 150);
+            }
+        });
     });
 
-    // Default tampil Overview
-    showSection('overview');
-});
+    // ===== RANDOM DEFAULT VIEW =====
+    const views = ['overview', 'summary', 'tables', 'calendar'];
+    const randomView = views[Math.floor(Math.random() * views.length)];
 
+    // Tampilkan section random
+    showSection(randomView);
+
+    // Set tombol aktif
+    viewButtons.forEach(b => {
+        const isActive = (b.dataset.view === randomView);
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    // 🔥 FIX: Kalau default view = calendar → render heatmap otomatis
+    if (randomView === 'calendar') {
+        setTimeout(() => {
+            if (typeof renderHeatmap === "function") {
+                renderHeatmap();
+            }
+        }, 200);
+    }
+
+});
 
 // ===== ANIMASI =====
 const obs = new IntersectionObserver(entries => {
@@ -913,40 +900,6 @@ new Chart(document.getElementById('quarterSanksiChart'), {
     }
 });
 
-// ===== FIXED: CLICK = OPEN, CLICK AGAIN = CLOSE =====
-const selectEl = document.getElementById('dashboardSelector');
-const wrapper = document.querySelector('.dashboard-select-wrapper');
-
-let opened = false;
-
-// Fungsi untuk membuka select secara paksa (benar-benar terbuka)
-function openSelect(el) {
-    const event = new MouseEvent('mousedown', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-    });
-    el.dispatchEvent(event);
-}
-
-// Saat select kehilangan fokus → state jadi tertutup
-selectEl.addEventListener('blur', () => {
-    opened = false;
-});
-
-// Klik wrapper → toggle
-wrapper.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    if (!opened) {
-        opened = true;
-        openSelect(selectEl); // buka langsung tanpa tahan
-    } else {
-        opened = false;
-        selectEl.blur(); // tutup langsung
-    }
-});
-
 // ===== CALENDAR HEATMAP =====
 
 // Data dari server (jumlah kecurangan per tanggal)
@@ -966,9 +919,8 @@ function renderHeatmap() {
         const current = new Date(start);
         current.setDate(start.getDate() + i);
 
-        // 🔥 FIX: gunakan format lokal stabil (YYYY-MM-DD) tanpa timezone shift
+        // gunakan format stabil (YYYY-MM-DD)
         const dateKey = current.toLocaleDateString("en-CA");
-        // contoh output: 2025-10-07
 
         const count = fraudCalendarData[dateKey] ?? 0;
 
@@ -987,14 +939,12 @@ function renderHeatmap() {
             const tooltipHeight = tooltip.offsetHeight;
 
             let x = e.clientX - tooltipWidth / 2 - 290;
-            let y = e.clientY - tooltipHeight - 180; // tepat di atas kursor (10px)
+            let y = e.clientY - tooltipHeight - 180;
 
-            // 🔥 Cegah tooltip keluar layar kiri/kanan
             const pageWidth = window.innerWidth;
             if (x < 5) x = 5;
             if (x + tooltipWidth > pageWidth) x = pageWidth - tooltipWidth - 5;
 
-            // 🔥 Cegah tooltip hilang di atas jika dekat navbar
             if (y < 5) y = e.clientY + 20;
 
             tooltip.style.left = x + "px";
@@ -1014,7 +964,6 @@ function renderHeatmap() {
             `;
         });
 
-
         cell.addEventListener("mouseleave", () => {
             tooltip.style.opacity = 0;
         });
@@ -1022,14 +971,5 @@ function renderHeatmap() {
         container.appendChild(cell);
     }
 }
-
-
-
-// Render saat calendar view dipilih
-document.getElementById('dashboardSelector').addEventListener('change', function() {
-    if (this.value === "calendar") {
-        setTimeout(renderHeatmap, 150);
-    }
-});
 </script>
 @endpush

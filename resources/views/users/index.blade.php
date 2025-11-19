@@ -101,13 +101,15 @@
                                     <td class="text-center">
 
                                         {{-- Tombol Atur Akses --}}
+                                        @if ($user->id != 1 || auth()->id() == 1)
                                         <a href="{{ route('user.access', $user->id) }}"
                                             class="btn btn-info btn-icon btn-sm btn-round" title="Atur Akses">
                                             <i class="now-ui-icons ui-1_lock-circle-open"></i>
                                         </a>
+                                        @endif
 
                                         {{-- Tombol Edit --}}
-                                        @if ($access && $access->can_edit)
+                                        @if ($access && $access->can_edit && ($user->id != 1 || auth()->id() == 1))
                                         <a href="{{ route('user.edit', $user->id) }}"
                                             class="btn btn-warning btn-icon btn-sm btn-round"
                                             style="background:#eee733;border:none;" title="Edit">
@@ -116,10 +118,9 @@
                                         @endif
 
                                         {{-- Tombol Hapus --}}
-                                        @if ($access && $access->can_delete)
+                                        @if ($access && $access->can_delete && ($user->id != 1 || auth()->id() == 1))
                                         <form action="{{ route('user.delete', $user->id) }}" method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                            class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button"
@@ -128,9 +129,9 @@
                                                 style="background:#e74c3c;border:none;" title="Hapus">
                                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>
-
                                         </form>
                                         @endif
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -182,6 +183,10 @@
     </div>
 </div>
 @endsection
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
 @push('styles')
 <style>
 input:invalid,

@@ -342,7 +342,6 @@
     </div>
 </div>
 @endsection
-
 @push('styles')
 <style>
 input:invalid,
@@ -633,11 +632,14 @@ button#modalNext.btn {
 @endpush
 
 @push('js')
-<link href="{{ asset('css/kecurangan.css') }}" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
 <script>
 $(document).ready(function() {
     // === Select2 Setup ===

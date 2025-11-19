@@ -34,6 +34,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// routes/web.php
+Route::get('/apple-touch-icon.png', function () {
+    return response()->file(public_path('apple-touch-icon.png'));
+});
+Route::get('/apple-touch-icon-precomposed.png', function () {
+    return response()->file(public_path('apple-touch-icon.png'));
+});
+
+
 Auth::routes();
 
 Route::get('/welcome', function () {

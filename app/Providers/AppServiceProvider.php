@@ -83,12 +83,17 @@ class AppServiceProvider extends ServiceProvider
             $firstSegment = $segments[0] ?? '';
 
             /** CARI MENU YANG COCOK DENGAN URL */
-            $menu = $menus->first(function($m) use ($firstSegment, $prefixMap) {
+            $menu = $menus->firstWhere('route', $routeName);
 
-                $target = $prefixMap[$m->route] ?? explode('.', $m->route)[0];
+            if (!$menu) {
+                $menu = $menus->first(function($m) use ($firstSegment, $prefixMap) {
 
-                return strtolower($firstSegment) === strtolower($target);
-            });
+                    $target = $prefixMap[$m->route] ?? explode('.', $m->route)[0];
+
+                    return strtolower($firstSegment) === strtolower($target);
+                });
+            }
+
 
 
             /** ===============================

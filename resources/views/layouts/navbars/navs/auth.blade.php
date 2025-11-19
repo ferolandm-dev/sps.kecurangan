@@ -15,14 +15,10 @@
             </div>
 
 
-            <div class="d-flex flex-column">
+            <div class="breadcrumb-wrapper-mini">
+    {!! $breadcrumb ?? '' !!}
+</div>
 
-                <div class="navbar-brand-wrapper">
-                    {!! $breadcrumb ?? '' !!}
-                </div>
-
-
-            </div>
         </div>
 
         {{-- RIGHT AREA --}}
@@ -247,18 +243,28 @@
 /* ======================================
    FIX: Ketika layar diperbesar dari mobile
 ====================================== */
-@media (min-width: 992px) {
+@media (max-width: 575px) {
 
-    .navbar-collapse {
-        background: transparent !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-    }
+  .breadcrumb-sps {
+    display: flex;
+    flex-wrap: nowrap;                 /* jangan wrap */
+    overflow-x: auto;                  /* scroll horizontal */
+    -webkit-overflow-scrolling: touch; /* smooth iPhone */
+    white-space: nowrap !important;    /* tetap 1 baris */
+    padding: 8px 12px;
+    gap: 10px;
 
-    .navbar-collapse .dropdown-menu {
-        position: absolute !important;
-        background: #ffffff !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
-    }
+    max-width: 280px;                  /* <<< KUNCI BIAR KECIL */
+    border-radius: 12px;
+  }
+
+  .breadcrumb-sps::-webkit-scrollbar {
+    display: none;                     /* scrollbar hilang */
+  }
+
+  .breadcrumb-sps li {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
 }
 </style>

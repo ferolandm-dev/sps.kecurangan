@@ -1,7 +1,7 @@
 @extends('layouts.app', [
-'namePage' => 'Data Sales',
+'namePage' => 'Data Distributor',
 'class' => 'sidebar-mini',
-'activePage' => 'data_sales',
+'activePage' => 'data_distributors',
 ])
 
 @section('content')
@@ -13,170 +13,151 @@
 
             {{-- ALERT SUCCESS --}}
             @if (session('success'))
-            <div class="alert alert-success alert-with-icon alert-dismissible fade show" data-notify="container"
-                role="alert" style="
-                    background: rgba(41,177,74,0.2);
-                    border: 1px solid #29b14a;
-                    color: #155724;
-                    border-radius: 12px;
-                ">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#155724;">
+            <div class="alert alert-success alert-with-icon alert-dismissible fade show shadow-lg" role="alert"
+                style="background: linear-gradient(135deg, #29b14a, #34d058); color:#fff; border:none; border-radius:14px;">
+                <div class="d-flex align-items-center">
+                    <span class="now-ui-icons ui-1_check mr-2" style="font-size:18px;"></span>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" style="color:#fff; opacity:.8;">
                     <i class="now-ui-icons ui-1_simple-remove"></i>
                 </button>
-                <span data-notify="icon" class="now-ui-icons ui-1_check"></span>
-                <span data-notify="message">{{ session('success') }}</span>
             </div>
             @endif
 
-            {{-- CARD DATA SALES --}}
-            <div class="card" style="border-radius: 20px;">
+
+            {{-- CARD DATA DISTRIBUTOR --}}
+            <div class="card" style="border-radius:20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Data Sales') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">Data Distributor</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
-                        {{-- Form Pencarian --}}
-                        <form action="{{ route('sales.data') }}" method="GET" class="mr-2">
+
+                        {{-- SEARCH --}}
+                        <form action="{{ route('distributor.data') }}" method="GET" class="mr-2">
                             <div class="search-group">
                                 <input type="text" name="search" class="form-control search-input"
-                                    placeholder="Cari sales..." value="{{ request('search') }}">
-
+                                    placeholder="Cari distributor..." value="{{ request('search') }}">
                                 <button class="btn search-btn" type="submit">
                                     <i class="now-ui-icons ui-1_zoom-bold"></i>
                                 </button>
                             </div>
                         </form>
 
-                        {{-- Tombol Tampilkan Semua / Paginate --}}
+                        {{-- SHOW ALL --}}
                         @if (request()->has('all'))
-                        <a href="{{ route('sales.data', request()->except('all')) }}"
-                            class="btn btn-warning btn-round mr-2"
-                            style="background:#eee733;color:#000;border:none;margin-top:10px;"
-                            title="Tampilkan Halaman">
+                        <a href="{{ route('distributor.data', request()->except('all')) }}"
+                            class="btn btn-warning btn-round mr-2">
                             <i class="now-ui-icons arrows-1_refresh-69"></i> Tampilkan Halaman
                         </a>
                         @else
-                        <a href="{{ route('sales.data', array_merge(request()->query(), ['all' => true])) }}"
-                            class="btn btn-success btn-round mr-2"
-                            style="background:#29b14a;border:none;margin-top:10px;" title="Tampilkan Semua Data">
+                        <a href="{{ route('distributor.data', array_merge(request()->query(), ['all' => true])) }}"
+                            class="btn btn-success btn-round mr-2">
                             <i class="now-ui-icons ui-1_zoom-bold"></i> Tampilkan Semua
                         </a>
                         @endif
 
-                        {{-- ✅ Tombol Cetak (Excel & PDF) --}}
-                        @if (checkAccess('Data', 'Data Sales', 'print'))
-                        <a href="{{ route('sales.exportExcel') }}"
-                            class="btn btn-success btn-round mr-2 d-flex align-items-center"
-                            style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel">
+                        {{-- EXPORT --}}
+                        @if (checkAccess('Data', 'Data Distributor', 'print'))
+                        <a href="{{ route('distributor.exportExcel') }}" class="btn btn-success btn-round mr-2"
+                            style="background:#29b14a;">
                             <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
                         </a>
 
-                        <a href="{{ route('sales.exportPDF') }}"
-                            class="btn btn-danger btn-round d-flex align-items-center"
-                            style="margin-top:10px;background:#e74c3c;border:none;" title="Export PDF">
+                        <a href="{{ route('distributor.exportPdf') }}" class="btn btn-danger btn-round"
+                            style="background:#e74c3c;">
                             <i class="now-ui-icons files_paper mr-1"></i> PDF
                         </a>
                         @endif
                     </div>
                 </div>
 
+
+                {{-- TABLE --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle text-nowrap mb-0" style="color:#333;">
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th style="width:5%; text-align:center;">#</th>
+                                    <th class="text-center" style="width:5%;">#</th>
 
-                                    <th style="width:15%;">
-                                        <a href="{{ route('sales.data', array_merge(request()->query(), [
-                                            'sort_by' => 'id',
-                                            'sort_order' => (request('sort_by') === 'id' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            ID Sales
-                                        </a>
-                                    </th>
-
-                                    <th style="width:25%;">
-                                        <a href="{{ route('sales.data', array_merge(request()->query(), [
-                                            'sort_by' => 'nama',
-                                            'sort_order' => (request('sort_by') === 'nama' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            Nama Sales
-                                        </a>
-                                    </th>
-
-                                    <th style="width:20%; text-align:center;">
-                                        <a href="{{ route('sales.data', array_merge(request()->query(), [
-                                            'sort_by' => 'id_distributor',
-                                            'sort_order' => (request('sort_by') === 'id_distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
+                                    <th style="width:20px; text-align:center">
+                                        <a href="{{ route('distributor.data', array_merge(request()->query(), [
+                'sort_by' => 'ID_DISTRIBUTOR',
+                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
 
-                                    <th style="width:20%; text-align:center;">
-                                        <a href="{{ route('sales.data', array_merge(request()->query(), [
-                                            'sort_by' => 'total_kecurangan',
-                                            'sort_order' => (request('sort_by') === 'total_kecurangan' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            Total Kecurangan
+                                    <th style="width:70%;">
+                                        <a href="{{ route('distributor.data', array_merge(request()->query(), [
+                'sort_by' => 'NAMA_DISTRIBUTOR',
+                'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
+                                            Nama Distributor
                                         </a>
                                     </th>
 
-                                    <th style="width:15%; text-align:center;">
-                                        <a href="{{ route('sales.data', array_merge(request()->query(), [
-                                            'sort_by' => 'status',
-                                            'sort_order' => (request('sort_by') === 'status' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            Status
-                                        </a>
-                                    </th>
+                                    {{-- Kolom lain (JANGAN DIHAPUS) --}}
+                                    <!-- <th>Kota</th>
+                                    <th>Region</th>
+                                    <th>SPV</th>
+                                    <th>Logistic</th>
+                                    <th>Provinsi</th>
+                                    <th>Latitude</th>
+                                    <th>Longitude</th>
+                                    <th>Accuracy</th> -->
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @forelse ($sales as $index => $item)
+                                @forelse ($distributor as $d)
                                 <tr>
-                                    <td style="text-align:center;">
-                                        {{ $loop->iteration + (method_exists($sales, 'firstItem') ? $sales->firstItem() - 1 : 0) }}
+                                    <td class="text-center">
+                                        {{ $loop->iteration + (method_exists($distributor, 'firstItem') ? $distributor->firstItem() - 1 : 0) }}
                                     </td>
-                                    <td>{{ $item->id }}</td>
-                                    <td class="text-truncate" style="max-width: 200px;" title="{{ $item->nama }}">
-                                        {{ $item->nama }}
-                                    </td>
-                                    <td style="text-align:center;">{{ $item->id_distributor }}</td>
-                                    <td style="text-align:center;">{{ $item->total_kecurangan ?? 0 }}</td>
-                                    <td style="text-align:center;">
-                                        <span class="badge" style="background: {{ strtolower($item->status) == 'aktif' ? '#29b14a' : '#e74c3c' }};
-                                                color:white; border-radius:10px; padding:6px 10px;">
-                                            {{ ucfirst(strtolower($item->status)) }}
-                                        </span>
-                                    </td>
+
+                                    <td class="text-center">{{ $d->ID_DISTRIBUTOR }}</td>
+                                    <td>{{ $d->NAMA_DISTRIBUTOR }}</td>
+
+                                    {{-- Kolom lain (JANGAN DIHAPUS) --}}
+                                    <!-- <td>{{ $d->ID_KOTA ?? '-' }}</td>
+                                    <td>{{ $d->ID_REGION ?? '-' }}</td>
+                                    <td>{{ $d->ID_SPV ?? '-' }}</td>
+                                    <td>{{ $d->ID_LOGISTIC ?? '-' }}</td>
+                                    <td>{{ $d->ID_PROV ?? '-' }}</td>
+                                    <td>{{ $d->LATITUDE_DIST ?? '-' }}</td>
+                                    <td>{{ $d->LONGITUDE_DIST ?? '-' }}</td>
+                                    <td>{{ $d->ACCURACY_DIST ?? '-' }}</td> -->
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted">
-                                        Belum ada data sales
-                                    </td>
+                                    <!-- colspan disesuaikan dengan jumlah kolom yang terlihat (3 aktif saat ini) -->
+                                    <td colspan="3" class="text-center text-muted">Belum ada data distributor</td>
                                 </tr>
                                 @endforelse
                             </tbody>
+
                         </table>
                     </div>
 
                     {{-- Pagination --}}
                     @if (!request()->has('all'))
                     <div class="d-flex justify-content-center mt-3">
-                        {{ $sales->links('pagination::bootstrap-4') }}
+                        {{ $distributor->links('pagination::bootstrap-4') }}
                     </div>
                     @endif
                 </div>
+
             </div>
 
         </div>
     </div>
 </div>
 @endsection
-@push ('styles')
+
+@push('styles')
 <style>
 input:invalid,
 textarea:invalid,
@@ -252,12 +233,14 @@ body,
 }
 
 .navbar-soft {
-    transition: none !important; /* matikan transisi container */
+    transition: none !important;
+    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
+    transition: color .25s ease, transform .25s ease !important;
+    /* biarkan hover tetap smooth */
 }
 
 /* =============================== */

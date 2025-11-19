@@ -59,12 +59,14 @@
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Sales</h6>
 
                         <div class="form-group">
-                            <label for="id_sales" class="text-dark font-weight-bold">{{ __('ID Sales') }}</label>
+                            <label class="text-dark font-weight-bold">ID Sales</label>
                             <select name="id_sales" id="id_sales" class="form-control select2" required
                                 style="border-radius:12px;">
-                                <option value="">-- Pilih ID Sales --</option>
+                                <option value="">-- Pilih Sales --</option>
                                 @foreach($sales as $s)
-                                <option value="{{ $s->id }}">{{ $s->id }} - {{ $s->nama }}</option>
+                                <option value="{{ $s->ID_SALESMAN }}">
+                                    {{ $s->ID_SALESMAN }} - {{ $s->NAMA_SALESMAN }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -72,7 +74,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Nama Sales') }}</label>
+                                    <label class="text-dark font-weight-bold">Nama Sales</label>
                                     <input type="text" id="nama_sales" name="nama_sales" class="form-control" readonly
                                         style="border-radius:12px;">
                                 </div>
@@ -80,7 +82,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Distributor') }}</label>
+                                    <label class="text-dark font-weight-bold">Distributor</label>
                                     <input type="text" id="distributor" name="distributor" class="form-control" readonly
                                         style="border-radius:12px;">
                                 </div>
@@ -89,26 +91,23 @@
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== DETAIL ASISTEN MANAGER ===================== --}}
+                        {{-- ===================== DETAIL ASSISTANT MANAGER ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
 
                         <div class="form-group">
-                            <label for="id_asisten_manager"
-                                class="text-dark font-weight-bold">{{ __('ID ASS') }}</label>
+                            <label class="text-dark font-weight-bold">ID ASS</label>
                             <select name="id_asisten_manager" id="id_asisten_manager" class="form-control select2"
                                 style="border-radius:12px;">
-                                <option value="">-- Pilih Asisten Manager --</option>
+                                <option value="">-- Pilih ASS --</option>
                             </select>
+
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label for="nama_asisten_manager"
-                                        class="text-dark font-weight-bold">{{ __('Nama Asisten Manager') }}</label>
-                                    <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
-                                        class="form-control" readonly style="border-radius:12px;">
-                                </div>
+                        <div class="col-md-3 pl-0">
+                            <div class="form-group has-label">
+                                <label class="text-dark font-weight-bold">Nama ASS</label>
+                                <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
+                                    class="form-control" readonly style="border-radius:12px;">
                             </div>
                         </div>
 
@@ -118,14 +117,11 @@
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Kejadian</h6>
 
                         <div class="row">
-                            {{-- Dropdown Jenis Sanksi --}}
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="jenis_sanksi"
-                                        class="text-dark font-weight-bold">{{ __('Jenis Sanksi') }}</label>
-                                    <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required
-                                        style="border-radius:12px; border:1px solid #E3E3E3; width:100%;">
-                                        <option value="">-- Pilih Jenis Sanksi --</option>
+                                    <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                                    <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required>
+                                        <option value="">-- Pilih Jenis --</option>
                                         @foreach($jenisSanksi as $jenis)
                                         <option value="{{ $jenis }}">{{ $jenis }}</option>
                                         @endforeach
@@ -133,90 +129,89 @@
                                 </div>
                             </div>
 
-                            {{-- Dropdown Deskripsi Sanksi --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="deskripsi_sanksi"
-                                        class="text-dark font-weight-bold">{{ __('Deskripsi Sanksi') }}</label>
+                                    <label class="text-dark font-weight-bold">Deskripsi Sanksi</label>
                                     <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
-                                        required style="border-radius:12px; border:1px solid #E3E3E3; width:100%;">
-                                        <option value="">-- Pilih Deskripsi --</option>
-                                    </select>
+                                        required></select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="nilai_sanksi"
-                                        class="text-dark font-weight-bold">{{ __('Nilai Sanksi (Rp)') }}</label>
-                                    <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control"
-                                        readonly style="border-radius:12px;">
-                                </div>
+                                <label class="text-dark font-weight-bold">Nilai Sanksi</label>
+                                <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control" readonly
+                                    style="border-radius:12px;">
                             </div>
-
                         </div>
 
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Toko') }}</label>
-                                    <input type="text" name="toko" class="form-control" required
-                                        style="border-radius:12px;">
-                                </div>
+                                <label class="text-dark font-weight-bold">Toko</label>
+                                <input type="text" name="toko" class="form-control" required
+                                    style="border-radius:12px;">
                             </div>
+
                             <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Kunjungan') }}</label>
-                                    <input type="text" name="kunjungan" class="form-control" required
-                                        style="border-radius:12px;">
-                                </div>
+                                <label class="text-dark font-weight-bold">Kunjungan</label>
+                                <input type="text" name="kunjungan" class="form-control" required
+                                    style="border-radius:12px;">
                             </div>
+
                             <div class="col-md-3">
-                                <div class="form-group has-label" title="Tanggal Kunjungan">
-                                    <label class="text-dark font-weight-bold">{{ __('Tanggal') }}</label>
-                                    <input type="text" name="tanggal" id="tanggal" class="form-control"
-                                        placeholder="dd/mm/yyyy" required style="border-radius:12px;">
-                                </div>
+                                <label class="text-dark font-weight-bold">Tanggal</label>
+                                <input type="text" name="tanggal" id="tanggal" class="form-control" required
+                                    placeholder="dd/mm/yyyy" style="border-radius:12px;">
                             </div>
+
                             <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Kuartal') }}</label>
-                                    <input type="text" name="kuartal" id="kuartal" class="form-control" readonly
-                                        style="border-radius:12px;">
-                                </div>
+                                <label class="text-dark font-weight-bold">Kuartal</label>
+                                <input type="text" name="kuartal" id="kuartal" class="form-control" readonly
+                                    style="border-radius:12px;">
                             </div>
                         </div>
 
                         <div class="form-group has-label">
-                            <label for="keterangan" class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
-                            <textarea type="text" name="keterangan" id="keterangan" class="form-control" style=" border-radius: 12px; 
-                            width: 40%; height: 100px; padding: 10px 14px; border: 1px solid #E3E3E3; "></textarea>
+                            <label class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
+                            <textarea name="keterangan" class="form-control"
+                                style="border-radius:12px; width:40%; height:100px; padding:10px 14px; border:1px solid #E3E3E3;"></textarea>
                         </div>
 
-                        <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== FOTO KEJADIAN ===================== --}}
+                        <hr class="my-4">
+
+                        {{-- ===================== BAGIAN FOTO ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Bukti Kecurangan (Foto)
                         </h6>
 
                         <div class="form-group has-label">
-                            <label
-                                class="text-dark font-weight-bold d-block mb-2">{{ __('Upload Foto (Maksimal 5)') }}</label>
+
+                            {{-- Label Upload Foto --}}
+                            <label class="text-dark font-weight-bold d-block mb-2">
+                                {{ __('Upload Foto (Maksimal total 5 foto)') }}
+                            </label>
+
+                            {{-- Tombol pilih foto --}}
                             <button type="button" id="btn-upload" class="btn btn-outline-success btn-round mb-3"
                                 style="border-radius:12px;padding:8px 16px;">
                                 <i class="now-ui-icons ui-1_simple-add"></i> Pilih Foto
                             </button>
+
+                            {{-- Input file disembunyikan --}}
                             <input type="file" name="bukti[]" id="bukti" accept=".jpg,.jpeg,.png" multiple hidden>
+
+                            {{-- Container preview foto baru --}}
                             <div id="preview-container"
                                 class="mt-2 d-flex flex-wrap gap-2 justify-content-start align-items-start"></div>
-                            <small class="form-text text-muted mt-2">Format: JPG, JPEG, PNG — maksimal 5 foto.</small>
+
+                            <small class="form-text text-muted mt-2">
+                                Format diperbolehkan: JPG, JPEG, PNG — maksimal 5 foto.
+                            </small>
+
                         </div>
 
-                        <div class="text-right mt-4">
+                        <div class="text-right mt-3">
                             <a href="{{ route('kecurangan.index') }}" class="btn btn-secondary btn-round">Batal</a>
-                            <button type="submit" class="btn btn-success btn-round">
-                                <i class="now-ui-icons"></i> Simpan
-                            </button>
+                            <button type="submit" class="btn btn-success btn-round">Simpan</button>
                         </div>
                     </form>
                 </div>
@@ -249,41 +244,15 @@
                     border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2);
                     transition:0.3s;">
                 <button type="button" id="modalPrev" class="btn btn-link" style="
-    position:absolute;
-    left:0;
-    top:0;
-    height:100%;
-    width:120px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    padding-left:25px;
-    font-size:42px;
-    color:#333;
-    text-decoration:none;
-    opacity:0.7;
-    background:transparent;
-    border:none;
-">
+                    position:absolute;left:0;top:0;height:100%;width:120px;
+                    display:flex;align-items:center;justify-content:flex-start;
+                    padding-left:25px;font-size:42px;color:#333;opacity:0.7;">
                     ‹
                 </button>
                 <button type="button" id="modalNext" class="btn btn-link" style="
-    position:absolute;
-    right:0;
-    top:0;
-    height:100%;
-    width:120px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-end;
-    padding-right:25px;
-    font-size:42px;
-    color:#333;
-    text-decoration:none;
-    opacity:0.7;
-    background:transparent;
-    border:none;
-">
+                    position:absolute;right:0;top:0;height:100%;width:120px;
+                    display:flex;align-items:center;justify-content:flex-end;
+                    padding-right:25px;font-size:42px;color:#333;opacity:0.7;">
                     ›
                 </button>
             </div>
@@ -296,6 +265,7 @@
     </div>
 </div>
 @endsection
+
 @push('styles')
 <style>
 input:invalid,
@@ -748,22 +718,49 @@ $(document).ready(function() {
         }
     });
 
-    // === Dropdown Dinamis Sales / AM / Sanksi ===
+    // === Dropdown Dinamis Sales / ASS ===
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
+
+        // Reset semua field terkait
         $('#nama_sales, #distributor, #nama_asisten_manager').val('');
-        $('#id_asisten_manager').html('<option value="">-- Pilih Asisten Manager --</option>').trigger(
-            'change');
+
+        // Reset dropdown ASS TANPA DISABLE
+        $('#id_asisten_manager')
+            .html('<option value="">-- Pilih ASS --</option>')
+            .trigger('change');
+
         if (!idSales) return;
+
+        // Ambil detail sales
         $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
+
             $('#nama_sales').val(data.nama_sales);
             $('#distributor').val(data.distributor);
+
+            // Ambil ASS
             if (data.distributor_id) {
+
                 $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
-                    let opt = '<option value="">-- Pilih Asisten Manager --</option>';
-                    res.forEach(a => opt +=
-                        `<option value="${a.id}">${a.id} - ${a.nama}</option>`);
-                    $('#id_asisten_manager').html(opt).trigger('change');
+
+                    // Jika tidak ada ASS
+                    if (res.length === 0) {
+                        $('#id_asisten_manager')
+                            .html('<option value="">-- Tidak ada ASS --</option>');
+                        return;
+                    }
+
+                    // Jika ada ASS
+                    let opt = '<option value="">-- Pilih ASS --</option>';
+                    res.forEach(a => {
+                        opt +=
+                            `<option value="${a.id}">${a.id} - ${a.nama}</option>`;
+                    });
+
+
+                    $('#id_asisten_manager')
+                        .html(opt)
+                        .trigger('change');
                 });
             }
         });
@@ -771,9 +768,16 @@ $(document).ready(function() {
 
     $('#id_asisten_manager').on('change', function() {
         const txt = $(this).find('option:selected').text();
-        const nama = txt.split('-').slice(1).join('-').trim();
+        const parts = txt.split(' - ');
+
+        // Ambil semua setelah ID
+        const nama = parts.slice(1).join(' - ').trim();
+
         $('#nama_asisten_manager').val(nama);
     });
+
+
+
 
     $('#jenis_sanksi').on('change', function() {
         const jenis = $(this).val();

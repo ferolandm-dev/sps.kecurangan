@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -15,21 +16,19 @@ class DashboardController extends Controller
     public function index()
     {
         // ======================================
-        // 📊 Total distributor aktif
+        // 📊 Total distributor (tidak ada kolom status)
         // ======================================
-        $totalDistributorAktif = DB::table('distributors')
-            ->where('status', 'Aktif')
+        $totalDistributorAktif = DB::table('distributor')->count();
+
+        // ======================================
+        // 👨‍💼 Total salesman (tidak ada kolom status)
+        // ======================================
+        $totalSalesAktif = DB::table('salesman')
+            ->where('TYPE_SALESMAN', '1')
             ->count();
 
         // ======================================
-        // 👨‍💼 Total sales aktif
-        // ======================================
-        $totalSalesAktif = DB::table('sales')
-            ->where('status', 'Aktif')
-            ->count();
-
-        // ======================================
-        // ⚠️ Jumlah kecurangan tiap bulan (validasi = 1)
+        // ⚠️ Jumlah kecurangan tiap bulan
         // ======================================
         $fraudPerMonth = DB::table('kecurangan')
             ->select(
@@ -41,52 +40,51 @@ class DashboardController extends Controller
             ->orderBy('bulan')
             ->pluck('total', 'bulan');
 
-        // Pastikan 12 bulan terisi
+        // Isi 12 bulan
         $fraudData = [];
         for ($i = 1; $i <= 12; $i++) {
             $fraudData[] = $fraudPerMonth[$i] ?? 0;
         }
 
         // ======================================
-        // 🏢 Top 5 distributor berdasarkan sales aktif
+        // 🏢 Top 5 distributor berdasarkan jumlah salesman
         // ======================================
-        $topDistributors = DB::table('distributors')
-            ->leftJoin('sales', function ($join) {
-                $join->on('sales.id_distributor', '=', 'distributors.id')
-                    ->where('sales.status', 'Aktif');
+        $topDistributors = DB::table('distributor')
+            ->leftJoin('salesman', function ($join) {
+                $join->on('salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
+                    ->where('salesman.TYPE_SALESMAN', 1); 
             })
             ->select(
-                'distributors.id',
-                'distributors.distributor',
-                DB::raw('COUNT(sales.id) as total_sales')
+                'distributor.ID_DISTRIBUTOR as id',
+                'distributor.NAMA_DISTRIBUTOR as distributor',
+                DB::raw('COUNT(salesman.ID_SALESMAN) as total_sales')
             )
-            ->where('distributors.status', 'Aktif')
-            ->groupBy('distributors.id', 'distributors.distributor')
+            ->groupBy('distributor.ID_DISTRIBUTOR', 'distributor.NAMA_DISTRIBUTOR')
             ->orderByDesc('total_sales')
-            ->orderBy('distributors.distributor', 'asc')
+            ->orderBy('distributor.NAMA_DISTRIBUTOR', 'asc')
             ->limit(5)
             ->get();
 
+
         // ======================================
-        // 🚨 Top 5 sales paling sering curang (validasi = 1)
+        // 🚨 Top 5 salesman paling sering curang
         // ======================================
         $topFraudSales = DB::table('kecurangan')
-            ->join('sales', 'kecurangan.id_sales', '=', 'sales.id')
+            ->join('salesman', 'kecurangan.id_sales', '=', 'salesman.ID_SALESMAN')
             ->select(
-                'sales.id as id_sales',
-                'sales.nama as nama_sales',
+                'salesman.ID_SALESMAN as id_sales',
+                'salesman.NAMA_SALESMAN as nama_sales',
                 DB::raw('COUNT(kecurangan.id) as total_kecurangan'),
                 DB::raw('MAX(kecurangan.updated_at) as terakhir_validasi')
             )
             ->where('kecurangan.validasi', 1)
-            ->groupBy('sales.id', 'sales.nama')
+            ->groupBy('salesman.ID_SALESMAN', 'salesman.NAMA_SALESMAN')
             ->orderByDesc('total_kecurangan')
-            ->orderBy('terakhir_validasi', 'asc')
             ->limit(5)
             ->get();
 
         // ======================================
-        // 📆 Total kecurangan bulan ini (validasi = 1)
+        // 📆 Total kecurangan bulan ini
         // ======================================
         $totalKecuranganBulanIni = DB::table('kecurangan')
             ->where('validasi', 1)
@@ -104,18 +102,15 @@ class DashboardController extends Controller
             ->sum('nilai_sanksi');
 
         // ======================================
-        // 📆 Progress kuartal (hari kerja)
+        // 📆 HITUNG KUARTAL & PROGRESS
         // ======================================
-        $currentMonth = date('n');
-
+        $currentMonth = (int) Carbon::now()->format('n');
         if ($currentMonth <= 3) $currentQuarter = 1;
         elseif ($currentMonth <= 6) $currentQuarter = 2;
         elseif ($currentMonth <= 9) $currentQuarter = 3;
         else $currentQuarter = 4;
 
-        $year = date('Y');
-        $today = now()->startOfDay();
-
+        $year = Carbon::now()->year;
         $quarterRanges = [
             1 => ['start' => "$year-01-01", 'end' => "$year-03-31"],
             2 => ['start' => "$year-04-01", 'end' => "$year-06-30"],
@@ -123,30 +118,29 @@ class DashboardController extends Controller
             4 => ['start' => "$year-10-01", 'end' => "$year-12-31"],
         ];
 
-        $startQuarter = \Carbon\Carbon::parse($quarterRanges[$currentQuarter]['start']);
-        $endQuarter   = \Carbon\Carbon::parse($quarterRanges[$currentQuarter]['end']);
+        $startQuarter = Carbon::parse($quarterRanges[$currentQuarter]['start']);
+        $endQuarter   = Carbon::parse($quarterRanges[$currentQuarter]['end']);
 
+        // Hitung total hari kerja (exclude Minggu)
         $totalHariKuartal = 0;
         $temp = $startQuarter->copy();
-
         while ($temp->lte($endQuarter)) {
             if ($temp->dayOfWeek !== 0) $totalHariKuartal++;
             $temp->addDay();
         }
 
+        // Hitung progress hari kerja berjalan
         $hariKe = 0;
+        $today = Carbon::now()->startOfDay();
         $temp = $startQuarter->copy();
-
-        while ($temp->lte($today)) {
+        while ($temp->lte($today) && $temp->lte($endQuarter)) {
             if ($temp->dayOfWeek !== 0) $hariKe++;
             $temp->addDay();
         }
 
-        $progressQuarterDay = ($totalHariKuartal > 0)
-            ? ($hariKe / $totalHariKuartal) * 100
+        $progressQuarterDay = $totalHariKuartal > 0
+            ? round(min(max(($hariKe / $totalHariKuartal) * 100, 0), 100), 1)
             : 0;
-
-        $progressQuarterDay = round(min(max($progressQuarterDay, 0), 100), 1);
 
         // ======================================
         // 📊 Kasus & Nilai Sanksi per Kuartal
@@ -162,11 +156,9 @@ class DashboardController extends Controller
             ->orderBy('quarter')
             ->get();
 
-        $quarters = [1, 2, 3, 4];
         $kasusPerQuarter = [];
         $sanksiPerQuarter = [];
-
-        foreach ($quarters as $q) {
+        foreach ([1,2,3,4] as $q) {
             $row = $quarterSummary->firstWhere('quarter', $q);
             $kasusPerQuarter[] = $row->total_kasus ?? 0;
             $sanksiPerQuarter[] = $row->total_sanksi ?? 0;
@@ -178,7 +170,7 @@ class DashboardController extends Controller
         $bulanIni = date('m');
         $bulanLalu = date('m', strtotime('-1 month'));
         $tahunIni = date('Y');
-        $tahunBulanLalu = date('Y', strtotime('-1 month'));
+        $tahunLalu = date('Y', strtotime('-1 month'));
 
         $fraudBulanIni = DB::table('kecurangan')
             ->where('validasi', 1)
@@ -189,7 +181,7 @@ class DashboardController extends Controller
         $fraudBulanLalu = DB::table('kecurangan')
             ->where('validasi', 1)
             ->whereMonth('tanggal', $bulanLalu)
-            ->whereYear('tanggal', $tahunBulanLalu)
+            ->whereYear('tanggal', $tahunLalu)
             ->count();
 
         if ($fraudBulanLalu == 0) {
@@ -210,43 +202,32 @@ class DashboardController extends Controller
         $avgSanksiBulanIni = round($avgSanksiBulanIni);
 
         // ======================================
-        // 🔥 HEATMAP KECURANGAN PER TANGGAL
+        // 🔥 Heatmap
         // ======================================
+        $latestYear = DB::table('kecurangan')->max(DB::raw('YEAR(tanggal)')) ?? date('Y');
 
-        // Ambil tahun terbaru berdasarkan data kecurangan
-        $latestYear = DB::table('kecurangan')
-            ->max(DB::raw('YEAR(tanggal)'));
-
-        // Jika tidak ada data → gunakan tahun sekarang
-        if (!$latestYear) {
-            $latestYear = date('Y');
-        }
-
-        // Query data heatmap per tanggal untuk tahun tersebut
         $fraudCalendar = DB::table('kecurangan')
             ->whereYear('tanggal', $latestYear)
             ->groupBy('tanggal')
             ->pluck(DB::raw('COUNT(*) as total'), 'tanggal');
-        
-        // ======================================
-        // 🔥 LEADERBOARD DISTRIBUTOR
-        // ======================================
 
+        // ======================================
+        // 🔥 Leaderboard Distributor
+        // ======================================
         $leaderboardDistributor = DB::table('kecurangan')
-            ->leftJoin('distributors', 'distributors.distributor', '=', 'kecurangan.distributor')
+            ->leftJoin('distributor', 'distributor.ID_DISTRIBUTOR', '=', 'kecurangan.distributor')
             ->select(
                 'kecurangan.distributor',
                 DB::raw('COUNT(kecurangan.id) as total_kecurangan'),
-                DB::raw('SUM(kecurangan.nilai_sanksi) as total_sanksi'),
-                'distributors.status'
+                DB::raw('SUM(kecurangan.nilai_sanksi) as total_sanksi')
             )
-            ->groupBy('kecurangan.distributor', 'distributors.status')
+            ->groupBy('kecurangan.distributor')
             ->orderByDesc('total_kecurangan')
             ->limit(5)
             ->get();
 
         // ======================================
-        // 🔥 RECENT FRAUD CASES
+        // 🔥 Kasus terbaru
         // ======================================
         $recentFraudCases = DB::table('kecurangan')
             ->select(
@@ -255,18 +236,14 @@ class DashboardController extends Controller
                 'distributor',
                 'jenis_sanksi',
                 'nilai_sanksi',
-                'tanggal',
-                'validasi'
+                'tanggal'
             )
             ->where('validasi', 1)
-            ->orderBy('created_at', 'DESC') // paling terbaru
+            ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get();
 
 
-        // ======================================
-        // 🔁 Kirim semua data ke VIEW
-        // ======================================
         return view('dashboard', compact(
             'totalDistributorAktif',
             'totalSalesAktif',
@@ -286,6 +263,5 @@ class DashboardController extends Controller
             'leaderboardDistributor',
             'recentFraudCases'
         ));
-
     }
 }

@@ -52,23 +52,23 @@
                 </div>
 
                 <div class="card-body" style="background: rgba(255,255,255,0.7); border-radius: 0 0 20px 20px;">
-                    {{-- FORM UPDATE (fields) --}}
                     <form action="{{ route('kecurangan.update', $kecurangan->id) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
-                        {{-- ===================== BAGIAN SALES ===================== --}}
+                        {{-- ===================== DETAIL SALES ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Sales</h6>
 
                         <div class="form-group">
-                            <label for="id_sales" class="text-dark font-weight-bold">{{ __('ID Sales') }}</label>
+                            <label class="text-dark font-weight-bold">ID Sales</label>
                             <select name="id_sales" id="id_sales" class="form-control select2" required
                                 style="border-radius:12px;">
-                                <option value="">-- Pilih ID Sales --</option>
+                                <option value="">-- Pilih Sales --</option>
                                 @foreach($sales as $s)
-                                <option value="{{ $s->id }}" {{ $kecurangan->id_sales == $s->id ? 'selected' : '' }}>
-                                    {{ $s->id }} - {{ $s->nama }}
+                                <option value="{{ $s->ID_SALESMAN }}"
+                                    {{ $kecurangan->id_sales == $s->ID_SALESMAN ? 'selected' : '' }}>
+                                    {{ $s->ID_SALESMAN }} - {{ $s->NAMA_SALESMAN }}
                                 </option>
                                 @endforeach
                             </select>
@@ -77,131 +77,131 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Nama Sales') }}</label>
+                                    <label class="text-dark font-weight-bold">Nama Sales</label>
                                     <input type="text" id="nama_sales" name="nama_sales" class="form-control" readonly
-                                        style="border-radius:12px;" value="{{ $kecurangan->nama_sales }}">
+                                        style="border-radius:12px;"
+                                        value="{{ old('nama_sales', $kecurangan->nama_sales) }}">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Distributor') }}</label>
+                                    <label class="text-dark font-weight-bold">Distributor</label>
                                     <input type="text" id="distributor" name="distributor" class="form-control" readonly
-                                        style="border-radius:12px;" value="{{ $kecurangan->distributor }}">
+                                        style="border-radius:12px;"
+                                        value="{{ old('distributor', $kecurangan->distributor) }}">
                                 </div>
                             </div>
                         </div>
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== BAGIAN ASISTEN MANAGER ===================== --}}
+                        {{-- ===================== DETAIL ASSISTANT MANAGER ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
 
                         <div class="form-group">
-                            <label for="id_asisten_manager"
-                                class="text-dark font-weight-bold">{{ __('ID ASS') }}</label>
+                            <label class="text-dark font-weight-bold">ID ASS</label>
                             <select name="id_asisten_manager" id="id_asisten_manager" class="form-control select2"
                                 style="border-radius:12px;">
-                                <option value="">-- Pilih Asisten Manager --</option>
+                                <option value="">-- Pilih ASS --</option>
                                 @foreach($asistenManagers as $am)
-                                <option value="{{ $am->id }}"
-                                    {{ $kecurangan->id_asisten_manager == $am->id ? 'selected' : '' }}>
-                                    {{ $am->id }} - {{ $am->nama }}
+                                <option value="{{ $am->ID_SALESMAN }}"
+                                    {{ $kecurangan->id_asisten_manager == $am->ID_SALESMAN ? 'selected' : '' }}>
+                                    {{ $am->ID_SALESMAN }} - {{ $am->NAMA_SALESMAN }}
                                 </option>
                                 @endforeach
                             </select>
+
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label for="nama_asisten_manager"
-                                        class="text-dark font-weight-bold">{{ __('Nama Asisten Manager') }}</label>
-                                    <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
-                                        class="form-control" readonly style="border-radius:12px;"
-                                        value="{{ $kecurangan->nama_asisten_manager }}">
-                                </div>
+                        <div class="col-md-3 pl-0">
+                            <div class="form-group has-label">
+                                <label class="text-dark font-weight-bold">Nama ASS</label>
+                                <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
+                                    class="form-control" readonly style="border-radius:12px;"
+                                    value="{{ old('nama_asisten_manager', $kecurangan->nama_asisten_manager) }}">
                             </div>
                         </div>
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== BAGIAN KEJADIAN ===================== --}}
+                        {{-- ===================== DETAIL KEJADIAN ===================== --}}
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Kejadian</h6>
 
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="text-dark font-weight-bold">Jenis Sanksi</label>
-                                <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required>
-                                    <option value="">-- Pilih Jenis Sanksi --</option>
-                                    @foreach($jenisSanksi as $jenis)
-                                    <option value="{{ $jenis }}"
-                                        {{ $jenis == $kecurangan->jenis_sanksi ? 'selected' : '' }}>
-                                        {{ $jenis }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                                <div class="form-group">
+                                    <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                                    <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required>
+                                        <option value="">-- Pilih Jenis --</option>
+                                        @foreach($jenisSanksi as $jenis)
+                                        <option value="{{ $jenis }}"
+                                            {{ $jenis == $kecurangan->jenis_sanksi ? 'selected' : '' }}>
+                                            {{ $jenis }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="text-dark font-weight-bold">Deskripsi Sanksi</label>
-                                <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
-                                    required>
-                                    {{-- Jika sedang edit dan sudah ada nilai --}}
-                                    @if(!empty($kecurangan->keterangan_sanksi))
-                                    <option value="{{ $kecurangan->keterangan_sanksi }}" selected>
-                                        {{ $kecurangan->keterangan_sanksi }}
-                                    </option>
-                                    @else
-                                    <option value="">-- Pilih Deskripsi --</option>
-                                    @endif
-                                </select>
+                                <div class="form-group">
+                                    <label class="text-dark font-weight-bold">Deskripsi Sanksi</label>
+                                    <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
+                                        required>
+                                        {{-- prefill existing --}}
+                                        @if(!empty($kecurangan->keterangan_sanksi))
+                                        <option value="{{ $kecurangan->keterangan_sanksi }}" selected>
+                                            {{ $kecurangan->keterangan_sanksi }}
+                                        </option>
+                                        @else
+                                        <option value="">-- Pilih Deskripsi --</option>
+                                        @endif
+                                    </select>
+                                </div>
                             </div>
+
                             <div class="col-md-3">
-                                <label class="text-dark font-weight-bold">Nilai Sanksi (Rp)</label>
-                                <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control"
-                                    value="Rp {{ number_format($kecurangan->nilai_sanksi, 0, ',', '.') }}" readonly>
+                                <label class="text-dark font-weight-bold">Nilai Sanksi</label>
+                                <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control" readonly
+                                    style="border-radius:12px;"
+                                    value="{{ $kecurangan->nilai_sanksi ? 'Rp '.number_format($kecurangan->nilai_sanksi,0,',','.') : '' }}">
                             </div>
                         </div>
-                        <div class="row">
+
+                        <div class="row mt-3">
                             <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Toko') }}</label>
-                                    <input type="text" name="toko" class="form-control" required
-                                        style="border-radius:12px;" value="{{ $kecurangan->toko }}">
-                                </div>
+                                <label class="text-dark font-weight-bold">Toko</label>
+                                <input type="text" name="toko" class="form-control" required style="border-radius:12px;"
+                                    value="{{ old('toko', $kecurangan->toko) }}">
                             </div>
 
                             <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Kunjungan') }}</label>
-                                    <input type="text" name="kunjungan" class="form-control" required
-                                        style="border-radius:12px;" value="{{ $kecurangan->kunjungan }}">
-                                </div>
+                                <label class="text-dark font-weight-bold">Kunjungan</label>
+                                <input type="text" name="kunjungan" class="form-control" required
+                                    style="border-radius:12px;" value="{{ old('kunjungan', $kecurangan->kunjungan) }}">
                             </div>
 
                             <div class="col-md-3">
-                                <div class="form-group has-label" title="Tanggal Kunjungan">
-                                    <label class="text-dark font-weight-bold">{{ __('Tanggal') }}</label>
-                                    <input type="text" name="tanggal" id="tanggal" class="form-control"
-                                        placeholder="dd/mm/yyyy" required style="border-radius:12px;"
-                                        value="{{ \Carbon\Carbon::parse($kecurangan->tanggal)->format('d/m/Y') }}">
-                                </div>
+                                <label class="text-dark font-weight-bold">Tanggal</label>
+                                <input type="text" name="tanggal" id="tanggal" class="form-control" required
+                                    placeholder="dd/mm/yyyy" style="border-radius:12px;"
+                                    value="{{ \Carbon\Carbon::parse($kecurangan->tanggal)->format('d/m/Y') }}">
                             </div>
 
                             <div class="col-md-3">
-                                <div class="form-group has-label">
-                                    <label class="text-dark font-weight-bold">{{ __('Kuartal') }}</label>
-                                    <input type="text" name="kuartal" id="kuartal" class="form-control" readonly
-                                        style="border-radius:12px;" value="{{ $kecurangan->kuartal }}">
-                                </div>
+                                <label class="text-dark font-weight-bold">Kuartal</label>
+                                <input type="text" name="kuartal" id="kuartal" class="form-control" readonly
+                                    style="border-radius:12px;" value="{{ $kecurangan->kuartal }}">
                             </div>
                         </div>
-                        <div class="form-group has-label">
+
+                        <div class="form-group has-label mt-3">
                             <label class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
                             <textarea name="keterangan" class="form-control"
                                 style="border-radius:12px; width:40%; height:100px; padding:10px 14px; border:1px solid #E3E3E3;">{{ old('keterangan', $kecurangan->keterangan) }}</textarea>
                         </div>
+
                         <hr class="my-4" style="border-color:#29b14a;">
 
                         {{-- ===================== BAGIAN FOTO ===================== --}}
@@ -342,38 +342,14 @@
     </div>
 </div>
 @endsection
+
 @push('styles')
 <style>
-/* ===================== BACKDROP (ELEGAN) ===================== */
-.modal-backdrop.show {
-    opacity: 0.7 !important;
-    background-color: rgba(0, 0, 0, 0.7) !important;
-    backdrop-filter: blur(3px);
-}
-
-/* ===================== NON-SCROLL SAAT MODAL TERBUKA ===================== */
-body.modal-open {
-    overflow: hidden !important;
-}
-
-.modal {
-    overflow: hidden !important;
-}
-
-/* ===================== TOMBOL MODAL (Z-INDEX & INTERAKSI) ===================== */
-#modalCloseBtn,
-#modalPrev,
-#modalNext {
-    z-index: 2102 !important;
-    pointer-events: auto !important;
-}
-
 input:invalid,
 textarea:invalid,
 select:invalid {
     box-shadow: none !important;
     border-color: #ced4da !important;
-    /* warna abu normal */
 }
 
 input:focus,
@@ -450,6 +426,30 @@ body,
 .navbar-soft .navbar-brand {
     transition: color .25s ease, transform .25s ease !important;
     /* biarkan hover tetap smooth */
+}
+
+/* === BACKDROP AKTIF DAN TIDAK TRANSPARAN === */
+.modal-backdrop.show {
+    opacity: 1 !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(2px);
+}
+
+/* Tombol navigasi modal tetap di atas */
+#modalCloseBtn,
+#modalPrev,
+#modalNext {
+    z-index: 2102 !important;
+    pointer-events: auto !important;
+}
+
+/* Kunci scroll pada body dan modal */
+body.modal-open {
+    overflow: hidden !important;
+}
+
+.modal {
+    overflow: hidden !important;
 }
 
 /* ===========================================================
@@ -631,6 +631,7 @@ button#modalNext.btn {
 }
 </style>
 @endpush
+
 @push('js')
 <link href="{{ asset('css/kecurangan.css') }}" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -639,14 +640,13 @@ button#modalNext.btn {
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
 $(document).ready(function() {
-    // ===================== SELECT2 =====================
-    $('#jenis_sanksi, #deskripsi_sanksi, #id_sales, #id_asisten_manager').select2({
+    // === Select2 Setup ===
+    $('#id_sales, #id_asisten_manager, #jenis_sanksi, #deskripsi_sanksi').select2({
         placeholder: "-- Pilih --",
-        allowClear: false,
         width: '100%'
     });
 
-    // ===================== VARIABEL =====================
+    // Files state
     let selectedFiles = [];
     let currentIndex = 0;
     const MAX_FILES = 5;
@@ -654,18 +654,7 @@ $(document).ready(function() {
     const $previewContainer = $('#preview-container');
     const $existingContainer = $('#existing-container');
 
-    // ===================== HANDLE FOTO =====================
-    function collectAllPreviewElements() {
-        const arr = [];
-        $existingContainer.find('img.existing-img').each(function() {
-            arr.push($(this));
-        });
-        $previewContainer.find('img.preview-img').each(function() {
-            arr.push($(this));
-        });
-        return arr;
-    }
-
+    // Click to open file dialog
     $('#btn-upload').on('click', function() {
         $fileInput.val('');
         $fileInput.trigger('click');
@@ -679,8 +668,10 @@ $(document).ready(function() {
 
     $fileInput.on('change', function() {
         const incoming = Array.from(this.files || []);
+        // filter duplicates by name+size
         const newFiles = incoming.filter(f => !selectedFiles.some(sf => sf.name === f.name && sf
             .size === f.size));
+
         const existingCount = $existingContainer.find('.existing-photo').length;
         const spaceLeft = MAX_FILES - existingCount;
 
@@ -703,10 +694,10 @@ $(document).ready(function() {
             reader.onload = e => {
                 const html = `
                     <div class="position-relative m-1" style="display:inline-block;">
-                        <img src="${e.target.result}" alt="${file.name}" class="preview-img" data-index="${index}"
-                            style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
+                        <img src="${e.target.result}" class="preview-img" data-index="${index}"
+                             style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
                         <button type="button" class="btn btn-danger btn-sm btn-remove-new" data-index="${index}"
-                            style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
+                             style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
                     </div>`;
                 $previewContainer.append(html);
             };
@@ -714,6 +705,7 @@ $(document).ready(function() {
         });
     }
 
+    // remove new preview
     $(document).on('click', '.btn-remove-new', function(e) {
         e.stopPropagation();
         const idx = Number($(this).data('index'));
@@ -722,15 +714,29 @@ $(document).ready(function() {
         syncInputFiles();
     });
 
+    // delete existing photo (mark for deletion)
     $(document).on('click', '.btn-delete-existing', function(e) {
         e.stopPropagation();
         const $wrap = $(this).closest('.existing-photo');
         const fotoId = $wrap.data('id');
+        // append hidden input so controller can read deleted_photos[]
         $('form').append(`<input type="hidden" name="deleted_photos[]" value="${fotoId}">`);
         $wrap.remove();
     });
 
-    // ===================== MODAL PREVIEW FOTO (GAYA BARU) =====================
+    // collect all img elements (existing + preview) in order for modal navigation
+    function collectAllPreviewElements() {
+        const arr = [];
+        $existingContainer.find('img.existing-img').each(function() {
+            arr.push($(this));
+        });
+        $previewContainer.find('img.preview-img').each(function() {
+            arr.push($(this));
+        });
+        return arr;
+    }
+
+    // show modal when clicking any image
     $(document).on('click', '.existing-img, .preview-img', function() {
         const allEls = collectAllPreviewElements();
         let idx = allEls.findIndex(el => el[0] === this);
@@ -750,19 +756,21 @@ $(document).ready(function() {
         $('#modalImage').attr('src', allEls[index].attr('src') || '');
     }
 
-    $(document).on('click', '#modalCloseBtn', () => $('#modalPreview').modal('hide'));
-    $(document).on('click', '#modalNext', () => {
+    // modal nav
+    $(document).on('click', '#modalNext', function() {
         const allEls = collectAllPreviewElements();
         if (!allEls.length) return;
         currentIndex = (currentIndex + 1) % allEls.length;
         showModalImageByIndex(currentIndex);
     });
-    $(document).on('click', '#modalPrev', () => {
+
+    $(document).on('click', '#modalPrev', function() {
         const allEls = collectAllPreviewElements();
         if (!allEls.length) return;
         currentIndex = (currentIndex - 1 + allEls.length) % allEls.length;
         showModalImageByIndex(currentIndex);
     });
+
     $(document).on('keydown', function(e) {
         if (!$('#modalPreview').hasClass('show')) return;
         if (e.key === 'Escape') $('#modalPreview').modal('hide');
@@ -777,7 +785,7 @@ $(document).ready(function() {
         $('body').css('overflow', 'auto');
     });
 
-    // ===================== VALIDASI SUBMIT =====================
+    // validate on submit (total foto <= MAX_FILES)
     $('form').on('submit', function() {
         syncInputFiles();
         const existingCount = $existingContainer.find('.existing-photo').length;
@@ -788,7 +796,23 @@ $(document).ready(function() {
         return true;
     });
 
-    // ===================== AJAX SALES =====================
+    // === Datepicker ===
+    $('#tanggal').datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        showAnim: 'slideDown',
+        onSelect: function(dateText) {
+            const [d, m, y] = dateText.split('/');
+            const bln = parseInt(m);
+            const th = parseInt(y);
+            const kuartal = bln <= 3 ? 'Q1 ' + th : bln <= 6 ? 'Q2 ' + th : bln <= 9 ? 'Q3 ' + th :
+                'Q4 ' + th;
+            $('#kuartal').val(kuartal);
+        }
+    });
+
+    // === Sales -> Distributor -> ASS (AJAX) ===
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
         const $namaSales = $('#nama_sales');
@@ -799,7 +823,7 @@ $(document).ready(function() {
         $namaSales.val('');
         $distributor.val('');
         $namaAsisten.val('');
-        $idAsisten.html('<option value="">Pilih Asisten Manager</option>').trigger('change');
+        $idAsisten.html('<option value="">-- Pilih ASS --</option>').trigger('change');
 
         if (!idSales) return;
 
@@ -808,7 +832,7 @@ $(document).ready(function() {
             $distributor.val(data.distributor);
             if (data.distributor_id) {
                 $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
-                    let options = '<option value="">Pilih Asisten Manager</option>';
+                    let options = '<option value="">-- Pilih ASS --</option>';
                     res.forEach(am => {
                         options +=
                             `<option value="${am.id}">${am.id} - ${am.nama}</option>`;
@@ -825,7 +849,7 @@ $(document).ready(function() {
         $('#nama_asisten_manager').val(nama);
     });
 
-    // ===================== AUTOLOAD SAAT EDIT =====================
+    // === Autoload ASS when opening edit (pre-select ass options based on current sales) ===
     const initialSales = $('#id_sales').val();
     const currentAsistenId = "{{ $kecurangan->id_asisten_manager ?? '' }}";
     if (initialSales) {
@@ -834,7 +858,7 @@ $(document).ready(function() {
             $('#distributor').val(data.distributor);
             if (data.distributor_id) {
                 $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
-                    let options = '<option value="">Pilih Asisten Manager</option>';
+                    let options = '<option value="">-- Pilih ASS --</option>';
                     res.forEach(am => {
                         options +=
                             `<option value="${am.id}" ${am.id == currentAsistenId ? 'selected' : ''}>${am.id} - ${am.nama}</option>`;
@@ -845,23 +869,7 @@ $(document).ready(function() {
         });
     }
 
-    // ===================== DATEPICKER =====================
-    $('#tanggal').datepicker({
-        dateFormat: 'dd/mm/yy',
-        changeMonth: true,
-        changeYear: true,
-        showAnim: 'slideDown',
-        onSelect: function(dateText) {
-            const [d, m, y] = dateText.split('/');
-            const bln = parseInt(m);
-            const th = parseInt(y);
-            const kuartal = bln <= 3 ? 'Q1 ' + th : bln <= 6 ? 'Q2 ' + th : bln <= 9 ? 'Q3 ' + th :
-                'Q4 ' + th;
-            $('#kuartal').val(kuartal);
-        }
-    });
-
-    // ===================== SANKSI =====================
+    // === SANKSI: load deskripsi list when jenis changed & on load keep existing selected ===
     $('#jenis_sanksi').on('change', function() {
         const jenis = $(this).val();
         $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
@@ -874,14 +882,29 @@ $(document).ready(function() {
         });
     });
 
+    // on change deskripsi, get nilai
     $('#deskripsi_sanksi').on('change', function() {
         const jenis = $('#jenis_sanksi').val();
         const deskripsi = $(this).val();
-        $.getJSON(`/sanksi/nilai/${jenis}/${deskripsi}`, function(data) {
-            const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
-            $('#nilai_sanksi').val('Rp ' + formatted);
+        if (!jenis || !deskripsi) {
+            $('#nilai_sanksi').val('');
+            return;
+        }
+        $.getJSON(`/sanksi/nilai/${jenis}/${encodeURIComponent(deskripsi)}`, function(data) {
+            if (data && data.nilai !== undefined) {
+                const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
+                $('#nilai_sanksi').val('Rp ' + formatted);
+            } else {
+                $('#nilai_sanksi').val('');
+            }
+        }).fail(function() {
+            $('#nilai_sanksi').val('');
         });
     });
+
+    // ensure deskripsi remains if already set (edit page) — if deskripsi exists but jenis not reloaded, keep as-is
+    // if user changes jenis, deskripsi options will be refreshed by the change handler above.
+
 });
 </script>
 @endpush

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     KecuranganController,
     DistributorController,
-    SalesController,
+    SalesmanController,
     UserController,
     ProfileController,
     PageController,
@@ -100,106 +100,95 @@ Route::middleware('auth')->group(function () {
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('profile/password', [ProfileController::class, 'password'])->name('profile.password');
 
-    // =====================================================
-    // 🏢 MASTER DISTRIBUTOR
-    // =====================================================
-    Route::prefix('distributors')
-        ->middleware('check.access:Master,Master Distributor')
-        ->group(function () {
 
-            Route::get('/', [DistributorController::class, 'index'])
-                ->middleware('check.access:Master,Master Distributor,access')
-                ->name('distributors.index');
+// =====================================================
+// 📌 MASTER DISTRIBUTOR
+// =====================================================
+Route::prefix('distributor')
+    ->middleware('check.access:Master,Master Distributor')
+    ->group(function () {
 
-            Route::get('/create', [DistributorController::class, 'create'])
-                ->middleware('check.access:Master,Master Distributor,create')
-                ->name('distributors.create');
+        // LIST & SEARCH
+        Route::get('/', [DistributorController::class, 'index'])
+            ->middleware('check.access:Master,Master Distributor,access')
+            ->name('distributor.index');
 
-            Route::post('/', [DistributorController::class, 'store'])
-                ->middleware('check.access:Master,Master Distributor,create')
-                ->name('distributors.store');
+        // CREATE FORM
+        Route::get('/create', [DistributorController::class, 'create'])
+            ->middleware('check.access:Master,Master Distributor,create')
+            ->name('distributor.create');
 
-            Route::get('/{id}/edit', [DistributorController::class, 'edit'])
-                ->middleware('check.access:Master,Master Distributor,edit')
-                ->name('distributors.edit');
+        // SUBMIT CREATE
+        Route::post('/', [DistributorController::class, 'store'])
+            ->middleware('check.access:Master,Master Distributor,create')
+            ->name('distributor.store');
 
-            Route::put('/{id}', [DistributorController::class, 'update'])
-                ->middleware('check.access:Master,Master Distributor,edit')
-                ->name('distributors.update');
+        // EDIT FORM
+        Route::get('/{ID_DISTRIBUTOR}/edit', [DistributorController::class, 'edit'])
+            ->middleware('check.access:Master,Master Distributor,edit')
+            ->name('distributor.edit');
 
-            Route::delete('/{id}', [DistributorController::class, 'destroy'])
-                ->middleware('check.access:Master,Master Distributor,delete')
-                ->name('distributors.destroy');
-        });
+        // SUBMIT UPDATE
+        Route::put('/{ID_DISTRIBUTOR}', [DistributorController::class, 'update'])
+            ->middleware('check.access:Master,Master Distributor,edit')
+            ->name('distributor.update');
 
-    // =====================================================
-    // 📊 DATA DISTRIBUTOR
-    // =====================================================
-    Route::prefix('distributors')
-        ->middleware('check.access:Data,Data Distributor')
-        ->group(function () {
-            Route::get('/data', [DistributorController::class, 'data'])
-                ->middleware('check.access:Data,Data Distributor,access')
-                ->name('distributors.data');
+        // DELETE
+        Route::delete('/{ID_DISTRIBUTOR}', [DistributorController::class, 'destroy'])
+            ->middleware('check.access:Master,Master Distributor,delete')
+            ->name('distributor.destroy');
+    });
 
-            Route::get('/export-excel', [DistributorController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data Distributor,print')
-                ->name('distributors.exportExcel');
 
-            Route::get('/export-pdf', [DistributorController::class, 'exportPDF'])
-                ->middleware('check.access:Data,Data Distributor,print')
-                ->name('distributors.exportPDF');
-        });
+// =====================================================
+// 📊 DATA DISTRIBUTOR
+// =====================================================
+Route::prefix('distributor')
+    ->middleware('check.access:Data,Data Distributor')
+    ->group(function () {
 
-    // =====================================================
-    // 🧾 MASTER SALES
-    // =====================================================
-    Route::prefix('sales')
-        ->middleware('check.access:Master,Master Sales')
-        ->group(function () {
-            Route::get('/', [SalesController::class, 'index'])
-                ->middleware('check.access:Master,Master Sales,access')
-                ->name('sales.index');
+        // PAGE data distributor
+        Route::get('/data', [DistributorController::class, 'data'])
+            ->middleware('check.access:Data,Data Distributor,access')
+            ->name('distributor.data');
 
-            Route::get('/create', [SalesController::class, 'create'])
-                ->middleware('check.access:Master,Master Sales,create')
-                ->name('sales.create');
+        // EXPORT EXCEL
+        Route::get('/export-excel', [DistributorController::class, 'exportExcel'])
+            ->middleware('check.access:Data,Data Distributor,print')
+            ->name('distributor.exportExcel');
 
-            Route::post('/', [SalesController::class, 'store'])
-                ->middleware('check.access:Master,Master Sales,create')
-                ->name('sales.store');
+        // EXPORT PDF
+        Route::get('/export-pdf', [DistributorController::class, 'exportPdf'])
+            ->middleware('check.access:Data,Data Distributor,print')
+            ->name('distributor.exportPdf');
+    });
 
-            Route::get('/{id}/edit', [SalesController::class, 'edit'])
-                ->middleware('check.access:Master,Master Sales,edit')
-                ->name('sales.edit');
 
-            Route::put('/{id}', [SalesController::class, 'update'])
-                ->middleware('check.access:Master,Master Sales,edit')
-                ->name('sales.update');
 
-            Route::delete('/{id}', [SalesController::class, 'destroy'])
-                ->middleware('check.access:Master,Master Sales,delete')
-                ->name('sales.destroy');
-        });
+// ==================================================================================
+// DATA SALESMAN (HANYA DATA + EXPORT)
+// ==================================================================================
+Route::prefix('salesman')
+    ->middleware('check.access:Data,Data Salesman')
+    ->group(function () {
 
-    // =====================================================
-    // 📈 DATA SALES
-    // =====================================================
-    Route::prefix('sales')
-        ->middleware('check.access:Data,Data Sales')
-        ->group(function () {
-            Route::get('/data', [SalesController::class, 'data'])
-                ->middleware('check.access:Data,Data Sales,access')
-                ->name('sales.data');
+        // halaman data salesman (LIST)
+        Route::get('/data', [SalesmanController::class, 'data'])
+            ->middleware('check.access:Data,Data Salesman,access')
+            ->name('salesman.data');
 
-            Route::get('/export-excel', [SalesController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data Sales,print')
-                ->name('sales.exportExcel');
+        // export excel
+        Route::get('/export-excel', [SalesmanController::class, 'exportExcel'])
+            ->middleware('check.access:Data,Data Salesman,print')
+            ->name('salesman.exportExcel');
 
-            Route::get('/export-pdf', [SalesController::class, 'exportPDF'])
-                ->middleware('check.access:Data,Data Sales,print')
-                ->name('sales.exportPDF');
-        });
+        // export pdf
+        Route::get('/export-pdf', [SalesmanController::class, 'exportPdf'])
+            ->middleware('check.access:Data,Data Salesman,print')
+            ->name('salesman.exportPdf');
+    });
+
+
 
     // =====================================================
     // ⚠️ MASTER & DATA KECURANGAN

@@ -79,7 +79,7 @@
         $dataSlug = Str::slug(str_replace('data ', '', $labelLower));
 
         if ($dataSlug === 'distributor') {
-        $url = url('/distributors/data'); // khusus distributor plural
+        $url = url('/distributor/data'); // khusus distributor plural
         } else {
         $url = url('/' . $dataSlug . '/data');
         }

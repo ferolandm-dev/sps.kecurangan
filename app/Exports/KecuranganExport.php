@@ -34,52 +34,47 @@ class KecuranganExport implements FromCollection, WithHeadings, WithMapping, Sho
     }
 
     public function collection()
-    {
-        $query = DB::table('kecurangan')
-            ->where('kecurangan.validasi', 1)
-            ->select(
-                'kecurangan.id_sales',
-                'kecurangan.nama_sales',                   // ⬅️ gunakan nama_sales dari tabel kecurangan
-                'distributors.distributor AS distributor',
-                'asisten_managers.nama AS nama_asisten_manager',
-                'kecurangan.jenis_sanksi',
-                'kecurangan.keterangan_sanksi',
-                'kecurangan.nilai_sanksi',
-                'kecurangan.toko',
-                'kecurangan.kunjungan',
-                'kecurangan.tanggal',
-                'kecurangan.keterangan',
-                'kecurangan.kuartal'
-            )
-            ->leftJoin('sales', 'kecurangan.id_sales', '=', 'sales.id')
-            ->leftJoin('distributors', 'sales.id_distributor', '=', 'distributors.id')
-            ->leftJoin('asisten_managers', 'kecurangan.id_asisten_manager', '=', 'asisten_managers.id');
+{
+    $query = DB::table('kecurangan')
+        ->where('validasi', 1)
+        ->select(
+            'id_sales',
+            'nama_sales',
+            'distributor',
+            'nama_asisten_manager',
+            'jenis_sanksi',
+            'keterangan_sanksi',
+            'nilai_sanksi',
+            'toko',
+            'kunjungan',
+            'tanggal',
+            'keterangan',
+            'kuartal'
+        );
 
-
-        // ========== 🔍 FILTER SALES (BARU DITAMBAHKAN) ==========
-        if (!empty($this->sales)) {
-            $query->where('kecurangan.id_sales', $this->sales);
-        }
-
-        // ========== MODE TANGGAL ==========
-        if ($this->mode === 'date' && $this->startDate && $this->endDate) {
-            $query->whereBetween('kecurangan.tanggal', [
-                $this->startDate,
-                $this->endDate
-            ]);
-        }
-
-        // ========== FILTER TAMBAHAN ==========
-        if (!empty($this->jenis)) {
-            $query->where('kecurangan.jenis_sanksi', $this->jenis);
-        }
-
-        if (!empty($this->keterangan)) {
-            $query->where('kecurangan.keterangan_sanksi', $this->keterangan);
-        }
-
-        return $query->orderBy('kecurangan.tanggal', 'desc')->get();
+    // FILTER SALES
+    if (!empty($this->sales)) {
+        $query->where('id_sales', $this->sales);
     }
+
+    // FILTER JENIS
+    if (!empty($this->jenis)) {
+        $query->where('jenis_sanksi', $this->jenis);
+    }
+
+    // FILTER KETERANGAN
+    if (!empty($this->keterangan)) {
+        $query->where('keterangan_sanksi', $this->keterangan);
+    }
+
+    // FILTER TANGGAL
+    if ($this->mode === 'date' && $this->startDate && $this->endDate) {
+        $query->whereBetween('tanggal', [$this->startDate, $this->endDate]);
+    }
+
+    return $query->orderBy('tanggal', 'desc')->get();
+}
+
 
     public function map($row): array
     {

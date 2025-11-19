@@ -90,7 +90,7 @@
                             <thead style="color:#29b14a;">
                                 <tr>
                                     <th class="col-no text-center" style="width:40px;">#</th>
-                                    <th class="col-id-sales" style="width:120px;">
+                                    <th class="col-id-sales" style="width:150px; text-align:center">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
                         'sort_by' => 'id_sales',
                         'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
@@ -177,7 +177,7 @@
                                     <td class="text-center">
                                         {{ $loop->iteration + (method_exists($kecurangan, 'firstItem') ? $kecurangan->firstItem() - 1 : 0) }}
                                     </td>
-                                    <td>{{ $item->id_sales }}</td>
+                                    <td class="text-center">{{ $item->id_sales }}</td>
                                     <td>{{ $item->nama_sales }}</td>
                                     <td>{{ $item->distributor }}</td>
                                     <td>{{ $item->nama_asisten_manager }}</td>

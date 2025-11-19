@@ -1,7 +1,7 @@
 @extends('layouts.app', [
-'namePage' => 'Data ASS',
+'namePage' => 'Data Sales',
 'class' => 'sidebar-mini',
-'activePage' => 'data_asisten_managers',
+'activePage' => 'data_sales',
 ])
 
 @section('content')
@@ -28,18 +28,18 @@
             </div>
             @endif
 
-            {{-- CARD DATA ASISTEN MANAGER --}}
+            {{-- CARD DATA SALESMAN --}}
             <div class="card" style="border-radius: 20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Data ASS') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Data Salesman') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
+
                         {{-- Form Pencarian --}}
-                        <form action="{{ route('asisten_manager.data') }}" method="GET" class="mr-2">
+                        <form action="{{ route('salesman.data') }}" method="GET" class="mr-2">
                             <div class="search-group">
                                 <input type="text" name="search" class="form-control search-input"
-                                    placeholder="Cari ASS..." value="{{ request('search') }}">
-
+                                    placeholder="Cari salesman..." value="{{ request('search') }}">
                                 <button class="btn search-btn" type="submit">
                                     <i class="now-ui-icons ui-1_zoom-bold"></i>
                                 </button>
@@ -48,101 +48,139 @@
 
                         {{-- Tombol Tampilkan Semua / Paginate --}}
                         @if (request()->has('all'))
-                        <a href="{{ route('asisten_manager.data', request()->except('all')) }}"
+                        <a href="{{ route('salesman.data', request()->except('all')) }}"
                             class="btn btn-warning btn-round mr-2"
-                            style="background:#eee733;color:#000;border:none;margin-top:10px;"
-                            title="Tampilkan Halaman">
+                            style="background:#eee733;color:#000;border:none;margin-top:10px;">
                             <i class="now-ui-icons arrows-1_refresh-69"></i> Tampilkan Halaman
                         </a>
                         @else
-                        <a href="{{ route('asisten_manager.data', array_merge(request()->query(), ['all' => true])) }}"
+                        <a href="{{ route('salesman.data', array_merge(request()->query(), ['all' => true])) }}"
                             class="btn btn-success btn-round mr-2"
-                            style="background:#29b14a;border:none;margin-top:10px;" title="Tampilkan Semua Data">
+                            style="background:#29b14a;border:none;margin-top:10px;">
                             <i class="now-ui-icons ui-1_zoom-bold"></i> Tampilkan Semua
                         </a>
                         @endif
 
-                        {{-- ✅ Tombol Cetak (Excel & PDF) --}}
-                        @if (checkAccess('Data', 'Data ASS', 'print'))
-                        <a href="{{ route('asisten_manager.exportExcel') }}"
-                            class="btn btn-success btn-round mr-2 d-flex align-items-center"
-                            style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel">
+                        {{-- Tombol Export --}}
+                        @if (checkAccess('Data', 'Data Salesman', 'print'))
+                        <a href="{{ route('salesman.exportExcel') }}" class="btn btn-success btn-round mr-2"
+                            style="margin-top:10px;background:#29b14a;border:none;">
                             <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
                         </a>
 
-                        <a href="{{ route('asisten_manager.exportPDF') }}"
-                            class="btn btn-danger btn-round d-flex align-items-center"
-                            style="margin-top:10px;background:#e74c3c;border:none;" title="Export PDF">
+                        <a href="{{ route('salesman.exportPdf') }}" class="btn btn-danger btn-round"
+                            style="margin-top:10px;background:#e74c3c;border:none;">
                             <i class="now-ui-icons files_paper mr-1"></i> PDF
                         </a>
                         @endif
                     </div>
                 </div>
 
-
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle text-nowrap mb-0" style="color:#333;">
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th style="width:5%; text-align:center;">#</th>
-                                    <th style="width:15%;">
-                                        <a href="{{ route('asisten_manager.data', array_merge(request()->query(), [
-                                            'sort_by' => 'id',
-                                            'sort_order' => (request('sort_by') === 'id' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            ID Asisten Manager
-                                        </a>
-                                    </th>
-                                    <th style="width:25%;">
-                                        <a href="{{ route('asisten_manager.data', array_merge(request()->query(), [
-                                            'sort_by' => 'nama',
-                                            'sort_order' => (request('sort_by') === 'nama' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            Nama ASS
-                                        </a>
-                                    </th>
-                                    <th style="width:20%; text-align:center;">
-                                        <a href="{{ route('asisten_manager.data', array_merge(request()->query(), [
-                                            'sort_by' => 'id_distributor',
-                                            'sort_order' => (request('sort_by') === 'id_distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
+                                    <th class="text-center" style="width:5%;">#</th>
+
+                                    <th style="width:20px; text-align:center;">
+    <a href="{{ route('salesman.data', array_merge(request()->query(), [
+        'sort_by' => 'ID_SALESMAN',
+        'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+    ])) }}" class="text-success text-decoration-none">
+        ID Salesman
+    </a>
+</th>
+
+                                    <th style="width:20px; text-align:center;">
+                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
+        'sort_by' => 'ID_DISTRIBUTOR',
+        'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+    ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
-                                    <th style="width:15%; text-align:center;">
-                                        <a href="{{ route('asisten_manager.data', array_merge(request()->query(), [
-                                            'sort_by' => 'status',
-                                            'sort_order' => (request('sort_by') === 'status' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            Status
-                                        </a>
-                                    </th>
+
+                                    <!-- <th>User</th>
+                                    <th>Junior SPV</th>
+                                    <th>SPC Manager</th> -->
+                                    <th style="width:40%;">
+    <a href="{{ route('salesman.data', array_merge(request()->query(), [
+        'sort_by' => 'NAMA_SALESMAN',
+        'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+    ])) }}" class="text-success text-decoration-none">
+        Nama Salesman
+    </a>
+</th>
+
+                                    <!-- <th>Type</th> -->
+                                    <!-- <th>Alamat</th>
+                                    <th>Alamat Dari ASS</th>
+                                    <th>Alamat Geoloc</th> -->
+                                    <!-- <th>Latitude</th>
+                                    <th>Longitude</th> -->
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @forelse ($asistenManagers as $index => $item)
+                                @forelse ($salesman as $index => $item)
                                 <tr>
-                                    <td style="text-align:center;">
-                                        {{ $loop->iteration + (method_exists($asistenManagers, 'firstItem') ? $asistenManagers->firstItem() - 1 : 0) }}
+                                    <td class="text-center">
+                                        {{ $loop->iteration + (method_exists($salesman, 'firstItem') ? $salesman->firstItem() - 1 : 0) }}
                                     </td>
-                                    <td>{{ $item->id }}</td>
-                                    <td class="text-truncate" style="max-width: 200px;" title="{{ $item->nama }}">
-                                        {{ $item->nama }}
-                                    </td>
-                                    <td style="text-align:center;">{{ $item->id_distributor }}</td>
-                                    <td style="text-align:center;">
-                                        <span class="badge" style="background: {{ strtolower($item->status) == 'aktif' ? '#29b14a' : '#e74c3c' }};
-                                                color:white; border-radius:10px; padding:6px 10px;">
-                                            {{ ucfirst(strtolower($item->status)) }}
-                                        </span>
-                                    </td>
+
+                                    <td class="text-center">{{ $item->ID_SALESMAN }}</td>
+                                    <td class="text-center">{{ $item->ID_DISTRIBUTOR }}</td>
+                                    <!-- <td>{{ $item->ID_USER ?? '-' }}</td>
+                                    <td>{{ $item->ID_JUNIOR_SPV ?? '-' }}</td>
+                                    <td>{{ $item->ID_SPC_MANAGER ?? '-' }}</td> -->
+
+                                    <td>{{ $item->NAMA_SALESMAN }}</td>
+                                    <!-- <td>{{ $item->TYPE_SALESMAN ?? '-' }}</td> -->
+
+                                    {{-- ALAMAT BUTTON --}}
+                                    <!-- <td class="text-center">
+                                        @if ($item->ALAMAT)
+                                        <button class="btn btn-info btn-sm btn-round btn-lihat-alamat"
+                                            data-judul="Alamat" data-isi="{{ $item->ALAMAT }}">
+                                            <i class="now-ui-icons files_paper"></i>
+                                        </button>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </td> -->
+
+                                    {{-- ALAMAT DARI ASS BUTTON --}}
+                                    <!-- <td class="text-center">
+                                        @if ($item->ALAMAT_DARI_ASS)
+                                        <button class="btn btn-info btn-sm btn-round btn-lihat-alamat"
+                                            data-judul="Alamat Dari ASS" data-isi="{{ $item->ALAMAT_DARI_ASS }}">
+                                            <i class="now-ui-icons files_paper"></i>
+                                        </button>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </td> -->
+
+                                    {{-- ALAMAT GEOLOC BUTTON --}}
+                                    <!-- <td class="text-center">
+                                        @if ($item->ALAMAT_GEOLOC)
+                                        <button class="btn btn-info btn-sm btn-round btn-lihat-alamat"
+                                            data-judul="Alamat Geoloc" data-isi="{{ $item->ALAMAT_GEOLOC }}">
+                                            <i class="now-ui-icons files_paper"></i>
+                                        </button>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </td> -->
+
+                                    <!-- <td>{{ $item->LATITUDE ?? '-' }}</td>
+                                    <td>{{ $item->LONGITUDE ?? '-' }}</td> -->
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted">
-                                        Belum ada data Asisten Manager
+                                    <td colspan="13" class="text-center text-muted">
+                                        Belum ada data salesman
                                     </td>
                                 </tr>
                                 @endforelse
@@ -153,17 +191,41 @@
                     {{-- Pagination --}}
                     @if (!request()->has('all'))
                     <div class="d-flex justify-content-center mt-3">
-                        {{ $asistenManagers->links('pagination::bootstrap-4') }}
+                        {{ $salesman->links('pagination::bootstrap-4') }}
                     </div>
                     @endif
                 </div>
+
             </div>
 
         </div>
     </div>
 </div>
+
+{{-- ===================== MODAL LIHAT ALAMAT ===================== --}}
+<div class="modal fade" id="modalAlamat" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+            border-radius:15px;
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="border-bottom:none;">
+                <h5 class="modal-title font-weight-bold" id="modalAlamatTitle"></h5>
+            </div>
+
+            <div class="modal-body" style="font-size:15px; color:#333; text-align:justify; line-height:1.6em;">
+                <p id="modalAlamatIsi"></p>
+            </div>
+
+            <div class="modal-footer" style="border-top:none;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
-@push('styles')
+
+
+@push ('styles')
 <style>
 input:invalid,
 textarea:invalid,
@@ -436,4 +498,17 @@ body,
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
 }
 </style>
+@endpush
+@push('js')
+<script>
+$(document).on("click", ".btn-lihat-alamat", function() {
+    let judul = $(this).data("judul");
+    let isi = $(this).data("isi");
+
+    $("#modalAlamatTitle").text(judul);
+    $("#modalAlamatIsi").text(isi);
+
+    $("#modalAlamat").modal("show");
+});
+</script>
 @endpush

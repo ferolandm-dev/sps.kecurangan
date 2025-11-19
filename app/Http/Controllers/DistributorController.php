@@ -4,202 +4,212 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel; 
-use App\Exports\DistributorsExport;  
-use PDF; 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DistributorExport;
+use PDF;
 
 class DistributorController extends Controller
 {
+    // =====================================================
+    // 📌 MASTER DISTRIBUTOR LIST
+    // =====================================================
     public function index(Request $request)
-{
-    // Mulai query
-    $query = DB::table('distributors');
+    {
+        $query = DB::table('distributor');
 
-    // Jika ada input pencarian
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('id', 'like', "%{$search}%")
-              ->orWhere('distributor', 'like', "%{$search}%")
-              ->orWhere('status', 'like', "%{$search}%");
-        });
-    }
-
-    $sort_by = $request->get('sort_by', 'distributor');
-        $sort_order = $request->get('sort_order', 'asc');
-
-        $allowed_columns = ['id', 'distributor', 'status', 'jumlah_sales'];
-        $allowed_order = ['asc', 'desc'];
-
-        if (!in_array($sort_by, $allowed_columns)) $sort_by = 'distributor';
-        if (!in_array($sort_order, $allowed_order)) $sort_order = 'asc';
-
-        // Base query
-        $query = DB::table('distributors')
-            ->leftJoin('sales', function ($join) {
-                $join->on('distributors.id', '=', 'sales.id_distributor')
-                    ->where('sales.status', '=', 'Aktif');
-            })
-            ->select(
-                'distributors.id',
-                'distributors.distributor',
-                'distributors.status',
-                DB::raw('COUNT(sales.id) as jumlah_sales')
-            )
-            ->groupBy('distributors.id', 'distributors.distributor', 'distributors.status');
-
-        // Pencarian
+        // Searching
         if ($request->filled('search')) {
             $search = $request->search;
+
             $query->where(function ($q) use ($search) {
-                $q->where('distributors.id', 'like', "%{$search}%")
-                ->orWhere('distributors.distributor', 'like', "%{$search}%")
-                ->orWhere('distributors.status', 'like', "%{$search}%");
+                $q->where('ID_DISTRIBUTOR', 'like', "%{$search}%")
+                  ->orWhere('NAMA_DISTRIBUTOR', 'like', "%{$search}%")
+                  ->orWhere('ID_REGION', 'like', "%{$search}%")
+                  ->orWhere('ID_KOTA', 'like', "%{$search}%")
+                  ->orWhere('ID_SPV', 'like', "%{$search}%")
+                  ->orWhere('ID_LOGISTIC', 'like', "%{$search}%");
             });
         }
 
         // Sorting
-        $query->orderBy($sort_by, $sort_order);
+        $allowedColumns = [
+            'ID_DISTRIBUTOR', 'NAMA_DISTRIBUTOR', 'ID_REGION', 'ID_KOTA',
+            'ID_SPV', 'ID_LOGISTIC', 'ID_PROV',
+            'LATITUDE_DIST', 'LONGITUDE_DIST', 'ACCURACY_DIST'
+        ];
 
-        // Paginate / tampilkan semua
-        if ($request->has('all')) {
-            $distributors = $query->get();
-        } else {
-            $distributors = $query->paginate(10)->appends($request->query());
+        $sortBy = $request->get('sort_by', 'NAMA_DISTRIBUTOR');
+        $sortOrder = $request->get('sort_order', 'asc');
+
+        if (!in_array($sortBy, $allowedColumns)) {
+            $sortBy = 'NAMA_DISTRIBUTOR';
+        }
+        if (!in_array($sortOrder, ['asc', 'desc'])) {
+            $sortOrder = 'asc';
         }
 
-    return view('distributors.index', compact('distributors'));
-}
+        $query->orderBy($sortBy, $sortOrder);
 
+        // Pagination
+        if ($request->has('all')) {
+            $distributor = $query->get();
+        } else {
+            $distributor = $query->paginate(10)->appends($request->query());
+        }
 
+        return view('distributor.index', compact('distributor'));
+    }
+
+    // =====================================================
+    // 📌 MASTER CREATE
+    // =====================================================
     public function create()
     {
-        return view('distributors.create');
+        return view('distributor.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'id' => 'required|string|max:6',
-            'distributor' => 'required|string|max:100',
+            'ID_DISTRIBUTOR' => 'required|max:5',
+            'NAMA_DISTRIBUTOR' => 'required|max:50',
         ]);
 
-        // Cek apakah ID sudah ada
-        $exists = DB::table('distributors')->where('id', $request->id)->exists();
-
-        if ($exists) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'ID Distributor <strong>' . e($request->id) . '</strong> sudah terdaftar!');
+        // Check duplicate ID
+        if (DB::table('distributor')->where('ID_DISTRIBUTOR', $request->ID_DISTRIBUTOR)->exists()) {
+            return back()->withInput()->with('error', 'ID Distributor sudah ada!');
         }
 
-        DB::table('distributors')->insert([
-            'id' => $request->id,
-            'distributor' => $request->distributor,
-            'status' => 'Aktif',
+        DB::table('distributor')->insert([
+            'ID_DISTRIBUTOR' => $request->ID_DISTRIBUTOR,
+            'ID_KOTA' => $request->ID_KOTA,
+            'ID_REGION' => $request->ID_REGION,
+            'ID_SPV' => $request->ID_SPV,
+            'ID_LOGISTIC' => $request->ID_LOGISTIC,
+            'ID_PROV' => $request->ID_PROV,
+            'NAMA_DISTRIBUTOR' => $request->NAMA_DISTRIBUTOR,
+            'LATITUDE_DIST' => $request->LATITUDE_DIST,
+            'LONGITUDE_DIST' => $request->LONGITUDE_DIST,
+            'ACCURACY_DIST' => $request->ACCURACY_DIST,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        return redirect()->route('distributors.index')
-            ->with('success', 'Data distributor berhasil ditambahkan!');
+        return redirect()->route('distributor.index')->with('success', 'Distributor berhasil ditambahkan!');
     }
 
-
+    // =====================================================
+    // 📌 MASTER EDIT
+    // =====================================================
     public function edit($id)
     {
-        $distributor = DB::table('distributors')->where('id', $id)->first();
-        return view('distributors.edit', compact('distributor'));
-    }
-    
-    public function destroy($id)
-    {
-        DB::table('distributors')->where('id', $id)->delete();
+        $distributor = DB::table('distributor')
+            ->where('ID_DISTRIBUTOR', $id)
+            ->first();
 
-        return redirect()->route('distributors.index')->with('success', 'Distributor berhasil dihapus!');
+        return view('distributor.edit', compact('distributor'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'distributor' => 'required',
-            'status' => 'required',
+            'NAMA_DISTRIBUTOR' => 'required|max:50',
         ]);
 
-        DB::table('distributors')
-            ->where('id', $id)
+        DB::table('distributor')
+            ->where('ID_DISTRIBUTOR', $id)
             ->update([
-                'distributor' => $request->distributor,
-                'status' => $request->status,
+                'ID_KOTA' => $request->ID_KOTA,
+                'ID_REGION' => $request->ID_REGION,
+                'ID_SPV' => $request->ID_SPV,
+                'ID_LOGISTIC' => $request->ID_LOGISTIC,
+                'ID_PROV' => $request->ID_PROV,
+                'NAMA_DISTRIBUTOR' => $request->NAMA_DISTRIBUTOR,
+                'LATITUDE_DIST' => $request->LATITUDE_DIST,
+                'LONGITUDE_DIST' => $request->LONGITUDE_DIST,
+                'ACCURACY_DIST' => $request->ACCURACY_DIST,
                 'updated_at' => now(),
             ]);
 
-        return redirect()->route('distributors.index')->with('success', 'Distributor berhasil diperbarui!');
+        return redirect()->route('distributor.index')->with('success', 'Distributor berhasil diperbarui!');
     }
 
+    // =====================================================
+    // 📌 MASTER DELETE
+    // =====================================================
+    public function destroy($id)
+    {
+        DB::table('distributor')
+            ->where('ID_DISTRIBUTOR', $id)
+            ->delete();
+
+        return redirect()->route('distributor.index')->with('success', 'Distributor berhasil dihapus!');
+    }
+
+    // =====================================================
+    // 📊 DATA DISTRIBUTOR PAGE (yang error tadi)
+    // =====================================================
     public function data(Request $request)
     {
-        $sort_by = $request->get('sort_by', 'distributor');
-        $sort_order = $request->get('sort_order', 'asc');
+        $allowedColumns = [
+            'ID_DISTRIBUTOR', 'NAMA_DISTRIBUTOR',
+            'ID_KOTA', 'ID_REGION', 'ID_SPV',
+            'ID_LOGISTIC', 'ID_PROV',
+            'LATITUDE_DIST', 'LONGITUDE_DIST', 'ACCURACY_DIST'
+        ];
 
-        $allowed_columns = ['id', 'distributor', 'status', 'jumlah_sales'];
-        $allowed_order = ['asc', 'desc'];
+        $sortBy = $request->get('sort_by', 'NAMA_DISTRIBUTOR');
+        $sortOrder = $request->get('sort_order', 'asc');
 
-        if (!in_array($sort_by, $allowed_columns)) $sort_by = 'distributor';
-        if (!in_array($sort_order, $allowed_order)) $sort_order = 'asc';
+        if (!in_array($sortBy, $allowedColumns)) $sortBy = 'NAMA_DISTRIBUTOR';
+        if (!in_array($sortOrder, ['asc', 'desc'])) $sortOrder = 'asc';
 
-        // Base query
-        $query = DB::table('distributors')
-            ->leftJoin('sales', function ($join) {
-                $join->on('distributors.id', '=', 'sales.id_distributor')
-                    ->where('sales.status', '=', 'Aktif');
-            })
-            ->select(
-                'distributors.id',
-                'distributors.distributor',
-                'distributors.status',
-                DB::raw('COUNT(sales.id) as jumlah_sales')
-            )
-            ->groupBy('distributors.id', 'distributors.distributor', 'distributors.status');
+        $query = DB::table('distributor');
 
-        // Pencarian
+        // Searching
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('distributors.id', 'like', "%{$search}%")
-                ->orWhere('distributors.distributor', 'like', "%{$search}%")
-                ->orWhere('distributors.status', 'like', "%{$search}%");
+                $q->where('ID_DISTRIBUTOR', 'like', "%$search%")
+                  ->orWhere('NAMA_DISTRIBUTOR', 'like', "%$search%")
+                  ->orWhere('ID_KOTA', 'like', "%$search%")
+                  ->orWhere('ID_REGION', 'like', "%$search%")
+                  ->orWhere('ID_SPV', 'like', "%$search%")
+                  ->orWhere('ID_LOGISTIC', 'like', "%$search%");
             });
         }
 
         // Sorting
-        $query->orderBy($sort_by, $sort_order);
+        $query->orderBy($sortBy, $sortOrder);
 
-        // Paginate / tampilkan semua
+        // Pagination/show all
         if ($request->has('all')) {
-            $distributors = $query->get();
+            $distributor = $query->get();
         } else {
-            $distributors = $query->paginate(10)->appends($request->query());
+            $distributor = $query->paginate(10)->appends($request->query());
         }
 
-        return view('distributors.data', compact('distributors', 'sort_by', 'sort_order'));
+        return view('distributor.data', compact('distributor', 'sortBy', 'sortOrder'));
     }
 
-public function exportExcel()
+    // =====================================================
+    // 📤 EXPORT EXCEL
+    // =====================================================
+    public function exportExcel()
     {
-        return Excel::download(new DistributorsExport, 'data_distributor.xlsx');
+        return Excel::download(new DistributorExport, 'data_distributor.xlsx');
     }
 
-public function exportPdf()
+    // =====================================================
+    // 📄 EXPORT PDF
+    // =====================================================
+    public function exportPdf()
     {
-        $data = DB::table('distributors')
-            ->select('id', 'distributor', 'status', 'created_at')
-            ->get();
+        $data = DB::table('distributor')->get();
 
-        $pdf = Pdf::loadView('pdf.distributors', ['distributors' => $data])
+        $pdf = PDF::loadView('pdf.distributor', ['distributor' => $data])
             ->setPaper('a4', 'portrait');
 
         return $pdf->download('data_distributor.pdf');
     }
-
 }

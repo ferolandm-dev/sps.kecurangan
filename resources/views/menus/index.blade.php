@@ -101,14 +101,14 @@
                             <table class="table table-hover align-items-center mb-0" style="color:#333;">
                                 <thead style="color:#29b14a;">
                                     <tr class="text-center">
-                                        <th class="text-left">Sub Menu</th>
-                                        <th class="text-left">Icon</th>
+                                        <th class="text-left" style="width:200px;">Sub Menu</th>
+                                        <th class="text-left" style="width:250px;">Icon</th>
                                         <th class="text-left">Route</th>
                                         <th>Main Order</th>
                                         <th>Order</th>
                                         <th>CRUD</th>
                                         <th>Print</th>
-                                        <th>Aksi</th>
+                                        <th style="width:100px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -331,7 +331,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Rank</th>
-                                        <th>Distributor</th>
+                                        <th style="min-width:400px;">Distributor</th>
                                         <th class="text-right">Jumlah Kasus</th>
                                     </tr>
                                 </thead>

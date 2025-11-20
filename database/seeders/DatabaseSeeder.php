@@ -16,14 +16,12 @@ class DatabaseSeeder extends Seeder
 
         // Opsional: truncate tabel yang akan diisi
         DB::table('users')->truncate();
-        DB::table('distributors')->truncate(); // jika ada
         DB::table('menus')->truncate();
         DB::table('user_access')->truncate();
 
         // Jalankan semua seeder
         $this->call([
             UsersTableSeeder::class,
-            DistributorTableSeeder::class,
             MenusTableSeeder::class,
             UserAccessTableSeeder::class,
         ]);

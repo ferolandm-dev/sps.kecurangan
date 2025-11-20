@@ -28,45 +28,6 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
-            // =============================
-            // MASTER
-            // =============================
-            [
-                'user_id'     => 1,
-                'main_menu'   => 'Master',
-                'sub_menu'    => 'Master Distributor',
-                'can_access'  => 1,
-                'can_create'  => 1,
-                'can_edit'    => 1,
-                'can_delete'  => 1,
-                'can_print'   => 0,
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
-            [
-                'user_id'     => 1,
-                'main_menu'   => 'Master',
-                'sub_menu'    => 'Master Sales',
-                'can_access'  => 1,
-                'can_create'  => 1,
-                'can_edit'    => 1,
-                'can_delete'  => 1,
-                'can_print'   => 0,
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
-            [
-                'user_id'     => 1,
-                'main_menu'   => 'Master',
-                'sub_menu'    => 'Master ASS',
-                'can_access'  => 1,
-                'can_create'  => 1,
-                'can_edit'    => 1,
-                'can_delete'  => 1,
-                'can_print'   => 0,
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Master',
@@ -110,7 +71,7 @@ class UserAccessTableSeeder extends Seeder
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Data',
-                'sub_menu'    => 'Data Sales',
+                'sub_menu'    => 'Data Salesman',
                 'can_access'  => 1,
                 'can_create'  => 0,
                 'can_edit'    => 0,
@@ -119,18 +80,7 @@ class UserAccessTableSeeder extends Seeder
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
-            [
-                'user_id'     => 1,
-                'main_menu'   => 'Data',
-                'sub_menu'    => 'Data ASS',
-                'can_access'  => 1,
-                'can_create'  => 0,
-                'can_edit'    => 0,
-                'can_delete'  => 0,
-                'can_print'   => 1,
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
+            
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Data',

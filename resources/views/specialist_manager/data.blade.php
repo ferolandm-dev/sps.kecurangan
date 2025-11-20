@@ -91,15 +91,6 @@
                                             Nama Specialist Manager
                                         </a>
                                     </th>
-
-                                    <th class="text-center" style="padding-left: 100px">
-                                        <a href="{{ route('specialist_manager.data', array_merge(request()->query(), [
-                'sort_by' => 'total_user',
-                'sort_order' => (request('sort_by') === 'total_user' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-            ])) }}" class="text-success text-decoration-none">
-                                            Total User
-                                        </a>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,12 +102,6 @@
 
                                     <td style="padding-left: 100px">{{ $item->NAMA }}</td>
 
-                                    <td class="text-center" style="padding-left: 100px">
-                                        <span class="badge-soft text-primary font-weight-bold" style="cursor:pointer;"
-                                            onclick="showUser('{{ $item->NAMA }}')">
-                                            {{ $item->total_user }}
-                                        </span>
-                                    </td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -136,49 +121,6 @@
                     @endif
                 </div>
 
-            </div>
-
-        </div>
-    </div>
-</div>
-
-{{-- ===================== MODAL USER ===================== --}}
-<div class="modal fade" id="modalDistributor" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:750px;">
-        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
-            border-radius:15px;
-            box-shadow:0 4px 25px rgba(0,0,0,0.3);">
-
-            <div class="modal-header" style="border-bottom:none;">
-                <h5 class="modal-title text-success" style="font-weight:600;">
-                    <i class="now-ui-icons users_single-02"></i> Daftar User
-                </h5>
-            </div>
-
-            <div class="modal-body" style="font-size:15px; color:#333;">
-
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped"
-                        style="background:white; border-radius:10px; overflow:hidden;">
-                        <thead style="background:#29b14a; color:white;">
-                            <tr>
-                                <th class="text-center" style="width: 10%;">#</th>
-                                <th class="text-center" style="width: 25%;">ID User</th>
-                                <th class="text-center">Nama User</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableDistributor"></tbody>
-                    </table>
-                    <div id="modalPagination" class="mt-2"></div>
-
-                </div>
-
-            </div>
-
-            <div class="modal-footer" style="border-top:none;">
-                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">
-                    Tutup
-                </button>
             </div>
 
         </div>
@@ -464,55 +406,3 @@ body,
 </style>
 @endpush
 @endsection
-
-{{-- ============================================================ --}}
-{{-- JS SECTION - SUDAH DISESUAIKAN --}}
-{{-- ============================================================ --}}
-@push('js')
-<script>
-function showUser(nama, pageUrl = null) {
-
-    $("#distLoading").show();
-
-    let url = pageUrl ?? ("{{ url('/specialist-manager/get-user') }}/" + encodeURIComponent(nama));
-
-    $.get(url, function(res) {
-
-        let rows = "";
-
-        if (res.data.length === 0) {
-            rows = `
-                <tr>
-                    <td colspan="3" class="text-center text-muted py-3">Tidak ada user</td>
-                </tr>
-            `;
-        } else {
-            let no = res.firstItem;
-
-            res.data.forEach(row => {
-                rows += `
-                    <tr>
-                        <td class="text-center">${no++}</td>
-                        <td class="text-center">${row.ID_USER}</td>
-                        <td>${row.nama_user ?? '-'}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        $("#tableDistributor").html(rows);
-        $("#modalPagination").html(res.pagination);
-
-        $("#modalPagination a.page-link").click(function(e) {
-            e.preventDefault();
-            showUser(nama, $(this).attr("href"));
-        });
-
-    }).always(function() {
-        $("#distLoading").hide();
-    });
-
-    $("#modalDistributor").modal('show');
-}
-</script>
-@endpush

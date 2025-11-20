@@ -574,10 +574,10 @@ function showKecurangan(idSales, pageUrl = null) {
                 rows += `
                     <tr>
                         <td class="text-center">${indexStart + i}</td>
-                        <td>${row.jenis_sanksi ?? '-'}</td>
-                        <td>${row.keterangan_sanksi ?? '-'}</td>
-                        <td>${row.nilai_sanksi ?? '0'}</td>
-                        <td>${row.tanggal}</td>
+                        <td>${row.JENIS_SANKSI ?? '-'}</td>
+                        <td>${row.KETERANGAN_SANKSI ?? '-'}</td>
+                        <td>${row.NILAI_SANKSI ?? '0'}</td>
+                        <td>${row.TANGGAL}</td>
                     </tr>
                 `;
             });

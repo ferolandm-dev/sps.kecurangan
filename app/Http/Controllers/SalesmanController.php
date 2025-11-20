@@ -73,9 +73,9 @@ class SalesmanController extends Controller
 public function getKecurangan(Request $request, $id)
 {
     $data = DB::table('kecurangan')
-        ->where('id_sales', $id)
-        ->where('validasi', 1)
-        ->orderBy('tanggal', 'desc')
+        ->where('ID_SALES', $id)
+        ->where('VALIDASI', 1)
+        ->orderBy('TANGGAL', 'desc')
         ->paginate(7);
 
     return response()->json([

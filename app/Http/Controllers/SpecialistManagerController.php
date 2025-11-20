@@ -49,30 +49,6 @@ class SpecialistManagerController extends Controller
         return view('specialist_manager.data', compact('data', 'sortBy', 'sortOrder'));
     }
 
-    // ============================================================================
-    // GET DETAIL USER PER SPECIALIST MANAGER
-    // ============================================================================
-    public function getUserByManager(Request $request, $namaManager)
-    {
-        $data = DB::table('specialist_manager')
-            ->whereRaw("TRIM(LOWER(NAMA)) = TRIM(LOWER(?))", [$namaManager])
-            ->leftJoin('users', 'specialist_manager.ID_USER', '=', 'users.id')
-            ->select(
-                'specialist_manager.ID_USER',
-                'users.name as nama_user'
-            )
-            ->groupBy('specialist_manager.ID_USER', 'users.name')
-            ->orderBy('users.name')
-            ->paginate(7);
-
-        return response()->json([
-            'data'        => $data->items(),
-            'pagination'  => $data->links('pagination::modal')->render(),
-            'currentPage' => $data->currentPage(),
-            'perPage'     => $data->perPage(),
-            'firstItem'   => $data->firstItem(),
-        ]);
-    }
 
     // ============================================================================
     // EXPORT EXCEL

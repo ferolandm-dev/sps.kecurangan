@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     KecuranganController,
     DistributorController,
     SalesmanController,
+    AssController,
     UserController,
     ProfileController,
     PageController,
@@ -197,7 +198,22 @@ Route::prefix('salesman')
             ->name('salesman.exportPdf');
     });
 
+Route::prefix('ass')
+    ->middleware('check.access:Data,Data ASS')
+    ->group(function () {
+        Route::get('/data', [AssController::class, 'data'])
+            ->middleware('check.access:Data,Data ASS,access')
+            ->name('ass.data');
 
+        Route::get('/export-excel', [AssController::class, 'exportExcel'])
+            ->middleware('check.access:Data,Data ASS,print')
+            ->name('ass.exportExcel');
+
+        Route::get('/export-pdf', [AssController::class, 'exportPdf'])
+            ->middleware('check.access:Data,Data ASS,print')
+            ->name('ass.exportPdf');
+
+    });
 
     // =====================================================
     // ⚠️ MASTER & DATA KECURANGAN

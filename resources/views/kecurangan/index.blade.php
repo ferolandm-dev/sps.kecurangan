@@ -119,8 +119,8 @@
 
                                     <th class="col-nama-ass" style="width:300px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                        'sort_by' => 'nama_asisten_manager',
-                        'sort_order' => (request('sort_by') === 'nama_asisten_manager' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                        'sort_by' => 'nama_specialist_manager',
+                        'sort_order' => (request('sort_by') === 'nama_specialist_manager' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                     ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
                                         </a>
@@ -177,21 +177,21 @@
                                     <td class="text-center">
                                         {{ $loop->iteration + (method_exists($kecurangan, 'firstItem') ? $kecurangan->firstItem() - 1 : 0) }}
                                     </td>
-                                    <td class="text-center">{{ $item->id_sales }}</td>
+                                    <td class="text-center">{{ $item->ID_SALES }}</td>
                                     <td>{{ $item->nama_sales }}</td>
-                                    <td>{{ $item->distributor }}</td>
-                                    <td>{{ $item->nama_asisten_manager }}</td>
-                                    <td>{{ $item->jenis_sanksi }}</td>
-                                    <td>{{ $item->keterangan_sanksi }}</td>
-                                    <td>Rp {{ number_format($item->nilai_sanksi, 0, ',', '.') }}</td>
-                                    <td>{{ $item->toko }}</td>
-                                    <td class="text-center">{{ $item->kunjungan }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
+                                    <td>{{ $item->DISTRIBUTOR }}</td>
+                                    <td>{{ $item->nama_specialist_manager }}</td>
+                                    <td>{{ $item->JENIS_SANKSI }}</td>
+                                    <td>{{ $item->KETERANGAN_SANKSI }}</td>
+                                    <td>Rp {{ number_format($item->NILAI_SANKSI, 0, ',', '.') }}</td>
+                                    <td>{{ $item->TOKO }}</td>
+                                    <td class="text-center">{{ $item->KUNJUNGAN }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}</td>
 
                                     <td class="text-center">
-                                        @if ($item->keterangan)
+                                        @if ($item->KETERANGAN)
                                         <button class="btn btn-info btn-sm btn-round btn-lihat-keterangan"
-                                            data-keterangan="{{ $item->keterangan }}">
+                                            data-keterangan="{{ $item->KETERANGAN }}">
                                             <i class="now-ui-icons files_paper"></i>
                                         </button>
                                         @else
@@ -199,22 +199,22 @@
                                         @endif
                                     </td>
 
-                                    <td>{{ $item->kuartal }}</td>
+                                    <td>{{ $item->KUARTAL }}</td>
 
                                     <td class="text-center" style="vertical-align: top;">
                                         <button class="btn btn-info btn-icon btn-sm btn-round btn-lihat-bukti"
-                                            data-id="{{ $item->id }}" title="Lihat Bukti"
+                                            data-id="{{ $item->ID }}" title="Lihat Bukti"
                                             style="background:#17a2b8;border:none;">
                                             <i class="now-ui-icons media-1_album"></i>
                                         </button>
-                                        @if($item->validasi == 0)
-                                        <form action="{{ route('kecurangan.validasi', $item->id) }}" method="POST"
+                                        @if($item->VALIDASI == 0)
+                                        <form action="{{ route('kecurangan.validasi', $item->ID) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf
                                             <button type="button"
                                                 class="btn btn-success btn-icon btn-sm btn-round btn-confirm"
                                                 data-action="validasi"
-                                                data-url="{{ route('kecurangan.validasi', $item->id) }}"
+                                                data-url="{{ route('kecurangan.validasi', $item->ID) }}"
                                                 title="Validasi Data" style="background:#29b14a;border:none;">
                                                 <i class="now-ui-icons ui-1_check"></i>
                                             </button>
@@ -222,7 +222,7 @@
 
 
                                         @if (checkAccess('Master', 'Master Kecurangan', 'edit'))
-                                        <a href="{{ route('kecurangan.edit', $item->id) }}"
+                                        <a href="{{ route('kecurangan.edit', $item->ID) }}"
                                             class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data"
                                             style="background:#f39c12;border:none;">
                                             <i class="now-ui-icons ui-2_settings-90"></i>
@@ -230,14 +230,14 @@
                                         @endif
 
                                         @if (checkAccess('Master', 'Master Kecurangan', 'delete'))
-                                        <form action="{{ route('kecurangan.destroy', $item->id) }}" method="POST"
+                                        <form action="{{ route('kecurangan.destroy', $item->ID) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button"
                                                 class="btn btn-danger btn-icon btn-sm btn-round btn-confirm"
                                                 data-action="delete"
-                                                data-url="{{ route('kecurangan.destroy', $item->id) }}"
+                                                data-url="{{ route('kecurangan.destroy', $item->ID) }}"
                                                 title="Hapus Data" style="background:#e74c3c;border:none;">
                                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>

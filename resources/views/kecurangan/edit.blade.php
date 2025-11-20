@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="card-body" style="background: rgba(255,255,255,0.7); border-radius: 0 0 20px 20px;">
-                    <form action="{{ route('kecurangan.update', $kecurangan->id) }}" method="POST"
+                    <form action="{{ route('kecurangan.update', $kecurangan->ID) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -67,7 +67,7 @@
                                 <option value="">-- Pilih Sales --</option>
                                 @foreach($sales as $s)
                                 <option value="{{ $s->ID_SALESMAN }}"
-                                    {{ $kecurangan->id_sales == $s->ID_SALESMAN ? 'selected' : '' }}>
+                                    {{ $kecurangan->ID_SALES == $s->ID_SALESMAN ? 'selected' : '' }}>
                                     {{ $s->ID_SALESMAN }} - {{ $s->NAMA_SALESMAN }}
                                 </option>
                                 @endforeach
@@ -80,7 +80,7 @@
                                     <label class="text-dark font-weight-bold">Nama Sales</label>
                                     <input type="text" id="nama_sales" name="nama_sales" class="form-control" readonly
                                         style="border-radius:12px;"
-                                        value="{{ old('nama_sales', $kecurangan->nama_sales) }}">
+                                        value="{{ old('nama_sales', $kecurangan->NAMA_SALES) }}">
                                 </div>
                             </div>
 
@@ -89,37 +89,25 @@
                                     <label class="text-dark font-weight-bold">Distributor</label>
                                     <input type="text" id="distributor" name="distributor" class="form-control" readonly
                                         style="border-radius:12px;"
-                                        value="{{ old('distributor', $kecurangan->distributor) }}">
+                                        value="{{ old('distributor', $kecurangan->DISTRIBUTOR) }}">
                                 </div>
                             </div>
                         </div>
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== DETAIL ASSISTANT MANAGER ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
+                        {{-- ===================== DETAIL SPECIALIST MANAGER ===================== --}}
+                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Specialist Manager
+                        </h6>
 
-                        <div class="form-group">
-                            <label class="text-dark font-weight-bold">ID ASS</label>
-                            <select name="id_asisten_manager" id="id_asisten_manager" class="form-control select2"
-                                style="border-radius:12px;">
-                                <option value="">-- Pilih ASS --</option>
-                                @foreach($asistenManagers as $am)
-                                <option value="{{ $am->ID_SALESMAN }}"
-                                    {{ $kecurangan->id_asisten_manager == $am->ID_SALESMAN ? 'selected' : '' }}>
-                                    {{ $am->ID_SALESMAN }} - {{ $am->NAMA_SALESMAN }}
-                                </option>
-                                @endforeach
-                            </select>
-
-                        </div>
+                        <input type="hidden" name="id_specialist_manager" id="id_specialist_manager"
+                            value="{{ $kecurangan->ID_SPC_MANAGER }}">
 
                         <div class="col-md-3 pl-0">
                             <div class="form-group has-label">
-                                <label class="text-dark font-weight-bold">Nama ASS</label>
-                                <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
-                                    class="form-control" readonly style="border-radius:12px;"
-                                    value="{{ old('nama_asisten_manager', $kecurangan->nama_asisten_manager) }}">
+                                <label class="text-dark font-weight-bold">Nama Specialist Manager</label>
+                                <input type="text" id="nama_specialist_manager" name="nama_specialist_manager"
+                                    class="form-control" readonly value="{{ $kecurangan->NAMA_SPECIALIST_MANAGER }}">
                             </div>
                         </div>
 
@@ -136,9 +124,10 @@
                                         <option value="">-- Pilih Jenis --</option>
                                         @foreach($jenisSanksi as $jenis)
                                         <option value="{{ $jenis }}"
-                                            {{ $jenis == $kecurangan->jenis_sanksi ? 'selected' : '' }}>
+                                            {{ $jenis == $kecurangan->JENIS_SANKSI ? 'selected' : '' }}>
                                             {{ $jenis }}
                                         </option>
+
                                         @endforeach
                                     </select>
                                 </div>
@@ -150,9 +139,9 @@
                                     <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
                                         required>
                                         {{-- prefill existing --}}
-                                        @if(!empty($kecurangan->keterangan_sanksi))
-                                        <option value="{{ $kecurangan->keterangan_sanksi }}" selected>
-                                            {{ $kecurangan->keterangan_sanksi }}
+                                        @if(!empty($kecurangan->KETERANGAN_SANKSI))
+                                        <option value="{{ $kecurangan->KETERANGAN_SANKSI }}" selected>
+                                            {{ $kecurangan->KETERANGAN_SANKSI }}
                                         </option>
                                         @else
                                         <option value="">-- Pilih Deskripsi --</option>
@@ -165,7 +154,7 @@
                                 <label class="text-dark font-weight-bold">Nilai Sanksi</label>
                                 <input type="text" id="nilai_sanksi" name="nilai_sanksi" class="form-control" readonly
                                     style="border-radius:12px;"
-                                    value="{{ $kecurangan->nilai_sanksi ? 'Rp '.number_format($kecurangan->nilai_sanksi,0,',','.') : '' }}">
+                                    value="{{ $kecurangan->NILAI_SANKSI ? 'Rp '.number_format($kecurangan->NILAI_SANKSI,0,',','.') : '' }}">
                             </div>
                         </div>
 
@@ -173,33 +162,33 @@
                             <div class="col-md-3">
                                 <label class="text-dark font-weight-bold">Toko</label>
                                 <input type="text" name="toko" class="form-control" required style="border-radius:12px;"
-                                    value="{{ old('toko', $kecurangan->toko) }}">
+                                    value="{{ old('toko', $kecurangan->TOKO) }}">
                             </div>
 
                             <div class="col-md-3">
                                 <label class="text-dark font-weight-bold">Kunjungan</label>
                                 <input type="text" name="kunjungan" class="form-control" required
-                                    style="border-radius:12px;" value="{{ old('kunjungan', $kecurangan->kunjungan) }}">
+                                    style="border-radius:12px;" value="{{ old('kunjungan', $kecurangan->KUNJUNGAN) }}">
                             </div>
 
                             <div class="col-md-3">
                                 <label class="text-dark font-weight-bold">Tanggal</label>
                                 <input type="text" name="tanggal" id="tanggal" class="form-control" required
                                     placeholder="dd/mm/yyyy" style="border-radius:12px;"
-                                    value="{{ \Carbon\Carbon::parse($kecurangan->tanggal)->format('d/m/Y') }}">
+                                    value="{{ \Carbon\Carbon::parse($kecurangan->TANGGAL)->format('d/m/Y') }}">
                             </div>
 
                             <div class="col-md-3">
                                 <label class="text-dark font-weight-bold">Kuartal</label>
                                 <input type="text" name="kuartal" id="kuartal" class="form-control" readonly
-                                    style="border-radius:12px;" value="{{ $kecurangan->kuartal }}">
+                                    style="border-radius:12px;" value="{{ $kecurangan->KUARTAL }}">
                             </div>
                         </div>
 
                         <div class="form-group has-label mt-3">
                             <label class="text-dark font-weight-bold">{{ __('Keterangan') }}</label>
                             <textarea name="keterangan" class="form-control"
-                                style="border-radius:12px; width:40%; height:100px; padding:10px 14px; border:1px solid #E3E3E3;">{{ old('keterangan', $kecurangan->keterangan) }}</textarea>
+                                style="border-radius:12px; width:40%; height:100px; padding:10px 14px; border:1px solid #E3E3E3;">{{ old('keterangan', $kecurangan->KETERANGAN) }}</textarea>
                         </div>
 
                         <hr class="my-4" style="border-color:#29b14a;">
@@ -217,12 +206,12 @@
                             <div id="existing-container"
                                 class="mt-2 d-flex flex-wrap gap-2 justify-content-start align-items-start">
                                 @foreach($fotos as $foto)
-                                <div class="position-relative m-1 existing-photo" data-id="{{ $foto->id }}"
+                                <div class="position-relative m-1 existing-photo" data-id="{{ $foto->ID }}"
                                     style="display:inline-block;">
                                     <img src="{{ $foto->url }}" alt="Foto Lama" class="existing-img"
                                         style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
                                     <button type="button" class="btn btn-danger btn-sm btn-delete-existing"
-                                        data-id="{{ $foto->id }}"
+                                        data-id="{{ $foto->ID }}"
                                         style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">
                                         ×
                                     </button>
@@ -642,13 +631,16 @@ button#modalNext.btn {
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
 <script>
 $(document).ready(function() {
+
     // === Select2 Setup ===
-    $('#id_sales, #id_asisten_manager, #jenis_sanksi, #deskripsi_sanksi').select2({
+    $('#id_sales, #jenis_sanksi, #deskripsi_sanksi').select2({
         placeholder: "-- Pilih --",
         width: '100%'
     });
 
-    // Files state
+    // ---------------------------------------------------------------------
+    // FOTO BARU + FOTO LAMA
+    // ---------------------------------------------------------------------
     let selectedFiles = [];
     let currentIndex = 0;
     const MAX_FILES = 5;
@@ -656,7 +648,6 @@ $(document).ready(function() {
     const $previewContainer = $('#preview-container');
     const $existingContainer = $('#existing-container');
 
-    // Click to open file dialog
     $('#btn-upload').on('click', function() {
         $fileInput.val('');
         $fileInput.trigger('click');
@@ -670,9 +661,9 @@ $(document).ready(function() {
 
     $fileInput.on('change', function() {
         const incoming = Array.from(this.files || []);
-        // filter duplicates by name+size
-        const newFiles = incoming.filter(f => !selectedFiles.some(sf => sf.name === f.name && sf
-            .size === f.size));
+        const newFiles = incoming.filter(f => !selectedFiles.some(sf =>
+            sf.name === f.name && sf.size === f.size
+        ));
 
         const existingCount = $existingContainer.find('.existing-photo').length;
         const spaceLeft = MAX_FILES - existingCount;
@@ -692,6 +683,7 @@ $(document).ready(function() {
         $previewContainer.empty();
         selectedFiles.forEach((file, index) => {
             if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) return;
+
             const reader = new FileReader();
             reader.onload = e => {
                 const html = `
@@ -707,7 +699,7 @@ $(document).ready(function() {
         });
     }
 
-    // remove new preview
+    // remove preview foto baru
     $(document).on('click', '.btn-remove-new', function(e) {
         e.stopPropagation();
         const idx = Number($(this).data('index'));
@@ -716,17 +708,19 @@ $(document).ready(function() {
         syncInputFiles();
     });
 
-    // delete existing photo (mark for deletion)
+    // delete foto lama
     $(document).on('click', '.btn-delete-existing', function(e) {
         e.stopPropagation();
         const $wrap = $(this).closest('.existing-photo');
         const fotoId = $wrap.data('id');
-        // append hidden input so controller can read deleted_photos[]
+
         $('form').append(`<input type="hidden" name="deleted_photos[]" value="${fotoId}">`);
         $wrap.remove();
     });
 
-    // collect all img elements (existing + preview) in order for modal navigation
+    // ---------------------------------------------------------------------
+    // MODAL PREVIEW FOTO
+    // ---------------------------------------------------------------------
     function collectAllPreviewElements() {
         const arr = [];
         $existingContainer.find('img.existing-img').each(function() {
@@ -738,13 +732,14 @@ $(document).ready(function() {
         return arr;
     }
 
-    // show modal when clicking any image
     $(document).on('click', '.existing-img, .preview-img', function() {
         const allEls = collectAllPreviewElements();
         let idx = allEls.findIndex(el => el[0] === this);
         if (idx === -1) return;
+
         currentIndex = idx;
         showModalImageByIndex(currentIndex);
+
         $('#modalPreview').modal({
             backdrop: 'static',
             keyboard: true,
@@ -755,26 +750,25 @@ $(document).ready(function() {
     function showModalImageByIndex(index) {
         const allEls = collectAllPreviewElements();
         if (!allEls[index]) return;
+
         $('#modalImage').attr('src', allEls[index].attr('src') || '');
     }
 
-    // modal nav
-    $(document).on('click', '#modalNext', function() {
+    $('#modalNext').on('click', function() {
         const allEls = collectAllPreviewElements();
-        if (!allEls.length) return;
         currentIndex = (currentIndex + 1) % allEls.length;
         showModalImageByIndex(currentIndex);
     });
 
-    $(document).on('click', '#modalPrev', function() {
+    $('#modalPrev').on('click', function() {
         const allEls = collectAllPreviewElements();
-        if (!allEls.length) return;
         currentIndex = (currentIndex - 1 + allEls.length) % allEls.length;
         showModalImageByIndex(currentIndex);
     });
 
     $(document).on('keydown', function(e) {
         if (!$('#modalPreview').hasClass('show')) return;
+
         if (e.key === 'Escape') $('#modalPreview').modal('hide');
         else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
         else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
@@ -787,18 +781,24 @@ $(document).ready(function() {
         $('body').css('overflow', 'auto');
     });
 
-    // validate on submit (total foto <= MAX_FILES)
+    // ---------------------------------------------------------------------
+    // VALIDASI FOTO
+    // ---------------------------------------------------------------------
     $('form').on('submit', function() {
         syncInputFiles();
         const existingCount = $existingContainer.find('.existing-photo').length;
+
         if (existingCount + selectedFiles.length > MAX_FILES) {
             alert('Total foto tidak boleh lebih dari ' + MAX_FILES + '.');
             return false;
         }
+
         return true;
     });
 
-    // === Datepicker ===
+    // ---------------------------------------------------------------------
+    // DATE PICKER
+    // ---------------------------------------------------------------------
     $('#tanggal').datepicker({
         dateFormat: 'dd/mm/yy',
         changeMonth: true,
@@ -808,105 +808,125 @@ $(document).ready(function() {
             const [d, m, y] = dateText.split('/');
             const bln = parseInt(m);
             const th = parseInt(y);
-            const kuartal = bln <= 3 ? 'Q1 ' + th : bln <= 6 ? 'Q2 ' + th : bln <= 9 ? 'Q3 ' + th :
+
+            const kuartal =
+                bln <= 3 ? 'Q1 ' + th :
+                bln <= 6 ? 'Q2 ' + th :
+                bln <= 9 ? 'Q3 ' + th :
                 'Q4 ' + th;
+
             $('#kuartal').val(kuartal);
         }
     });
 
-    // === Sales -> Distributor -> ASS (AJAX) ===
+    // ---------------------------------------------------------------------
+    // SALES -> DISTRIBUTOR -> SPECIALIST MANAGER
+    // ---------------------------------------------------------------------
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
-        const $namaSales = $('#nama_sales');
-        const $distributor = $('#distributor');
-        const $idAsisten = $('#id_asisten_manager');
-        const $namaAsisten = $('#nama_asisten_manager');
 
-        $namaSales.val('');
-        $distributor.val('');
-        $namaAsisten.val('');
-        $idAsisten.html('<option value="">-- Pilih ASS --</option>').trigger('change');
+        $('#nama_sales').val('');
+        $('#distributor').val('');
+        $('#nama_specialist_manager').val('');
+        $('#id_specialist_manager').val('');
 
         if (!idSales) return;
 
         $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
-            $namaSales.val(data.nama_sales);
-            $distributor.val(data.distributor);
-            if (data.distributor_id) {
-                $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
-                    let options = '<option value="">-- Pilih ASS --</option>';
-                    res.forEach(am => {
-                        options +=
-                            `<option value="${am.id}">${am.id} - ${am.nama}</option>`;
+            $('#nama_sales').val(data.nama_sales);
+            $('#distributor').val(data.distributor);
+
+            if (data.id_specialist_manager) {
+                $.getJSON(`/kecurangan/specialist-manager/${data.id_specialist_manager}`,
+                    function(sm) {
+                        $('#id_specialist_manager').val(sm.id_specialist_manager);
+                        $('#nama_specialist_manager').val(sm.nama_specialist_manager);
                     });
-                    $idAsisten.html(options).trigger('change');
-                });
             }
         });
     });
 
-    $('#id_asisten_manager').on('change', function() {
-        const selectedText = $(this).find('option:selected').text();
-        const nama = selectedText.split('-').slice(1).join('-').trim();
-        $('#nama_asisten_manager').val(nama);
-    });
-
-    // === Autoload ASS when opening edit (pre-select ass options based on current sales) ===
+    // ---------------------------------------------------------------------
+    // AUTOFILL Specialist Manager + Sanksi SAAT EDIT
+    // ---------------------------------------------------------------------
     const initialSales = $('#id_sales').val();
-    const currentAsistenId = "{{ $kecurangan->id_asisten_manager ?? '' }}";
+    const selectedJenis = "{{ $kecurangan->JENIS_SANKSI }}";
+    const selectedDesk = "{{ $kecurangan->KETERANGAN_SANKSI }}";
+
     if (initialSales) {
+
+        // Prefill nama sales + distributor + SM
         $.getJSON(`/kecurangan/sales/${initialSales}`, function(data) {
             $('#nama_sales').val(data.nama_sales);
             $('#distributor').val(data.distributor);
-            if (data.distributor_id) {
-                $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
-                    let options = '<option value="">-- Pilih ASS --</option>';
-                    res.forEach(am => {
-                        options +=
-                            `<option value="${am.id}" ${am.id == currentAsistenId ? 'selected' : ''}>${am.id} - ${am.nama}</option>`;
-                    });
-                    $('#id_asisten_manager').html(options).trigger('change');
+
+            if (data.id_specialist_manager) {
+                $.getJSON(`/kecurangan/specialist-manager/${data.id_specialist_manager}`, function(sm) {
+                    $('#id_specialist_manager').val(sm.id_specialist_manager);
+                    $('#nama_specialist_manager').val(sm.nama_specialist_manager);
                 });
             }
         });
+
+        // Prefill jenis sanksi
+        $('#jenis_sanksi').val(selectedJenis).trigger('change');
+
+        // Prefill deskripsi sanksi SETELAH dropdown diisi ulang
+        $.getJSON(`/sanksi/deskripsi/${selectedJenis}`, function(data) {
+
+            let options = '<option value="">-- Pilih Deskripsi --</option>';
+
+            data.forEach(item => {
+                options += `<option value="${item.keterangan}" 
+                ${item.keterangan === selectedDesk ? 'selected':''}>
+                    ${item.keterangan}
+                </option>`;
+            });
+
+            $('#deskripsi_sanksi').html(options).trigger('change');
+        });
     }
 
-    // === SANKSI: load deskripsi list when jenis changed & on load keep existing selected ===
+    // ---------------------------------------------------------------------
+    // ON CHANGE – Jenis Sanksi → Refresh Deskripsi
+    // ---------------------------------------------------------------------
     $('#jenis_sanksi').on('change', function() {
         const jenis = $(this).val();
+
         $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
             let options = '<option value="">-- Pilih Deskripsi --</option>';
+
             data.forEach(item => {
                 options +=
                     `<option value="${item.keterangan}">${item.keterangan}</option>`;
             });
+
             $('#deskripsi_sanksi').html(options).trigger('change');
         });
     });
 
-    // on change deskripsi, get nilai
+    // ---------------------------------------------------------------------
+    // ON CHANGE – Deskripsi → Nilai Sanksi
+    // ---------------------------------------------------------------------
     $('#deskripsi_sanksi').on('change', function() {
         const jenis = $('#jenis_sanksi').val();
         const deskripsi = $(this).val();
+
         if (!jenis || !deskripsi) {
             $('#nilai_sanksi').val('');
             return;
         }
+
         $.getJSON(`/sanksi/nilai/${jenis}/${encodeURIComponent(deskripsi)}`, function(data) {
-            if (data && data.nilai !== undefined) {
-                const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
-                $('#nilai_sanksi').val('Rp ' + formatted);
-            } else {
-                $('#nilai_sanksi').val('');
-            }
-        }).fail(function() {
+            const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
+            $('#nilai_sanksi').val('Rp ' + formatted);
+        }).fail(() => {
             $('#nilai_sanksi').val('');
         });
     });
 
-    // ensure deskripsi remains if already set (edit page) — if deskripsi exists but jenis not reloaded, keep as-is
-    // if user changes jenis, deskripsi options will be refreshed by the change handler above.
 
 });
 </script>
+
 @endpush

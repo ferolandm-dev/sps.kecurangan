@@ -68,7 +68,7 @@
     @if($sales)
     <p>
         Sales:
-        <strong>{{ $sales->nama_sales }} ({{ $sales->id_sales }})</strong>
+        <strong>{{ $sales->NAMA_SALESMAN }} ({{ $sales->ID_SALESMAN }})</strong>
     </p>
     @endif
 
@@ -91,7 +91,7 @@
                 <th>ID Sales</th>
                 <th>Nama Sales</th>
                 <th>Distributor</th>
-                <th>Asisten Manager</th>
+                <th>Specialist Manager</th>
                 <th>Jenis Sanksi</th>
                 <th>Keterangan Sanksi</th>
                 <th>Nilai Sanksi</th>
@@ -107,40 +107,47 @@
             @php $totalNilaiSanksi = 0; @endphp
 
             @forelse ($data as $index => $item)
+            @php
+                $nilai = !empty($item->NILAI_SANKSI) ? $item->NILAI_SANKSI : 0;
+                $totalNilaiSanksi += $nilai;
+            @endphp
+
             <tr>
                 <td style="text-align:center;">{{ $index + 1 }}</td>
-                <td>{{ $item->id_sales }}</td>
-                <td>{{ $item->nama_sales }}</td>
-                <td>{{ $item->distributor }}</td>
-                <td>{{ $item->nama_asisten_manager ?? '-' }}</td>
-                <td>{{ $item->jenis_sanksi ?? '-' }}</td>
-                <td>{{ $item->keterangan_sanksi ?? '-' }}</td>
 
-                @php
-                $nilai = !empty($item->nilai_sanksi) ? $item->nilai_sanksi : 0;
-                $totalNilaiSanksi += $nilai;
-                @endphp
+                <td>{{ $item->ID_SALES }}</td>
+
+                <td>{{ $item->nama_sales }}</td>
+
+                <td>{{ $item->DISTRIBUTOR }}</td>
+
+                <td>{{ $item->nama_specialist_manager ?? '-' }}</td>
+
+                <td>{{ $item->JENIS_SANKSI ?? '-' }}</td>
+
+                <td>{{ $item->KETERANGAN_SANKSI ?? '-' }}</td>
 
                 <td>
                     @if ($nilai > 0)
-                    Rp {{ number_format($nilai, 0, ',', '.') }}
+                        Rp {{ number_format($nilai, 0, ',', '.') }}
                     @else
-                    -
+                        -
                     @endif
                 </td>
 
-                <td>{{ $item->toko }}</td>
+                <td>{{ $item->TOKO }}</td>
 
-                <td style="text-align:center;">{{ $item->kunjungan }}</td>
+                <td style="text-align:center;">{{ $item->KUNJUNGAN }}</td>
 
                 <td style="text-align:center;">
-                    {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
+                    {{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}
                 </td>
 
-                <td>{{ $item->keterangan ?: '-' }}</td>
+                <td>{{ $item->KETERANGAN ?: '-' }}</td>
 
-                <td style="text-align:center;">{{ $item->kuartal }}</td>
+                <td style="text-align:center;">{{ $item->KUARTAL }}</td>
             </tr>
+
             @empty
             <tr>
                 <td colspan="13" style="text-align:center; color:#888;">

@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class SalesmanExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
 {
     /**
-     * Ambil data salesman + distributor + total kecurangan
+     * Ambil data salesman + distributor + total kecurangan valid
      */
     public function collection()
     {
@@ -25,8 +25,7 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
                 'distributor.NAMA_DISTRIBUTOR',
                 DB::raw('(SELECT COUNT(*) FROM kecurangan 
                           WHERE kecurangan.id_sales = salesman.ID_SALESMAN 
-                          AND kecurangan.validasi = 1) as total_kecurangan'),
-                'salesman.TYPE_SALESMAN'
+                          AND kecurangan.validasi = 1) AS total_kecurangan')
             )
             ->orderBy('salesman.ID_SALESMAN', 'asc')
             ->get();
@@ -42,8 +41,7 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
             'Nama Salesman',
             'ID Distributor',
             'Nama Distributor',
-            // 'Total Kecurangan (Valid)',
-            // 'Tipe Salesman',
+            'Total Kecurangan'
         ];
     }
 
@@ -57,8 +55,7 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
             $row->NAMA_SALESMAN,
             $row->ID_DISTRIBUTOR,
             $row->NAMA_DISTRIBUTOR ?? '-',
-            // $row->total_kecurangan,
-            // $row->TYPE_SALESMAN,
+            $row->total_kecurangan ?? 0
         ];
     }
 }

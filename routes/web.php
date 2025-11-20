@@ -6,7 +6,7 @@ use App\Http\Controllers\{
     KecuranganController,
     DistributorController,
     SalesmanController,
-    AssController,
+    SpecialistManagerController,
     UserController,
     ProfileController,
     PageController,
@@ -205,27 +205,30 @@ Route::prefix('salesman')
     });
 
 
-Route::prefix('ass')
-    ->middleware('check.access:Data,Data ASS')
+
+Route::prefix('specialist-manager')
+    ->middleware('check.access:Data,Data Specialist Manager')
     ->group(function () {
 
-        Route::get('/data', [AssController::class, 'data'])
-            ->middleware('check.access:Data,Data ASS,access')
-            ->name('ass.data');
+        Route::get('/data', [SpecialistManagerController::class, 'data'])
+            ->middleware('check.access:Data,Data Specialist Manager,access')
+            ->name('specialist_manager.data');
 
-        Route::get('/export-excel', [AssController::class, 'exportExcel'])
-            ->middleware('check.access:Data,Data ASS,print')
-            ->name('ass.exportExcel');
+        Route::get('/export-excel', [SpecialistManagerController::class, 'exportExcel'])
+            ->middleware('check.access:Data,Data Specialist Manager,print')
+            ->name('specialist_manager.exportExcel');
 
-        Route::get('/export-pdf', [AssController::class, 'exportPdf'])
-            ->middleware('check.access:Data,Data ASS,print')
-            ->name('ass.exportPdf');
+        Route::get('/export-pdf', [SpecialistManagerController::class, 'exportPdf'])
+            ->middleware('check.access:Data,Data Specialist Manager,print')
+            ->name('specialist_manager.exportPdf');
 
-        Route::get('/get-distributor/{namaAss}', [AssController::class, 'getDistributorByAss'])
-            ->middleware('check.access:Data,Data ASS,access')
-            ->name('ass.getDistributor');
+        Route::get('/get-user/{namaManager}', [SpecialistManagerController::class, 'getUserByManager'])
+            ->middleware('check.access:Data,Data Specialist Manager,access')
+            ->name('specialist_manager.getUser');
 
     });
+
+
 
 
     // =====================================================
@@ -247,14 +250,17 @@ Route::prefix('kecurangan')->group(function () {
             ->middleware('check.access:Master,Master Kecurangan,create')
             ->name('kecurangan.create');
 
-        Route::get('/sales/{id_distributor}', [KecuranganController::class, 'getSales'])
+        // === GET SALES (AJAX) ===
+        Route::get('/sales/{id}', [KecuranganController::class, 'getSales'])
             ->middleware('check.access:Master,Master Kecurangan,access')
             ->name('kecurangan.getSales');
 
-        Route::get('/asisten-manager/{id}', [KecuranganController::class, 'getAsistenManager'])
+        // === GET SPECIALIST MANAGER (AJAX) ===
+        Route::get('/specialist-manager/{id}', [KecuranganController::class, 'getSpecialistManager'])
             ->middleware('check.access:Master,Master Kecurangan,access')
-            ->name('kecurangan.getAsistenManager');
+            ->name('kecurangan.getSpecialistManager');
 
+        // === GET KETERANGAN SANKSI (AJAX) ===
         Route::get('/get-keterangan', [KecuranganController::class, 'getKeteranganByJenis'])
             ->middleware('check.access:Master,Master Kecurangan,access')
             ->name('kecurangan.getKeteranganByJenis');
@@ -271,25 +277,13 @@ Route::prefix('kecurangan')->group(function () {
             ->middleware('check.access:Master,Master Kecurangan,edit')
             ->name('kecurangan.update');
 
-        Route::delete('/{id}', [KecuranganController::class, 'destroy'])
+        Route::delete('/[{id}', [KecuranganController::class, 'destroy'])
             ->middleware('check.access:Master,Master Kecurangan,delete')
             ->name('kecurangan.destroy');
 
         Route::post('/validasi/{id}', [KecuranganController::class, 'validasi'])
             ->middleware('check.access:Master,Master Kecurangan,edit')
             ->name('kecurangan.validasi');
-
-        Route::post('/{id}/upload-bukti', [KecuranganController::class, 'uploadBukti'])
-            ->middleware('check.access:Master,Master Kecurangan,create')
-            ->name('kecurangan.uploadBukti');
-
-        Route::delete('/bukti/{id}', [KecuranganController::class, 'hapusBukti'])
-            ->middleware('check.access:Master,Master Kecurangan,delete')
-            ->name('kecurangan.hapusBukti');
-
-        Route::delete('/foto/{id}', [KecuranganController::class, 'hapusFoto'])
-            ->middleware('check.access:Master,Master Kecurangan,delete')
-            ->name('kecurangan.hapusFoto');
     });
 
     // ===============================
@@ -312,10 +306,9 @@ Route::prefix('kecurangan')->group(function () {
         Route::get('/{id}/bukti', [KecuranganController::class, 'getBukti'])
             ->middleware('check.access:Data,Data Kecurangan,access')
             ->name('kecurangan.getBukti');
-
-        
     });
 });
+
 
     // =====================================================
     // 🧩 MENU MANAGEMENT

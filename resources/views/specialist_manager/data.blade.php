@@ -1,7 +1,7 @@
 @extends('layouts.app', [
-'namePage' => 'Data ASS',
+'namePage' => 'Data Specialist Manager',
 'class' => 'sidebar-mini',
-'activePage' => 'data_ass',
+'activePage' => 'data_specialist_manager',
 ])
 
 @section('content')
@@ -28,33 +28,33 @@
             </div>
             @endif
 
-            {{-- CARD DATA ASS --}}
+            {{-- CARD DATA --}}
             <div class="card" style="border-radius: 20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Data ASS') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Data Specialist Manager') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
 
                         {{-- Form Pencarian --}}
-                        <form action="{{ route('ass.data') }}" method="GET" class="mr-2">
+                        <form action="{{ route('specialist_manager.data') }}" method="GET" class="mr-2">
                             <div class="search-group">
                                 <input type="text" name="search" class="form-control search-input"
-                                    placeholder="Cari ASS..." value="{{ request('search') }}">
+                                    placeholder="Cari Specialist Manager..." value="{{ request('search') }}">
                                 <button class="btn search-btn" type="submit">
                                     <i class="now-ui-icons ui-1_zoom-bold"></i>
                                 </button>
                             </div>
                         </form>
 
-                        {{-- Tombol Tampilkan Semua / Paginate --}}
+                        {{-- Tombol Tampilkan Semua --}}
                         @if (request()->has('all'))
-                        <a href="{{ route('ass.data', request()->except('all')) }}"
+                        <a href="{{ route('specialist_manager.data', request()->except('all')) }}"
                             class="btn btn-warning btn-round mr-2"
                             style="background:#eee733;color:#000;border:none;margin-top:10px;">
                             <i class="now-ui-icons arrows-1_refresh-69"></i> Tampilkan Halaman
                         </a>
                         @else
-                        <a href="{{ route('ass.data', array_merge(request()->query(), ['all' => true])) }}"
+                        <a href="{{ route('specialist_manager.data', array_merge(request()->query(), ['all' => true])) }}"
                             class="btn btn-success btn-round mr-2"
                             style="background:#29b14a;border:none;margin-top:10px;">
                             <i class="now-ui-icons ui-1_zoom-bold"></i> Tampilkan Semua
@@ -62,13 +62,13 @@
                         @endif
 
                         {{-- Tombol Export --}}
-                        @if (checkAccess('Data', 'Data ASS', 'print'))
-                        <a href="{{ route('ass.exportExcel') }}" class="btn btn-success btn-round mr-2"
+                        @if (checkAccess('Data', 'Data Specialist Manager', 'print'))
+                        <a href="{{ route('specialist_manager.exportExcel') }}" class="btn btn-success btn-round mr-2"
                             style="margin-top:10px;background:#29b14a;border:none;">
                             <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
                         </a>
 
-                        <a href="{{ route('ass.exportPdf') }}" class="btn btn-danger btn-round"
+                        <a href="{{ route('specialist_manager.exportPdf') }}" class="btn btn-danger btn-round"
                             style="margin-top:10px;background:#e74c3c;border:none;">
                             <i class="now-ui-icons files_paper mr-1"></i> PDF
                         </a>
@@ -84,44 +84,44 @@
                                     <th class="text-center" style="width:5%;">#</th>
 
                                     <th style="padding-left: 100px;">
-                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
-                'sort_by' => 'NAMA_SALESMAN',
-                'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        <a href="{{ route('specialist_manager.data', array_merge(request()->query(), [
+                'sort_by' => 'NAMA',
+                'sort_order' => (request('sort_by') === 'NAMA' && request('sort_order') === 'asc') ? 'desc' : 'asc'
             ])) }}" class="text-success text-decoration-none">
-                                            Nama ASS
+                                            Nama Specialist Manager
                                         </a>
                                     </th>
 
                                     <th class="text-center" style="padding-left: 100px">
-                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
-                'sort_by' => 'total_distributor',
-                'sort_order' => (request('sort_by') === 'total_distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        <a href="{{ route('specialist_manager.data', array_merge(request()->query(), [
+                'sort_by' => 'total_user',
+                'sort_order' => (request('sort_by') === 'total_user' && request('sort_order') === 'asc') ? 'desc' : 'asc'
             ])) }}" class="text-success text-decoration-none">
-                                            Total Distributor
+                                            Total User
                                         </a>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($salesman as $item)
+                                @forelse ($data as $item)
                                 <tr>
                                     <td class="text-center">
-                                        {{ $loop->iteration + (method_exists($salesman, 'firstItem') ? $salesman->firstItem() - 1 : 0) }}
+                                        {{ $loop->iteration + (method_exists($data, 'firstItem') ? $data->firstItem() - 1 : 0) }}
                                     </td>
 
-                                    <td style="padding-left: 100px">{{ $item->NAMA_SALESMAN }}</td>
+                                    <td style="padding-left: 100px">{{ $item->NAMA }}</td>
 
                                     <td class="text-center" style="padding-left: 100px">
                                         <span class="badge-soft text-primary font-weight-bold" style="cursor:pointer;"
-                                            onclick="showDistributor('{{ $item->NAMA_SALESMAN }}')">
-                                            {{ $item->total_distributor }}
+                                            onclick="showUser('{{ $item->NAMA }}')">
+                                            {{ $item->total_user }}
                                         </span>
                                     </td>
-
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted">Belum ada data ASS</td>
+                                    <td colspan="3" class="text-center text-muted">Belum ada data Specialist Manager
+                                    </td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -131,7 +131,7 @@
                     {{-- Pagination --}}
                     @if (!request()->has('all'))
                     <div class="d-flex justify-content-center mt-3">
-                        {{ $salesman->links('pagination::bootstrap-4') }}
+                        {{ $data->links('pagination::bootstrap-4') }}
                     </div>
                     @endif
                 </div>
@@ -142,7 +142,7 @@
     </div>
 </div>
 
-{{-- ===================== MODAL DAFTAR DISTRIBUTOR ===================== --}}
+{{-- ===================== MODAL USER ===================== --}}
 <div class="modal fade" id="modalDistributor" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:750px;">
         <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
@@ -151,7 +151,7 @@
 
             <div class="modal-header" style="border-bottom:none;">
                 <h5 class="modal-title text-success" style="font-weight:600;">
-                    <i class="now-ui-icons business_bank"></i> Daftar Distributor
+                    <i class="now-ui-icons users_single-02"></i> Daftar User
                 </h5>
             </div>
 
@@ -163,8 +163,8 @@
                         <thead style="background:#29b14a; color:white;">
                             <tr>
                                 <th class="text-center" style="width: 10%;">#</th>
-                                <th class="text-center" style="width: 25%;">ID Distributor</th>
-                                <th class="text-center">Nama Distributor</th>
+                                <th class="text-center" style="width: 25%;">ID User</th>
+                                <th class="text-center">Nama User</th>
                             </tr>
                         </thead>
                         <tbody id="tableDistributor"></tbody>
@@ -185,8 +185,6 @@
     </div>
 </div>
 
-
-@endsection
 @push ('styles')
 <link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
 <script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
@@ -465,23 +463,18 @@ body,
 }
 </style>
 @endpush
+@endsection
+
+{{-- ============================================================ --}}
+{{-- JS SECTION - SUDAH DISESUAIKAN --}}
+{{-- ============================================================ --}}
 @push('js')
 <script>
-$(document).on("click", ".btn-lihat-alamat", function() {
-    let judul = $(this).data("judul");
-    let isi = $(this).data("isi");
-
-    $("#modalAlamatTitle").text(judul);
-    $("#modalAlamatIsi").text(isi);
-
-    $("#modalAlamat").modal("show");
-});
-
-function showDistributor(namaAss, pageUrl = null) {
+function showUser(nama, pageUrl = null) {
 
     $("#distLoading").show();
 
-    let url = pageUrl ?? ("{{ url('/ass/get-distributor') }}/" + encodeURIComponent(namaAss));
+    let url = pageUrl ?? ("{{ url('/specialist-manager/get-user') }}/" + encodeURIComponent(nama));
 
     $.get(url, function(res) {
 
@@ -490,18 +483,18 @@ function showDistributor(namaAss, pageUrl = null) {
         if (res.data.length === 0) {
             rows = `
                 <tr>
-                    <td colspan="3" class="text-center text-muted py-3">Tidak ada distributor</td>
+                    <td colspan="3" class="text-center text-muted py-3">Tidak ada user</td>
                 </tr>
             `;
         } else {
-            let no = res.firstItem; // nomor awal halaman
+            let no = res.firstItem;
 
             res.data.forEach(row => {
                 rows += `
                     <tr>
                         <td class="text-center">${no++}</td>
-                        <td class="text-center">${row.ID_DISTRIBUTOR}</td>
-                        <td>${row.NAMA_DISTRIBUTOR ?? '-'}</td>
+                        <td class="text-center">${row.ID_USER}</td>
+                        <td>${row.nama_user ?? '-'}</td>
                     </tr>
                 `;
             });
@@ -512,7 +505,7 @@ function showDistributor(namaAss, pageUrl = null) {
 
         $("#modalPagination a.page-link").click(function(e) {
             e.preventDefault();
-            showDistributor(namaAss, $(this).attr("href"));
+            showUser(nama, $(this).attr("href"));
         });
 
     }).always(function() {
@@ -521,6 +514,5 @@ function showDistributor(namaAss, pageUrl = null) {
 
     $("#modalDistributor").modal('show');
 }
-
 </script>
 @endpush

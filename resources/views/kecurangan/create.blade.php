@@ -14,12 +14,8 @@
             {{-- ALERT SUCCESS --}}
             @if(session('success'))
             <div class="alert alert-success alert-with-icon alert-dismissible fade show" data-notify="container"
-                role="alert" style="
-                    background: rgba(41,177,74,0.2);
-                    border: 1px solid #29b14a;
-                    color: #155724;
-                    border-radius: 12px;
-                ">
+                role="alert"
+                style="background: rgba(41,177,74,0.2); border: 1px solid #29b14a; color: #155724; border-radius: 12px;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#155724;">
                     <i class="now-ui-icons ui-1_simple-remove"></i>
                 </button>
@@ -31,12 +27,8 @@
             {{-- ALERT ERROR --}}
             @if(session('error'))
             <div class="alert alert-danger alert-with-icon alert-dismissible fade show" data-notify="container"
-                role="alert" style="
-                    background: rgba(231,76,60,0.2);
-                    border: 1px solid #e74c3c;
-                    color: #721c24;
-                    border-radius: 12px;
-                ">
+                role="alert"
+                style="background: rgba(231,76,60,0.2); border: 1px solid #e74c3c; color: #721c24; border-radius: 12px;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#721c24;">
                     <i class="now-ui-icons ui-1_simple-remove"></i>
                 </button>
@@ -91,25 +83,20 @@
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== DETAIL ASSISTANT MANAGER ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
+                        {{-- ===================== DETAIL SPECIALIST MANAGER ===================== --}}
+                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Specialist Manager
+                        </h6>
 
-                        <div class="form-group">
-                            <label class="text-dark font-weight-bold">ID ASS</label>
-                            <select name="id_asisten_manager" id="id_asisten_manager" class="form-control select2"
-                                style="border-radius:12px;">
-                                <option value="">-- Pilih ASS --</option>
-                            </select>
-
-                        </div>
+                        <input type="hidden" name="id_specialist_manager" id="id_specialist_manager">
 
                         <div class="col-md-3 pl-0">
                             <div class="form-group has-label">
-                                <label class="text-dark font-weight-bold">Nama ASS</label>
-                                <input type="text" id="nama_asisten_manager" name="nama_asisten_manager"
+                                <label class="text-dark font-weight-bold">Nama Specialist Manager</label>
+                                <input type="text" id="nama_specialist_manager" name="nama_specialist_manager"
                                     class="form-control" readonly style="border-radius:12px;">
                             </div>
                         </div>
+
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
@@ -176,7 +163,6 @@
                                 style="border-radius:12px; width:40%; height:100px; padding:10px 14px; border:1px solid #E3E3E3;"></textarea>
                         </div>
 
-
                         <hr class="my-4">
 
                         {{-- ===================== BAGIAN FOTO ===================== --}}
@@ -184,29 +170,20 @@
                         </h6>
 
                         <div class="form-group has-label">
-
-                            {{-- Label Upload Foto --}}
-                            <label class="text-dark font-weight-bold d-block mb-2">
-                                {{ __('Upload Foto (Maksimal total 5 foto)') }}
-                            </label>
-
-                            {{-- Tombol pilih foto --}}
+                            <label class="text-dark font-weight-bold d-block mb-2">Upload Foto (Maksimal total 5
+                                foto)</label>
                             <button type="button" id="btn-upload" class="btn btn-outline-success btn-round mb-3"
                                 style="border-radius:12px;padding:8px 16px;">
                                 <i class="now-ui-icons ui-1_simple-add"></i> Pilih Foto
                             </button>
 
-                            {{-- Input file disembunyikan --}}
                             <input type="file" name="bukti[]" id="bukti" accept=".jpg,.jpeg,.png" multiple hidden>
 
-                            {{-- Container preview foto baru --}}
                             <div id="preview-container"
                                 class="mt-2 d-flex flex-wrap gap-2 justify-content-start align-items-start"></div>
 
-                            <small class="form-text text-muted mt-2">
-                                Format diperbolehkan: JPG, JPEG, PNG — maksimal 5 foto.
-                            </small>
-
+                            <small class="form-text text-muted mt-2">Format diperbolehkan: JPG, JPEG, PNG — maksimal 5
+                                foto.</small>
                         </div>
 
                         <div class="text-right mt-3">
@@ -224,47 +201,30 @@
 {{-- ===================== MODAL PREVIEW FOTO ===================== --}}
 <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:-10px;">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
-        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
-            border-radius:15px;
-            box-shadow:0 4px 25px rgba(0,0,0,0.3);
-            overflow:hidden;
-            position:relative;">
-
-            {{-- Header --}}
+        <div class="modal-content border-0"
+            style="background:rgba(255,255,255,0.97); border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3); overflow:hidden; position:relative;">
             <div class="modal-header d-flex justify-content-between align-items-center" style="border-bottom:none;">
-                <h5 class="modal-title text-success" style="font-weight:600;">
-                    <i class="now-ui-icons"></i> Bukti Kecurangan
-                </h5>
+                <h5 class="modal-title text-success" style="font-weight:600;">Bukti Kecurangan</h5>
             </div>
 
-            {{-- Isi Modal --}}
             <div class="modal-body d-flex justify-content-center align-items-center"
                 style="height:75vh; overflow:hidden; position:relative;">
-                <img id="modalImage" src="" alt="Preview" style="max-width:90%; max-height:90%; object-fit:contain;
-                    border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2);
-                    transition:0.3s;">
-                <button type="button" id="modalPrev" class="btn btn-link" style="
-                    position:absolute;left:0;top:0;height:100%;width:120px;
-                    display:flex;align-items:center;justify-content:flex-start;
-                    padding-left:25px;font-size:42px;color:#333;opacity:0.7;">
-                    ‹
-                </button>
-                <button type="button" id="modalNext" class="btn btn-link" style="
-                    position:absolute;right:0;top:0;height:100%;width:120px;
-                    display:flex;align-items:center;justify-content:flex-end;
-                    padding-right:25px;font-size:42px;color:#333;opacity:0.7;">
-                    ›
-                </button>
+                <img id="modalImage" src="" alt="Preview"
+                    style="max-width:90%; max-height:90%; object-fit:contain; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:0.3s;">
+                <button type="button" id="modalPrev" class="btn btn-link"
+                    style="position:absolute; left:0; top:0; height:100%; width:120px; display:flex; align-items:center; justify-content:flex-start; padding-left:25px; font-size:42px; color:#333; opacity:0.7;">‹</button>
+                <button type="button" id="modalNext" class="btn btn-link"
+                    style="position:absolute; right:0; top:0; height:100%; width:120px; display:flex; align-items:center; justify-content:flex-end; padding-right:25px; font-size:42px; color:#333; opacity:0.7;">›</button>
             </div>
 
-            {{-- Footer --}}
-            <div class="modal-footer" style="border-top:none;justify-content:center;">
+            <div class="modal-footer" style="border-top:none; justify-content:center;">
                 <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
 
 @push('styles')
 <style>
@@ -574,19 +534,22 @@ button#modalNext.btn {
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
 <script>
 $(document).ready(function() {
+
     // === Select2 Setup ===
-    $('#id_sales, #id_asisten_manager, #jenis_sanksi, #deskripsi_sanksi').select2({
+    $('#id_sales, #jenis_sanksi, #deskripsi_sanksi').select2({
         placeholder: "-- Pilih --",
         width: '100%'
     });
 
+    // ------------------------------------------
+    // FOTO PREVIEW (Tetap sama)
+    // ------------------------------------------
     let selectedFiles = [];
     let currentIndex = 0;
     const MAX_FILES = 5;
     const $fileInput = $('#bukti');
     const $previewContainer = $('#preview-container');
 
-    // === Upload & Preview ===
     $('#btn-upload').on('click', function() {
         $fileInput.val('');
         $fileInput.trigger('click');
@@ -614,7 +577,7 @@ $(document).ready(function() {
             const reader = new FileReader();
             reader.onload = e => {
                 const html = `
-                    <div class="position-relative m-1" style="display:inline-block;">
+                    <div class="position-relative m-1">
                         <img src="${e.target.result}" class="preview-img" data-index="${index}"
                              style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
                         <button type="button" class="btn btn-danger btn-sm btn-remove" data-index="${index}"
@@ -634,79 +597,73 @@ $(document).ready(function() {
         syncInputFiles();
     });
 
-    // === Modal Preview ===
+    // ------------------------------------------
+    // MODAL PREVIEW FOTO (SAMA DENGAN EDIT)
+    // ------------------------------------------
+    function collectAllPreviewElements() {
+        const arr = [];
+        $('#preview-container').find('img.preview-img').each(function() {
+            arr.push($(this));
+        });
+        return arr;
+    }
+
     $(document).on('click', '.preview-img', function() {
-        currentIndex = Number($(this).data('index'));
-        showModalImage(currentIndex);
+        const allEls = collectAllPreviewElements();
+        let idx = allEls.findIndex(el => el[0] === this);
+        if (idx === -1) return;
+
+        currentIndex = idx;
+        showModalImageByIndex(currentIndex);
+
         $('#modalPreview').modal({
-            backdrop: 'static', // aktifkan overlay, tidak bisa klik luar
+            backdrop: 'static',
             keyboard: true,
             show: true
         });
     });
 
-    function showModalImage(i) {
-        const file = selectedFiles[i];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => $('#modalImage').attr('src', e.target.result);
-        reader.readAsDataURL(file);
+    function showModalImageByIndex(index) {
+        const allEls = collectAllPreviewElements();
+        if (!allEls[index]) return;
+
+        $('#modalImage').attr('src', allEls[index].attr('src') || '');
     }
 
-    $('#modalCloseBtn').on('click', () => $('#modalPreview').modal('hide'));
-    $('#modalNext').on('click', () => {
-        if (!selectedFiles.length) return;
-        currentIndex = (currentIndex + 1) % selectedFiles.length;
-        showModalImage(currentIndex);
-    });
-    $('#modalPrev').on('click', () => {
-        if (!selectedFiles.length) return;
-        currentIndex = (currentIndex - 1 + selectedFiles.length) % selectedFiles.length;
-        showModalImage(currentIndex);
+    $('#modalNext').on('click', function() {
+        const allEls = collectAllPreviewElements();
+        currentIndex = (currentIndex + 1) % allEls.length;
+        showModalImageByIndex(currentIndex);
     });
 
-    // === Navigasi Keyboard ===
-    $(document).on('keydown', e => {
+    $('#modalPrev').on('click', function() {
+        const allEls = collectAllPreviewElements();
+        currentIndex = (currentIndex - 1 + allEls.length) % allEls.length;
+        showModalImageByIndex(currentIndex);
+    });
+
+    // keyboard navigation
+    $(document).on('keydown', function(e) {
         if (!$('#modalPreview').hasClass('show')) return;
+
         if (e.key === 'Escape') $('#modalPreview').modal('hide');
-        if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
-        if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
+        else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
+        else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
     });
 
-    // === Kunci scroll saat modal terbuka ===
-    $('#modalPreview').on('shown.bs.modal', function() {
-        $('body').css('overflow', 'hidden');
-        $('#modalPreview, #modalPreview .modal-body').css({
-            'overflow': 'hidden',
-            'touch-action': 'none'
+    // disable scroll when modal open
+    $('#modalPreview')
+        .on('show.bs.modal', function() {
+            $('body').css('overflow', 'hidden');
+        })
+        .on('hidden.bs.modal', function() {
+            $('#modalImage').attr('src', '');
+            $('body').css('overflow', 'auto');
         });
 
-        // ubah backdrop biar gelap elegan
-        $('.modal-backdrop')
-            .addClass('show')
-            .css({
-                'background-color': 'rgba(0,0,0,0.7)',
-                'backdrop-filter': 'blur(2px)'
-            });
-
-        $(document).on('touchmove.modalBlock', function(e) {
-            if ($('#modalPreview').hasClass('show')) e.preventDefault();
-        });
-    });
-
-    // === Pulihkan scroll saat modal tertutup ===
-    $('#modalPreview').on('hidden.bs.modal', function() {
-        $('#modalImage').attr('src', '');
-        $('body').css('overflow', 'auto');
-        $('#modalPreview, #modalPreview .modal-body').css({
-            'overflow': '',
-            'touch-action': ''
-        });
-        $('.modal-backdrop').removeAttr('style');
-        $(document).off('touchmove.modalBlock');
-    });
-
-    // === Datepicker ===
+    // ------------------------------------------
+    // DATE PICKER
+    // ------------------------------------------
     $('#tanggal').datepicker({
         dateFormat: 'dd/mm/yy',
         changeMonth: true,
@@ -721,101 +678,64 @@ $(document).ready(function() {
         }
     });
 
-    // === Dropdown Dinamis Sales / ASS ===
+    // ------------------------------------------
+    // LOAD SALESMAN + SPECIALIST MANAGER
+    // ------------------------------------------
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
 
-        // Reset semua field terkait
-        $('#nama_sales, #distributor, #nama_asisten_manager').val('');
-
-        // Reset dropdown ASS TANPA DISABLE
-        $('#id_asisten_manager')
-            .html('<option value="">-- Pilih ASS --</option>')
-            .trigger('change');
+        // reset form
+        $('#nama_sales, #distributor, #nama_specialist_manager').val('');
+        $('#id_specialist_manager').val('');
 
         if (!idSales) return;
 
-        // Ambil detail sales
         $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
-
             $('#nama_sales').val(data.nama_sales);
             $('#distributor').val(data.distributor);
 
-            // Ambil ASS
-            if (data.distributor_id) {
-
-                $.getJSON(`/kecurangan/asisten-manager/${data.distributor_id}`, function(res) {
-
-                    // Jika tidak ada ASS
-                    if (res.length === 0) {
-                        $('#id_asisten_manager')
-                            .html('<option value="">-- Tidak ada ASS --</option>');
-                        return;
-                    }
-
-                    // Jika ada ASS
-                    let opt = '<option value="">-- Pilih ASS --</option>';
-                    res.forEach(a => {
-                        opt +=
-                            `<option value="${a.id}">${a.id} - ${a.nama}</option>`;
+            // Ambil Specialist Manager
+            if (data.id_specialist_manager) {
+                $.getJSON(`/kecurangan/specialist-manager/${data.id_specialist_manager}`,
+                    function(sm) {
+                        $('#id_specialist_manager').val(sm.id_specialist_manager);
+                        $('#nama_specialist_manager').val(sm.nama_specialist_manager);
                     });
-
-
-                    $('#id_asisten_manager')
-                        .html(opt)
-                        .trigger('change');
-                });
             }
+
         });
     });
 
-    $('#id_asisten_manager').on('change', function() {
-        const txt = $(this).find('option:selected').text();
-        const parts = txt.split(' - ');
-
-        // Ambil semua setelah ID
-        const nama = parts.slice(1).join(' - ').trim();
-
-        $('#nama_asisten_manager').val(nama);
-    });
-
-
-
-
+    // ------------------------------------------
+    // SANKSI / DESKRIPSI / NILAI
+    // ------------------------------------------
     $('#jenis_sanksi').on('change', function() {
         const jenis = $(this).val();
-        const $deskripsiSelect = $('#deskripsi_sanksi');
-        const $nilaiInput = $('#nilai_sanksi');
-        $deskripsiSelect.html('<option value="">-- Pilih Deskripsi --</option>');
-        $nilaiInput.val('');
+        $('#deskripsi_sanksi').html('<option value="">-- Pilih --</option>');
+        $('#nilai_sanksi').val('');
+
         if (!jenis) return;
+
         $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
-            let options = '<option value="">-- Pilih Deskripsi --</option>';
-            data.forEach(item => {
-                options +=
-                    `<option value="${item.keterangan}">${item.keterangan}</option>`;
-            });
-            $deskripsiSelect.html(options);
+            let opt = '<option value="">-- Pilih Deskripsi --</option>';
+            data.forEach(item => opt +=
+                `<option value="${item.keterangan}">${item.keterangan}</option>`);
+            $('#deskripsi_sanksi').html(opt);
         });
     });
 
     $('#deskripsi_sanksi').on('change', function() {
         const jenis = $('#jenis_sanksi').val();
         const deskripsi = $(this).val();
-        const $nilaiInput = $('#nilai_sanksi');
-        if (!jenis || !deskripsi) return $nilaiInput.val('');
 
-        // encode deskripsi supaya karakter khusus (mis. "/") tidak merusak path URL
-        const encodedDeskripsi = encodeURIComponent(deskripsi);
+        if (!jenis || !deskripsi) {
+            $('#nilai_sanksi').val('');
+            return;
+        }
 
-        $.getJSON(`/sanksi/nilai/${jenis}/${encodedDeskripsi}`, function(data) {
-            if (data && data.nilai !== undefined) {
-                const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
-                $nilaiInput.val('Rp ' + formatted);
-            } else $nilaiInput.val('');
-        }).fail(function() {
-            // debug ringan: kosongkan jika gagal
-            $nilaiInput.val('');
+        $.getJSON(`/sanksi/nilai/${jenis}/${encodeURIComponent(deskripsi)}`, function(data) {
+            const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
+            $('#nilai_sanksi').val('Rp ' + formatted);
         });
     });
 

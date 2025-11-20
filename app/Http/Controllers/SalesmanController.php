@@ -102,6 +102,14 @@ public function getKecurangan(Request $request, $id)
     {
         $data = DB::table('salesman')
             ->where('TYPE_SALESMAN', 1)
+            ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
+            ->select(
+                'salesman.*',
+                'distributor.NAMA_DISTRIBUTOR',
+                DB::raw('(SELECT COUNT(*) FROM kecurangan 
+                        WHERE kecurangan.id_sales = salesman.ID_SALESMAN 
+                        AND kecurangan.validasi = 1) AS total_kecurangan')
+            )
             ->get();
 
         $pdf = PDF::loadView('pdf.salesman', ['salesman' => $data])

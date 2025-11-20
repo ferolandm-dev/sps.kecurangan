@@ -243,6 +243,11 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $totalAssAktif = DB::table('salesman')
+            ->where('TYPE_SALESMAN', 7)
+            ->distinct('NAMA_SALESMAN')
+            ->count('NAMA_SALESMAN');
+
         return view('dashboard', compact(
             'totalDistributorAktif',
             'totalSalesAktif',
@@ -260,7 +265,8 @@ class DashboardController extends Controller
             'fraudCalendar',
             'latestYear',
             'leaderboardDistributor',
-            'recentFraudCases'
+            'recentFraudCases',
+            'totalAssAktif'
         ));
     }
 }

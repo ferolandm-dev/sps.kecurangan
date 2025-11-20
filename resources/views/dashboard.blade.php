@@ -126,6 +126,25 @@
                 </div>
             </div>
 
+            {{-- Card: Total ASS Aktif --}}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card glass-card card-tilt fade-up" data-animate>
+                    <div class="tilt-inner p-3">
+                        <div class="card-header">
+                            <h5 class="card-category">Total ASS Aktif</h5>
+                            <h4 class="card-title">{{ $totalAssAktif }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mt-2">
+                                <div class="stats">
+                                    <i class="now-ui-icons arrows-1_refresh-69"></i> Updated
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- Card: Sales Aktif --}}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card glass-card card-tilt fade-up" data-animate>
@@ -432,8 +451,8 @@
     </div>
 
     <!-- ===============================
-           SECTION: CALENDAR HEATMAP
-================================ -->
+        SECTION: CALENDAR HEATMAP
+    ================================ -->
     <div id="section-calendar" style="display:none;">
         <div class="row">
             <div class="col-lg-12 mb-4">

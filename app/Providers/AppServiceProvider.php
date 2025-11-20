@@ -127,18 +127,27 @@ class AppServiceProvider extends ServiceProvider
                 /** KHUSUS KECURANGAN → tampilkan ID_SALES NAMA_SALES */
                 if ($firstSegment === 'kecurangan') {
 
-                    $row = DB::table('kecurangan')->where('id', $id)->first();
+                $row = DB::table('kecurangan')
+                    ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
+                    ->select(
+                        'kecurangan.ID',
+                        'kecurangan.ID_SALES',
+                        'salesman.NAMA_SALESMAN'
+                    )
+                    ->where('kecurangan.ID', $id)
+                    ->first();
 
-                    if ($row) {
-                        $breadcrumb .= "<li>{$row->id_sales} {$row->nama_sales}</li>";
-                    }
-
-                    if (in_array('edit', $segments)) {
-                        $breadcrumb .= "<li class='active'>Edit</li>";
-                    }
-
-                    return $view->with('breadcrumb', $breadcrumb."</ol></nav>");
+                if ($row) {
+                    $breadcrumb .= "<li>{$row->ID_SALES} - {$row->NAMA_SALESMAN}</li>";
                 }
+
+                if (in_array('edit', $segments)) {
+                    $breadcrumb .= "<li class='active'>Edit</li>";
+                }
+
+                return $view->with('breadcrumb', $breadcrumb."</ol></nav>");
+            }
+
 
 
                 /** KHUSUS USERS */

@@ -5,35 +5,36 @@
     <meta charset="utf-8">
     <title>Laporan Data Salesman</title>
     <style>
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            font-size: 12px;
-        }
+    body {
+        font-family: DejaVu Sans, sans-serif;
+        font-size: 12px;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
+    h2 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
 
-        th, td {
-            border: 1px solid #000;
-            padding: 6px 8px;
-            text-align: left;
-        }
+    th,
+    td {
+        border: 1px solid #000;
+        padding: 6px 8px;
+        text-align: left;
+    }
 
-        th {
-            background-color: #f0f0f0;
-        }
+    th {
+        background-color: #f0f0f0;
+    }
 
-        .text-center {
-            text-align: center;
-        }
+    .text-center {
+        text-align: center;
+    }
     </style>
 </head>
 
@@ -48,9 +49,10 @@
                 <th>ID Sales</th>
                 <th>Nama Sales</th>
                 <th>ID Distributor</th>
-                <!-- <th>Type Sales</th> -->
+                <th style="text-align:center;">Total Kecurangan</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach ($salesman as $s)
             <tr>
@@ -58,7 +60,11 @@
                 <td>{{ $s->ID_SALESMAN }}</td>
                 <td>{{ $s->NAMA_SALESMAN }}</td>
                 <td>{{ $s->ID_DISTRIBUTOR }}</td>
-                <!-- <td class="text-center">{{ $s->TYPE_SALESMAN }}</td> -->
+
+                {{-- Kolom baru --}}
+                <td class="text-center">
+                    {{ $s->total_kecurangan ?? 0 }}
+                </td>
             </tr>
             @endforeach
         </tbody>

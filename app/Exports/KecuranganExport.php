@@ -43,61 +43,61 @@ class KecuranganExport implements
     public function collection()
     {
         $query = DB::table('kecurangan')
-            ->where('validasi', 1)
+            ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
+            ->leftJoin('specialist_manager', 'kecurangan.ID_SPC_MANAGER', '=', 'specialist_manager.ID_SPC_MANAGER')
             ->select(
-                'id_sales',
-                'nama_sales',
-                'distributor',
-                'nama_asisten_manager',
-                'jenis_sanksi',
-                'keterangan_sanksi',
-                'nilai_sanksi',
-                'toko',
-                'kunjungan',
-                'tanggal',
-                'keterangan',
-                'kuartal'
-            );
+                'kecurangan.ID_SALES',
+                'salesman.NAMA_SALESMAN',
+                'kecurangan.DISTRIBUTOR',
+                'specialist_manager.NAMA as NAMA_SPECIALIST_MANAGER',
+                'kecurangan.JENIS_SANKSI',
+                'kecurangan.KETERANGAN_SANKSI',
+                'kecurangan.NILAI_SANKSI',
+                'kecurangan.TOKO',
+                'kecurangan.KUNJUNGAN',
+                'kecurangan.TANGGAL',
+                'kecurangan.KETERANGAN',
+                'kecurangan.KUARTAL'
+            )
+            ->where('kecurangan.VALIDASI', 1);
 
+        // === FILTERS ===
         if (!empty($this->sales)) {
-            $query->where('id_sales', $this->sales);
+            $query->where('kecurangan.ID_SALES', $this->sales);
         }
 
         if (!empty($this->jenis)) {
-            $query->where('jenis_sanksi', $this->jenis);
+            $query->where('kecurangan.JENIS_SANKSI', $this->jenis);
         }
 
         if (!empty($this->keterangan)) {
-            $query->where('keterangan_sanksi', $this->keterangan);
+            $query->where('kecurangan.KETERANGAN_SANKSI', $this->keterangan);
         }
 
         if ($this->mode === 'date' && $this->startDate && $this->endDate) {
-            $query->whereBetween('tanggal', [$this->startDate, $this->endDate]);
+            $query->whereBetween('kecurangan.TANGGAL', [$this->startDate, $this->endDate]);
         }
 
-        return $query->orderBy('tanggal', 'desc')->get();
+        return $query->orderBy('kecurangan.TANGGAL', 'desc')->get();
     }
 
     public function map($row): array
     {
         return [
-            $row->id_sales,
-            $row->nama_sales,
-            $row->distributor,
-            $row->nama_asisten_manager,
-            $row->jenis_sanksi ?? '-',
-            $row->keterangan_sanksi ?? '-',
-            $row->nilai_sanksi 
-                ? 'Rp ' . number_format($row->nilai_sanksi, 0, ',', '.') 
+            $row->ID_SALES,
+            $row->NAMA_SALESMAN,
+            $row->DISTRIBUTOR,
+            $row->NAMA_SPECIALIST_MANAGER,
+            $row->JENIS_SANKSI ?? '-',
+            $row->KETERANGAN_SANKSI ?? '-',
+            $row->NILAI_SANKSI 
+                ? 'Rp ' . number_format($row->NILAI_SANKSI, 0, ',', '.') 
                 : '-',
-            $row->toko,
-
-            // KUNJUNGAN → PAKSA JADI STRING
-            (string) $row->kunjungan,
-
-            \Carbon\Carbon::parse($row->tanggal)->format('d/m/Y'),
-            $row->keterangan ?? '-',
-            $row->kuartal ?? '-',
+            $row->TOKO,
+            (string) $row->KUNJUNGAN,
+            \Carbon\Carbon::parse($row->TANGGAL)->format('d/m/Y'),
+            $row->KETERANGAN ?: '-',
+            $row->KUARTAL ?: '-',
         ];
     }
 
@@ -107,7 +107,7 @@ class KecuranganExport implements
             'ID Sales',
             'Nama Sales',
             'Distributor',
-            'Asisten Manager',
+            'Specialist Manager',
             'Jenis Sanksi',
             'Keterangan Sanksi',
             'Nilai Sanksi',
@@ -119,11 +119,10 @@ class KecuranganExport implements
         ];
     }
 
-    // 🔥 FORMAT COLUMN — KUNJUNGAN = TEXT
     public function columnFormats(): array
     {
         return [
-            'I' => NumberFormat::FORMAT_TEXT, // Kolom ke-9 → Kunjungan
+            'I' => NumberFormat::FORMAT_TEXT, // kolom kunjungan
         ];
     }
 }

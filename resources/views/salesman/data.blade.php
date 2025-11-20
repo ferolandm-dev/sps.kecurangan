@@ -223,8 +223,7 @@
 
             <div class="modal-header" style="border-bottom:none;">
                 <h5 class="modal-title text-danger" style="font-weight:600;">
-                    <i class="now-ui-icons ui-1_simple-remove"></i>
-                    Daftar Kecurangan (Valid)
+                    Daftar Kecurangan
                 </h5>
             </div>
 

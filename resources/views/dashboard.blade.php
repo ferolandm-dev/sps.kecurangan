@@ -319,6 +319,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-6 mb-4">
                 <div class="card glass-card fade-up h-100" data-animate>
                     <div class="card-header pb-0">
@@ -425,7 +426,6 @@
                     </div>
                 </div>
             </div>
-
 
         </div>
 
@@ -725,8 +725,6 @@ body,
     outline: none !important;
     box-shadow: none !important;
 }
-
-
 </style>
 @endpush
 

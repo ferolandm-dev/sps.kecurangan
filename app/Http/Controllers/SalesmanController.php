@@ -14,53 +14,78 @@ class SalesmanController extends Controller
     // DATA (LISTING) — PENGGANTI index()
     // =========================================================================================
     public function data(Request $request)
-    {
-        $query = DB::table('salesman')
-            ->where('TYPE_SALESMAN', 1)
-            ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
-            ->select(
-                'salesman.*',
-                'distributor.NAMA_DISTRIBUTOR'
-            );
+{
+    $query = DB::table('salesman')
+        ->where('salesman.TYPE_SALESMAN', 1)
+        ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
+        ->select(
+            'salesman.*',
+            'distributor.NAMA_DISTRIBUTOR',
+            DB::raw('(SELECT COUNT(*) FROM kecurangan 
+                      WHERE kecurangan.id_sales = salesman.ID_SALESMAN 
+                      AND kecurangan.validasi = 1) AS total_kecurangan')
+        );
 
-        // Search
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('salesman.ID_SALESMAN', 'like', "%{$search}%")
-                  ->orWhere('salesman.NAMA_SALESMAN', 'like', "%{$search}%")
-                  ->orWhere('salesman.ID_DISTRIBUTOR', 'like', "%{$search}%")
-                  ->orWhere('distributor.NAMA_DISTRIBUTOR', 'like', "%{$search}%");
-            });
-        }
-
-        // Sorting
-        $sortBy = $request->get('sort_by', 'ID_SALESMAN');
-        $sortOrder = $request->get('sort_order', 'asc');
-
-        $allowed = [
-            'ID_SALESMAN',
-            'NAMA_SALESMAN',
-            'ID_DISTRIBUTOR',
-            'NAMA_DISTRIBUTOR',
-            'TYPE_SALESMAN'
-        ];
-
-        if (!in_array($sortBy, $allowed)) {
-            $sortBy = 'ID_SALESMAN';
-        }
-
-        $query->orderBy($sortBy, $sortOrder);
-
-        // Paginate / Show All
-        if ($request->has('all')) {
-            $salesman = $query->get();
-        } else {
-            $salesman = $query->paginate(10)->appends($request->query());
-        }
-
-        return view('salesman.data', compact('salesman', 'sortBy', 'sortOrder'));
+    // 🔍 SEARCH
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('salesman.ID_SALESMAN', 'like', "%{$search}%")
+              ->orWhere('salesman.NAMA_SALESMAN', 'like', "%{$search}%")
+              ->orWhere('salesman.ID_DISTRIBUTOR', 'like', "%{$search}%")
+              ->orWhere('distributor.NAMA_DISTRIBUTOR', 'like', "%{$search}%");
+        });
     }
+
+    // 🔀 SORTING
+    $sortBy = $request->get('sort_by', 'ID_SALESMAN');
+    $sortOrder = $request->get('sort_order', 'asc');
+
+    $allowed = [
+        'ID_SALESMAN',
+        'NAMA_SALESMAN',
+        'ID_DISTRIBUTOR',
+        'NAMA_DISTRIBUTOR',
+        'TYPE_SALESMAN',
+        'total_kecurangan' // <= sort jumlah kecurangan
+    ];
+
+    if (!in_array($sortBy, $allowed)) {
+        $sortBy = 'ID_SALESMAN';
+    }
+
+    // PERHATIAN: kolom total_kecurangan harus pakai raw
+    if ($sortBy === 'total_kecurangan') {
+        $query->orderBy(DB::raw('total_kecurangan'), $sortOrder);
+    } else {
+        $query->orderBy($sortBy, $sortOrder);
+    }
+
+    if ($request->has('all')) {
+        $salesman = $query->get();
+    } else {
+        $salesman = $query->paginate(10)->appends($request->query());
+    }
+
+    return view('salesman.data', compact('salesman', 'sortBy', 'sortOrder'));
+}
+
+public function getKecurangan(Request $request, $id)
+{
+    $data = DB::table('kecurangan')
+        ->where('id_sales', $id)
+        ->where('validasi', 1)
+        ->orderBy('tanggal', 'desc')
+        ->paginate(7);
+
+    return response()->json([
+        'data'       => $data->items(),
+        'first'      => $data->firstItem(),
+        'pagination' => $data->links('pagination::modal')->render()
+    ]);
+}
+
+
 
     // =========================================================================================
     // EXPORT EXCEL

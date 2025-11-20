@@ -83,51 +83,45 @@
                                 <tr>
                                     <th class="text-center" style="width:5%;">#</th>
 
-                                    <th class="text-center" style="width:20px;">
+                                    <th style="padding-left: 100px;">
                                         <a href="{{ route('ass.data', array_merge(request()->query(), [
-                                            'sort_by' => 'ID_SALESMAN',
-                                            'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            ID ASS
-                                        </a>
-                                    </th>
-
-                                    <th class="text-center" style="width:20px;">
-                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
-                                            'sort_by' => 'ID_DISTRIBUTOR',
-                                            'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
-                                            ID Distributor
-                                        </a>
-                                    </th>
-
-                                    <th style="width:40%;">
-                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
-                                            'sort_by' => 'NAMA_SALESMAN',
-                                            'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'NAMA_SALESMAN',
+                'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
+                                        </a>
+                                    </th>
+
+                                    <th class="text-center" style="padding-left: 100px">
+                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
+                'sort_by' => 'total_distributor',
+                'sort_order' => (request('sort_by') === 'total_distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
+                                            Total Distributor
                                         </a>
                                     </th>
                                 </tr>
                             </thead>
-
                             <tbody>
-                                @forelse ($salesman as $index => $item)
+                                @forelse ($salesman as $item)
                                 <tr>
                                     <td class="text-center">
                                         {{ $loop->iteration + (method_exists($salesman, 'firstItem') ? $salesman->firstItem() - 1 : 0) }}
                                     </td>
 
-                                    <td class="text-center">{{ $item->ID_SALESMAN }}</td>
-                                    <td class="text-center">{{ $item->ID_DISTRIBUTOR }}</td>
-                                    <td>{{ $item->NAMA_SALESMAN }}</td>
+                                    <td style="padding-left: 100px">{{ $item->NAMA_SALESMAN }}</td>
+
+                                    <td class="text-center" style="padding-left: 100px">
+                                        <span class="badge-soft text-primary font-weight-bold" style="cursor:pointer;"
+                                            onclick="showDistributor('{{ $item->NAMA_SALESMAN }}')">
+                                            {{ $item->total_distributor }}
+                                        </span>
+                                    </td>
+
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="13" class="text-center text-muted">
-                                        Belum ada data ASS
-                                    </td>
+                                    <td colspan="3" class="text-center text-muted">Belum ada data ASS</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -147,6 +141,51 @@
         </div>
     </div>
 </div>
+
+{{-- ===================== MODAL DAFTAR DISTRIBUTOR ===================== --}}
+<div class="modal fade" id="modalDistributor" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:750px;">
+        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+            border-radius:15px;
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);">
+
+            <div class="modal-header" style="border-bottom:none;">
+                <h5 class="modal-title text-success" style="font-weight:600;">
+                    <i class="now-ui-icons business_bank"></i> Daftar Distributor
+                </h5>
+            </div>
+
+            <div class="modal-body" style="font-size:15px; color:#333;">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped"
+                        style="background:white; border-radius:10px; overflow:hidden;">
+                        <thead style="background:#29b14a; color:white;">
+                            <tr>
+                                <th class="text-center" style="width: 10%;">#</th>
+                                <th class="text-center" style="width: 25%;">ID Distributor</th>
+                                <th class="text-center">Nama Distributor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableDistributor"></tbody>
+                    </table>
+                    <div id="modalPagination" class="mt-2"></div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer" style="border-top:none;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">
+                    Tutup
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 @endsection
 @push ('styles')
 <link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
@@ -437,5 +476,51 @@ $(document).on("click", ".btn-lihat-alamat", function() {
 
     $("#modalAlamat").modal("show");
 });
+
+function showDistributor(namaAss, pageUrl = null) {
+
+    $("#distLoading").show();
+
+    let url = pageUrl ?? ("{{ url('/ass/get-distributor') }}/" + encodeURIComponent(namaAss));
+
+    $.get(url, function(res) {
+
+        let rows = "";
+
+        if (res.data.length === 0) {
+            rows = `
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-3">Tidak ada distributor</td>
+                </tr>
+            `;
+        } else {
+            let no = res.firstItem; // nomor awal halaman
+
+            res.data.forEach(row => {
+                rows += `
+                    <tr>
+                        <td class="text-center">${no++}</td>
+                        <td class="text-center">${row.ID_DISTRIBUTOR}</td>
+                        <td>${row.NAMA_DISTRIBUTOR ?? '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        $("#tableDistributor").html(rows);
+        $("#modalPagination").html(res.pagination);
+
+        $("#modalPagination a.page-link").click(function(e) {
+            e.preventDefault();
+            showDistributor(namaAss, $(this).attr("href"));
+        });
+
+    }).always(function() {
+        $("#distLoading").hide();
+    });
+
+    $("#modalDistributor").modal('show');
+}
+
 </script>
 @endpush

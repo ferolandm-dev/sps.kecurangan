@@ -182,25 +182,33 @@ Route::prefix('salesman')
     ->middleware('check.access:Data,Data Salesman')
     ->group(function () {
 
-        // halaman data salesman (LIST)
+        // LIST
         Route::get('/data', [SalesmanController::class, 'data'])
             ->middleware('check.access:Data,Data Salesman,access')
             ->name('salesman.data');
 
-        // export excel
+        // AJAX — Ambil data kecurangan valid per salesman (untuk modal)
+        Route::get('/get-kecurangan/{idSales}', [SalesmanController::class, 'getKecurangan'])
+            ->middleware('check.access:Data,Data Salesman,access')
+            ->name('salesman.getKecurangan');
+
+
+        // Export Excel
         Route::get('/export-excel', [SalesmanController::class, 'exportExcel'])
             ->middleware('check.access:Data,Data Salesman,print')
             ->name('salesman.exportExcel');
 
-        // export pdf
+        // Export PDF
         Route::get('/export-pdf', [SalesmanController::class, 'exportPdf'])
             ->middleware('check.access:Data,Data Salesman,print')
             ->name('salesman.exportPdf');
     });
 
+
 Route::prefix('ass')
     ->middleware('check.access:Data,Data ASS')
     ->group(function () {
+
         Route::get('/data', [AssController::class, 'data'])
             ->middleware('check.access:Data,Data ASS,access')
             ->name('ass.data');
@@ -213,7 +221,12 @@ Route::prefix('ass')
             ->middleware('check.access:Data,Data ASS,print')
             ->name('ass.exportPdf');
 
+        Route::get('/get-distributor/{namaAss}', [AssController::class, 'getDistributorByAss'])
+            ->middleware('check.access:Data,Data ASS,access')
+            ->name('ass.getDistributor');
+
     });
+
 
     // =====================================================
     // ⚠️ MASTER & DATA KECURANGAN

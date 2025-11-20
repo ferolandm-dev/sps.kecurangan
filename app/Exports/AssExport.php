@@ -11,20 +11,18 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class AssExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
 {
     /**
-     * Ambil data ASS (type_salesman = 7)
+     * Ambil data ASS (unique per NAMA_SALESMAN + hitung total distributor)
      */
     public function collection()
     {
         return DB::table('salesman')
             ->where('TYPE_SALESMAN', 7)
-            ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
             ->select(
-                'salesman.ID_SALESMAN',
-                'salesman.NAMA_SALESMAN',
-                'salesman.ID_DISTRIBUTOR',
-                'distributor.NAMA_DISTRIBUTOR'
+                'NAMA_SALESMAN',
+                DB::raw('COUNT(DISTINCT ID_DISTRIBUTOR) as total_distributor')
             )
-            ->orderBy('salesman.ID_SALESMAN', 'asc')
+            ->groupBy('NAMA_SALESMAN')
+            ->orderBy('NAMA_SALESMAN', 'asc')
             ->get();
     }
 
@@ -34,10 +32,8 @@ class AssExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
     public function headings(): array
     {
         return [
-            'ID ASS',
             'Nama ASS',
-            'ID Distributor',
-            'Nama Distributor'
+            'Total Distributor'
         ];
     }
 
@@ -47,10 +43,8 @@ class AssExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
     public function map($row): array
     {
         return [
-            $row->ID_SALESMAN,
             $row->NAMA_SALESMAN,
-            $row->ID_DISTRIBUTOR,
-            $row->NAMA_DISTRIBUTOR ?? '-',
+            $row->total_distributor
         ];
     }
 }

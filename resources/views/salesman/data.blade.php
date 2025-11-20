@@ -83,16 +83,16 @@
                                 <tr>
                                     <th class="text-center" style="width:5%;">#</th>
 
-                                    <th style="width:20px; text-align:center;">
-    <a href="{{ route('salesman.data', array_merge(request()->query(), [
+                                    <th style="padding-left: 100px;">
+                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
         'sort_by' => 'ID_SALESMAN',
         'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
     ])) }}" class="text-success text-decoration-none">
-        ID Salesman
-    </a>
-</th>
+                                            ID Salesman
+                                        </a>
+                                    </th>
 
-                                    <th style="width:20px; text-align:center;">
+                                    <th style="padding-left: 100px;">
                                         <a href="{{ route('salesman.data', array_merge(request()->query(), [
         'sort_by' => 'ID_DISTRIBUTOR',
         'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
@@ -104,14 +104,18 @@
                                     <!-- <th>User</th>
                                     <th>Junior SPV</th>
                                     <th>SPC Manager</th> -->
-                                    <th style="width:40%;">
-    <a href="{{ route('salesman.data', array_merge(request()->query(), [
+                                    <th style="padding-left: 100px;">
+                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
         'sort_by' => 'NAMA_SALESMAN',
         'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
     ])) }}" class="text-success text-decoration-none">
-        Nama Salesman
-    </a>
-</th>
+                                            Nama Salesman
+                                        </a>
+                                    </th>
+                                    <th class="text-center" style="padding-left: 100px">
+                                        Total Kecurangan
+                                    </th>
+
 
                                     <!-- <th>Type</th> -->
                                     <!-- <th>Alamat</th>
@@ -129,15 +133,22 @@
                                         {{ $loop->iteration + (method_exists($salesman, 'firstItem') ? $salesman->firstItem() - 1 : 0) }}
                                     </td>
 
-                                    <td class="text-center">{{ $item->ID_SALESMAN }}</td>
-                                    <td class="text-center">{{ $item->ID_DISTRIBUTOR }}</td>
+                                    <td style="padding-left: 100px">{{ $item->ID_SALESMAN }}</td>
+                                    <td style="padding-left: 100px">{{ $item->ID_DISTRIBUTOR }}</td>
                                     <!-- <td>{{ $item->ID_USER ?? '-' }}</td>
                                     <td>{{ $item->ID_JUNIOR_SPV ?? '-' }}</td>
                                     <td>{{ $item->ID_SPC_MANAGER ?? '-' }}</td> -->
 
-                                    <td>{{ $item->NAMA_SALESMAN }}</td>
-                                    <!-- <td>{{ $item->TYPE_SALESMAN ?? '-' }}</td> -->
+                                    <td style="padding-left: 100px">{{ $item->NAMA_SALESMAN }}</td>
 
+                                    <td class="text-center" style="padding-left: 100px">
+                                        <span class="badge-soft text-danger font-weight-bold" style="cursor:pointer;"
+                                            onclick="showKecurangan('{{ $item->ID_SALESMAN }}')">
+                                            {{ $item->total_kecurangan }}
+                                        </span>
+                                    </td>
+
+                                    <!-- <td>{{ $item->TYPE_SALESMAN ?? '-' }}</td> -->
                                     {{-- ALAMAT BUTTON --}}
                                     <!-- <td class="text-center">
                                         @if ($item->ALAMAT)
@@ -201,27 +212,56 @@
         </div>
     </div>
 </div>
-
-{{-- ===================== MODAL LIHAT ALAMAT ===================== --}}
-<div class="modal fade" id="modalAlamat" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
-        <div class="modal-content border-0" style="background:rgba(255,255,255,0.97);
+{{-- ===================== MODAL KEKURANGAN ===================== --}}
+<div class="modal fade" id="modalKecurangan" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:750px;">
+        <div class="modal-content border-0" style="
+            background:rgba(255,255,255,0.97);
             border-radius:15px;
-            box-shadow:0 4px 25px rgba(0,0,0,0.3);">
+            box-shadow:0 4px 25px rgba(0,0,0,0.3);
+        ">
+
             <div class="modal-header" style="border-bottom:none;">
-                <h5 class="modal-title font-weight-bold" id="modalAlamatTitle"></h5>
+                <h5 class="modal-title text-danger" style="font-weight:600;">
+                    <i class="now-ui-icons ui-1_simple-remove"></i>
+                    Daftar Kecurangan (Valid)
+                </h5>
             </div>
 
-            <div class="modal-body" style="font-size:15px; color:#333; text-align:justify; line-height:1.6em;">
-                <p id="modalAlamatIsi"></p>
+            <div class="modal-body" style="font-size:15px; color:#333;">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped"
+                        style="background:white; border-radius:10px; overflow:hidden;">
+                        <thead style="background:#e74c3c; color:white;">
+                            <tr>
+                                <th class="text-center" style="width:10%;">#</th>
+                                <th class="text-center" style="width:20%;">Jenis Sanksi</th>
+                                <th class="text-center" style="width:30%;">Keterangan Sanksi</th>
+                                <th class="text-center" style="width:20%;">Nilai Sanksi</th>
+                                <th class="text-center" style="width:20%;">Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableKecurangan"></tbody>
+                    </table>
+
+                    <div id="kecuranganPagination" class="mt-2"></div>
+                </div>
+
             </div>
 
             <div class="modal-footer" style="border-top:none;">
-                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">
+                    Tutup
+                </button>
             </div>
+
         </div>
     </div>
 </div>
+
+
+
 @endsection
 
 
@@ -505,14 +545,63 @@ body,
 @endpush
 @push('js')
 <script>
-$(document).on("click", ".btn-lihat-alamat", function() {
-    let judul = $(this).data("judul");
-    let isi = $(this).data("isi");
+function showKecurangan(idSales, pageUrl = null) {
 
-    $("#modalAlamatTitle").text(judul);
-    $("#modalAlamatIsi").text(isi);
+    $("#tableKecurangan").html(`
+        <tr>
+            <td colspan="5" class="text-center text-muted py-3">Loading...</td>
+        </tr>
+    `);
 
-    $("#modalAlamat").modal("show");
-});
+    $("#kecuranganPagination").html("");
+    $("#modalKecurangan").modal('show');
+
+    // URL CORRECT
+    let url = pageUrl ?? ("{{ url('/salesman/get-kecurangan') }}/" + idSales);
+
+    $.get(url, function(res) {
+
+        let indexStart = res.first ?? 1;
+        let rows = "";
+
+        if (!res.data || res.data.length === 0) {
+            rows = `
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-3">Tidak ada data</td>
+                </tr>
+            `;
+        } else {
+            res.data.forEach((row, i) => {
+                rows += `
+                    <tr>
+                        <td class="text-center">${indexStart + i}</td>
+                        <td>${row.jenis_sanksi ?? '-'}</td>
+                        <td>${row.keterangan_sanksi ?? '-'}</td>
+                        <td>${row.nilai_sanksi ?? '0'}</td>
+                        <td>${row.tanggal}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        $("#tableKecurangan").html(rows);
+        $("#kecuranganPagination").html(res.pagination);
+
+        // pagination click
+        $("#kecuranganPagination a.page-link").click(function(e) {
+            e.preventDefault();
+            showKecurangan(idSales, $(this).attr("href"));
+        });
+
+    }).fail(function(xhr) {
+        console.log("AJAX Error:", xhr.responseText);
+        $("#tableKecurangan").html(`
+            <tr>
+                <td colspan="5" class="text-center text-danger py-3">Gagal memuat data</td>
+            </tr>
+        `);
+    });
+
+}
 </script>
 @endpush

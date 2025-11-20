@@ -14,41 +14,30 @@ class AssController extends Controller
     {
         $query = DB::table('salesman')
             ->where('TYPE_SALESMAN', 7)
-            ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
             ->select(
-                'salesman.*',
-                'distributor.NAMA_DISTRIBUTOR'
-            );
+                'NAMA_SALESMAN',
+                DB::raw('COUNT(DISTINCT ID_DISTRIBUTOR) as total_distributor')
+            )
+            ->groupBy('NAMA_SALESMAN');
 
-        // Search
+        // SEARCH
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('salesman.ID_SALESMAN', 'like', "%{$search}%")
-                  ->orWhere('salesman.NAMA_SALESMAN', 'like', "%{$search}%")
-                  ->orWhere('salesman.ID_DISTRIBUTOR', 'like', "%{$search}%")
-                  ->orWhere('distributor.NAMA_DISTRIBUTOR', 'like', "%{$search}%");
-            });
+            $query->where('NAMA_SALESMAN', 'like', "%{$search}%");
         }
 
-        // Sorting
-        $sortBy = $request->get('sort_by', 'ID_SALESMAN');
+        // SORTING
+        $sortBy = $request->get('sort_by', 'NAMA_SALESMAN');
         $sortOrder = $request->get('sort_order', 'asc');
 
-        $allowed = [
-            'ID_SALESMAN',
-            'NAMA_SALESMAN',
-            'ID_DISTRIBUTOR',
-            'NAMA_DISTRIBUTOR',
-        ];
-
+        $allowed = ['NAMA_SALESMAN', 'total_distributor'];
         if (!in_array($sortBy, $allowed)) {
-            $sortBy = 'ID_SALESMAN';
+            $sortBy = 'NAMA_SALESMAN';
         }
 
         $query->orderBy($sortBy, $sortOrder);
 
-        // Paginate / Show All
+        // PAGINATION / SHOW ALL
         if ($request->has('all')) {
             $salesman = $query->get();
         } else {
@@ -57,6 +46,31 @@ class AssController extends Controller
 
         return view('ass.data', compact('salesman', 'sortBy', 'sortOrder'));
     }
+    public function getDistributorByAss(Request $request, $namaAss)
+{
+    $data = DB::table('salesman')
+        ->where('TYPE_SALESMAN', 7)
+        ->whereRaw("TRIM(LOWER(NAMA_SALESMAN)) = TRIM(LOWER(?))", [$namaAss])
+        ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
+        ->select(
+            'salesman.ID_DISTRIBUTOR',
+            'distributor.NAMA_DISTRIBUTOR'
+        )
+        ->groupBy('salesman.ID_DISTRIBUTOR', 'distributor.NAMA_DISTRIBUTOR')
+        ->orderBy('distributor.NAMA_DISTRIBUTOR')
+        ->paginate(7);
+
+        return response()->json([
+        'data'       => $data->items(),
+        'pagination' => $data->links('pagination::modal')->render(),
+        'currentPage' => $data->currentPage(),
+        'perPage'     => $data->perPage(),
+        'firstItem'   => $data->firstItem(),
+    ]);
+
+}
+
+
 
     // ============================================================================
     // EXPORT EXCEL
@@ -73,11 +87,12 @@ class AssController extends Controller
     {
         $data = DB::table('salesman')
             ->where('TYPE_SALESMAN', 7)
-            ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
             ->select(
-                'salesman.*',
-                'distributor.NAMA_DISTRIBUTOR'
+                'NAMA_SALESMAN',
+                DB::raw('COUNT(DISTINCT ID_DISTRIBUTOR) as total_distributor')
             )
+            ->groupBy('NAMA_SALESMAN')
+            ->orderBy('NAMA_SALESMAN', 'asc')
             ->get();
 
         $pdf = PDF::loadView('pdf.ass', ['ass' => $data])

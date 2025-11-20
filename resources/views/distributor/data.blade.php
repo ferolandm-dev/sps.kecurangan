@@ -81,7 +81,7 @@
                                 <tr>
                                     <th class="text-center" style="width:5%;">#</th>
 
-                                    <th style="width:20px; text-align:center">
+                                    <th style="padding-left: 100px; width:30%;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
                 'sort_by' => 'ID_DISTRIBUTOR',
                 'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
@@ -90,7 +90,7 @@
                                         </a>
                                     </th>
 
-                                    <th style="width:70%;">
+                                    <th style="padding-left: 100px;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
                 'sort_by' => 'NAMA_DISTRIBUTOR',
                 'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
@@ -118,8 +118,8 @@
                                         {{ $loop->iteration + (method_exists($distributor, 'firstItem') ? $distributor->firstItem() - 1 : 0) }}
                                     </td>
 
-                                    <td class="text-center">{{ $d->ID_DISTRIBUTOR }}</td>
-                                    <td>{{ $d->NAMA_DISTRIBUTOR }}</td>
+                                    <td style="padding-left: 100px">{{ $d->ID_DISTRIBUTOR }}</td>
+                                    <td style="padding-left: 100px">{{ $d->NAMA_DISTRIBUTOR }}</td>
 
                                     {{-- Kolom lain (JANGAN DIHAPUS) --}}
                                     <!-- <td>{{ $d->ID_KOTA ?? '-' }}</td>

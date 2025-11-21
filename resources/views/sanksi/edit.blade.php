@@ -5,73 +5,96 @@
 ])
 
 @section('content')
+
 <div class="panel-header panel-header-sm panel-header-sps"></div>
 
 <div class="content">
     <div class="row justify-content-center">
         <div class="col-md-12">
 
-            {{-- ALERT SUCCESS --}}
+            {{-- ===========================================================
+                 ALERT: SUCCESS (jika update berhasil)
+            =========================================================== --}}
             @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert" style="
-                background: linear-gradient(135deg, #29b14a 0%, #34d058 100%);
-                color: #fff;border:none;border-radius:14px;padding:14px 18px;">
+            <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert" style="background: linear-gradient(135deg, #29b14a 0%, #34d058 100%);
+                color:#fff; border:none; border-radius:14px; padding:14px 18px;">
+
                 <div class="d-flex align-items-center">
                     <i class="now-ui-icons ui-1_bell-53 mr-2"></i>
                     <span>{{ session('success') }}</span>
                 </div>
+
                 <button type="button" class="close" data-dismiss="alert">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             @endif
 
-            {{-- ALERT ERROR --}}
+
+            {{-- ===========================================================
+                 ALERT: ERROR (jika terjadi error custom)
+            =========================================================== --}}
             @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert" style="
-                background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
-                color:#fff;border:none;border-radius:14px;padding:14px 18px;">
+            <div class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert" style="background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
+                color:#fff; border:none; border-radius:14px; padding:14px 18px;">
+
                 <div class="d-flex align-items-center">
                     <i class="now-ui-icons ui-1_bell-53 mr-2"></i>
                     <span>{!! session('error') !!}</span>
                 </div>
+
                 <button type="button" class="close" data-dismiss="alert">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             @endif
 
-            {{-- ALERT VALIDASI --}}
+
+            {{-- ===========================================================
+                 ALERT: VALIDASI FORM (Error bawaan Laravel)
+            =========================================================== --}}
             @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert" style="
-                background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
-                color:#fff;border-radius:14px;padding:14px 18px;">
+            <div class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert" style="background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
+                color:#fff; border-radius:14px; padding:14px 18px;">
+
                 <div class="d-flex align-items-start">
                     <i class="now-ui-icons ui-1_bell-53 mr-2"></i>
+
                     <ul class="mb-0 pl-2">
                         @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
+
                 <button type="button" class="close" data-dismiss="alert">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             @endif
 
-            {{-- FORM EDIT --}}
+
+            {{-- ===========================================================
+                 FORM EDIT SAN KSI
+            =========================================================== --}}
             <div class="card" style="border-radius:20px;">
+
+                {{-- Header Card --}}
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                     <h4 class="card-title mb-0 text-dark">Edit Data Sanksi</h4>
                 </div>
 
+                {{-- Body Card --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius:0 0 20px 20px;">
+
+                    {{-- FORM UPDATE --}}
                     <form method="POST" action="{{ route('sanksi.update', $sanksi->ID) }}">
                         @csrf
                         @method('PUT')
 
-                        {{-- Jenis Sanksi --}}
+                        {{-- ==========================================
+                             INPUT: Jenis Sanksi
+                        =========================================== --}}
                         <div class="form-group">
                             <label for="jenis">Jenis Sanksi</label>
                             <select name="jenis" id="jenis" class="form-control select2" required>
@@ -79,24 +102,24 @@
                                 <option value="Sanksi" {{ $sanksi->JENIS == 'Sanksi' ? 'selected' : '' }}>Sanksi
                                 </option>
                                 <option value="Non-Sanksi" {{ $sanksi->JENIS == 'Non-Sanksi' ? 'selected' : '' }}>
-                                    Non-Sanksi
-                                </option>
+                                    Non-Sanksi</option>
                             </select>
                         </div>
 
-                        {{-- Keterangan --}}
+                        {{-- ==========================================
+                             INPUT: Keterangan
+                        =========================================== --}}
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
-                            <textarea name="keterangan" id="keterangan" rows="3" class="form-control"
-                                placeholder="Tuliskan keterangan atau alasan sanksi..." style="border: 1px solid #ced4da;
-                            border-radius: 6px;
-                            padding: 10px 12px;
-                            resize: none;
-                            background: #fff;">{{ old('KETERANGAN', $sanksi->KETERANGAN) }}</textarea>
 
+                            <textarea name="keterangan" id="keterangan" rows="3" class="form-control"
+                                placeholder="Tuliskan keterangan atau alasan sanksi..."
+                                style="border:1px solid #ced4da; border-radius:6px; padding:10px 12px; resize:none; background:#fff;">{{ old('KETERANGAN', $sanksi->KETERANGAN) }}</textarea>
                         </div>
 
-                        {{-- Nilai --}}
+                        {{-- ==========================================
+                             INPUT: Nilai Sanksi
+                        =========================================== --}}
                         <div class="form-group">
                             <label for="nilai">Nilai (Rupiah)</label>
                             <input type="number" name="nilai" id="nilai" class="form-control"
@@ -104,9 +127,14 @@
                                 value="{{ old('NILAI', $sanksi->NILAI) }}" required>
                         </div>
 
-                        {{-- Tombol --}}
+                        {{-- ==========================================
+                             TOMBOL AKSI
+                        =========================================== --}}
                         <div class="text-right mt-4">
-                            <a href="{{ route('sanksi.index') }}" class="btn btn-secondary btn-round">Batal</a>
+                            <a href="{{ route('sanksi.index') }}" class="btn btn-secondary btn-round">
+                                Batal
+                            </a>
+
                             <button type="submit" class="btn btn-success btn-round"
                                 style="background:#29b14a;border:none;">
                                 Simpan
@@ -115,21 +143,20 @@
 
                     </form>
                 </div>
+
             </div>
 
         </div>
     </div>
 </div>
-@endsection
 
-{{-- CSS --}}
-<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
-<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
-<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
+@endsection
 
 @push('styles')
 <style>
+/* =====================================================
+   FIX VALIDATION STATE (hilangkan border merah default)
+===================================================== */
 input:invalid,
 textarea:invalid,
 select:invalid {
@@ -137,12 +164,19 @@ select:invalid {
     border-color: #ced4da !important;
 }
 
+/* Focus state hijau */
 input:focus,
 textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
 }
 
+
+
+/* =====================================================
+   GLOBAL PAGE BACKGROUND
+   (Gradient halaman utama sesuai tema)
+===================================================== */
 body,
 .wrapper,
 .main-panel {
@@ -150,15 +184,21 @@ body,
     background-attachment: fixed !important;
 }
 
+/* Panel header transparan */
 .panel-header-sps {
     background: transparent !important;
 }
 
+/* Konten full transparan */
 .content {
     background: transparent !important;
 }
 
-/* Navbar */
+
+
+/* =====================================================
+   NAVBAR CUSTOM (Tetap tema hijau–kuning)
+===================================================== */
 .navbar-soft {
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
     height: 95px !important;
@@ -166,12 +206,17 @@ body,
     border-bottom-right-radius: 20px;
 }
 
+/* Brand text */
 .navbar-soft .navbar-brand {
     color: #fff !important;
     font-weight: 700;
 }
 
-/* Global Button Style */
+
+
+/* =====================================================
+   BUTTON GLOBAL (Soft UI)
+===================================================== */
 .btn {
     border-radius: 12px !important;
     font-weight: 600 !important;
@@ -179,33 +224,69 @@ body,
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
+/* Hover effect tetap sama */
 .btn:hover {
     transform: translateY(-2px);
 }
 
-/* Specific Buttons */
+
+
+/* =====================================================
+   SPECIFIC BUTTON COLORS
+===================================================== */
+
+/* Success (Hijau) */
 .btn-success {
     background: linear-gradient(135deg, #29b14a, #34d058) !important;
     color: #fff !important;
 }
 
+/* Secondary (Abu lembut) */
 .btn-secondary {
     background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
     color: #333 !important;
 }
 
-/* Round Style */
+
+
+/* =====================================================
+   ROUND BUTTON (kapsul)
+===================================================== */
 .btn-round {
     border-radius: 30px !important;
 }
 </style>
 @endpush
 
+
 @push('js')
+
+<!-- ============================================
+     SIDEBAR FIX (Style & Script)
+============================================ -->
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+
+<!-- ============================================
+     UI LOCK (Prevent UI glitch / freeze)
+============================================ -->
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
+
+<!-- ============================================
+     SELECT2 (Dropdown modern)
+============================================ -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+
 <script>
+/* =======================================================
+   INIT SELECT2 UNTUK FIELD "jenis"
+   - Placeholder tetap "-- Pilih Jenis --"
+   - Full width
+   - Tidak mengubah fungsi asli sedikit pun
+======================================================= */
 $(document).ready(function() {
     $('#jenis').select2({
         placeholder: "-- Pilih Jenis --",
@@ -213,4 +294,5 @@ $(document).ready(function() {
     });
 });
 </script>
+
 @endpush

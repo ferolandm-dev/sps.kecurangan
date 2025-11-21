@@ -10,26 +10,28 @@ class DashboardController extends Controller
 {
     public function __construct()
     {
+        // Auth middleware untuk seluruh dashboard
         $this->middleware('auth');
     }
 
     public function index()
     {
-        // ======================================
-        // 📊 Total distributor
-        // ======================================
+        /* ================================================================
+           MASTER DATA COUNTS
+        ================================================================ */
+
+        // Total distributor aktif
         $totalDistributorAktif = DB::table('distributor')->count();
 
-        // ======================================
-        // 👨‍💼 Total salesman aktif
-        // ======================================
+        // Total salesman aktif (TYPE_SALESMAN = 1)
         $totalSalesAktif = DB::table('salesman')
             ->where('TYPE_SALESMAN', 1)
             ->count();
 
-        // ======================================
-        // ⚠️ Fraud per bulan (kolom TANGGAL)
-        // ======================================
+
+        /* ================================================================
+           FRAUD PER BULAN (UNTUK LINE CHART)
+        ================================================================ */
         $fraudPerMonth = DB::table('kecurangan')
             ->select(
                 DB::raw('MONTH(TANGGAL) as bulan'),
@@ -40,18 +42,20 @@ class DashboardController extends Controller
             ->orderBy('bulan')
             ->pluck('total', 'bulan');
 
+        // Konversi ke array 12 bulan (Jan–Des)
         $fraudData = [];
         for ($i = 1; $i <= 12; $i++) {
             $fraudData[] = $fraudPerMonth[$i] ?? 0;
         }
 
-        // ======================================
-        // 🏢 Top distributor berdasarkan jumlah salesman aktif
-        // ======================================
+
+        /* ================================================================
+           TOP 5 DISTRIBUTOR BERDASARKAN SALES AKTIF
+        ================================================================ */
         $topDistributors = DB::table('distributor')
             ->leftJoin('salesman', function ($join) {
                 $join->on('salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
-                    ->where('salesman.TYPE_SALESMAN', 1);
+                     ->where('salesman.TYPE_SALESMAN', 1);
             })
             ->select(
                 'distributor.ID_DISTRIBUTOR as id',
@@ -63,9 +67,10 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // ======================================
-        // 🚨 Top 5 salesman paling sering curang
-        // ======================================
+
+        /* ================================================================
+           TOP 5 SALESMAN PALING SERING CURANG
+        ================================================================ */
         $topFraudSales = DB::table('kecurangan')
             ->join('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
             ->select(
@@ -81,35 +86,38 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // ======================================
-        // 📆 Total kecurangan bulan ini
-        // ======================================
+
+        /* ================================================================
+           SUMMARY: TOTAL KECURANGAN & SANCTION VALUE (BULAN INI)
+        ================================================================ */
         $totalKecuranganBulanIni = DB::table('kecurangan')
             ->where('VALIDASI', 1)
             ->whereMonth('TANGGAL', date('m'))
             ->whereYear('TANGGAL', date('Y'))
             ->count();
 
-        // ======================================
-        // 💰 Total nilai sanksi bulan ini
-        // ======================================
         $totalNilaiSanksiBulanIni = DB::table('kecurangan')
             ->where('VALIDASI', 1)
             ->whereMonth('TANGGAL', date('m'))
             ->whereYear('TANGGAL', date('Y'))
             ->sum('NILAI_SANKSI');
 
-        // ======================================
-        // 📆 HITUNG KUARTAL & PROGRESS
-        // ======================================
+
+        /* ================================================================
+           HITUNG KUARTAL SAAT INI + PROGRESS HARI KERJA DALAM KUARTAL
+        ================================================================ */
+
+        // Cek bulan → Tentukan kuartal
         $currentMonth = (int) Carbon::now()->format('n');
 
-        if ($currentMonth <= 3) $currentQuarter = 1;
-        elseif ($currentMonth <= 6) $currentQuarter = 2;
-        elseif ($currentMonth <= 9) $currentQuarter = 3;
-        else $currentQuarter = 4;
+        if ($currentMonth <= 3)        $currentQuarter = 1;
+        elseif ($currentMonth <= 6)    $currentQuarter = 2;
+        elseif ($currentMonth <= 9)    $currentQuarter = 3;
+        else                            $currentQuarter = 4;
 
         $year = Carbon::now()->year;
+
+        // Range tiap kuartal
         $quarterRanges = [
             1 => ['start' => "$year-01-01", 'end' => "$year-03-31"],
             2 => ['start' => "$year-04-01", 'end' => "$year-06-30"],
@@ -120,30 +128,34 @@ class DashboardController extends Controller
         $startQuarter = Carbon::parse($quarterRanges[$currentQuarter]['start']);
         $endQuarter   = Carbon::parse($quarterRanges[$currentQuarter]['end']);
 
-        // Hitung hari kerja kuartal (exclude Minggu)
+        // Hitung total hari kerja kuartal (exclude Minggu)
         $totalHariKuartal = 0;
         $temp = $startQuarter->copy();
+
         while ($temp->lte($endQuarter)) {
             if ($temp->dayOfWeek !== 0) $totalHariKuartal++;
             $temp->addDay();
         }
 
-        // Hitung progress hari kerja
+        // Hitung posisi hari kerja saat ini
         $hariKe = 0;
         $today = Carbon::now()->startOfDay();
         $temp = $startQuarter->copy();
+
         while ($temp->lte($today) && $temp->lte($endQuarter)) {
             if ($temp->dayOfWeek !== 0) $hariKe++;
             $temp->addDay();
         }
 
+        // Kalkulasi progress %
         $progressQuarterDay = $totalHariKuartal > 0
             ? round(min(max(($hariKe / $totalHariKuartal) * 100, 0), 100), 1)
             : 0;
 
-        // ======================================
-        // 📊 Kasus & Nilai sanksi per kuartal
-        // ======================================
+
+        /* ================================================================
+           KASUS & NILAI SANCTION PER KUARTAL
+        ================================================================ */
         $quarterSummary = DB::table('kecurangan')
             ->select(
                 DB::raw('QUARTER(TANGGAL) as quarter'),
@@ -157,19 +169,21 @@ class DashboardController extends Controller
 
         $kasusPerQuarter = [];
         $sanksiPerQuarter = [];
-        foreach ([1, 2, 3, 4] as $q) {
+
+        foreach ([1,2,3,4] as $q) {
             $row = $quarterSummary->firstWhere('quarter', $q);
             $kasusPerQuarter[] = $row->total_kasus ?? 0;
             $sanksiPerQuarter[] = $row->total_sanksi ?? 0;
         }
 
-        // ======================================
-        // 📈 Trend Kecurangan Bulan Ini
-        // ======================================
-        $bulanIni = date('m');
-        $bulanLalu = date('m', strtotime('-1 month'));
-        $tahunIni = date('Y');
-        $tahunLalu = date('Y', strtotime('-1 month'));
+
+        /* ================================================================
+           TREND KECURANGAN BULAN INI VS BULAN LALU
+        ================================================================ */
+        $bulanIni   = date('m');
+        $bulanLalu  = date('m', strtotime('-1 month'));
+        $tahunIni   = date('Y');
+        $tahunLalu  = date('Y', strtotime('-1 month'));
 
         $fraudBulanIni = DB::table('kecurangan')
             ->where('VALIDASI', 1)
@@ -189,9 +203,10 @@ class DashboardController extends Controller
             $trendFraud = round((($fraudBulanIni - $fraudBulanLalu) / $fraudBulanLalu) * 100, 1);
         }
 
-        // ======================================
-        // 💵 Rata-rata nilai sanksi bulan ini
-        // ======================================
+
+        /* ================================================================
+           RATA-RATA NILAI SANKSI BULAN INI
+        ================================================================ */
         $avgSanksiBulanIni = DB::table('kecurangan')
             ->where('VALIDASI', 1)
             ->whereMonth('TANGGAL', date('m'))
@@ -200,9 +215,10 @@ class DashboardController extends Controller
 
         $avgSanksiBulanIni = round($avgSanksiBulanIni);
 
-        // ======================================
-        // 🔥 Heatmap per tanggal
-        // ======================================
+
+        /* ================================================================
+           HEATMAP — TOTAL KASUS PER TANGGAL
+        ================================================================ */
         $latestYear = DB::table('kecurangan')->max(DB::raw('YEAR(TANGGAL)')) ?? date('Y');
 
         $fraudCalendar = DB::table('kecurangan')
@@ -210,9 +226,10 @@ class DashboardController extends Controller
             ->groupBy('TANGGAL')
             ->pluck(DB::raw('COUNT(*) as total'), 'TANGGAL');
 
-        // ======================================
-        // 🔥 Leaderboard Distributor
-        // ======================================
+
+        /* ================================================================
+           LEADERBOARD DISTRIBUTOR (TOP 5 KASUS)
+        ================================================================ */
         $leaderboardDistributor = DB::table('kecurangan')
             ->leftJoin('distributor', 'distributor.ID_DISTRIBUTOR', '=', 'kecurangan.DISTRIBUTOR')
             ->select(
@@ -225,9 +242,10 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // ======================================
-        // 🔥 Kasus terbaru
-        // ======================================
+
+        /* ================================================================
+           KASUS TERBARU (LIMIT 5)
+        ================================================================ */
         $recentFraudCases = DB::table('kecurangan')
             ->leftJoin('salesman', 'salesman.ID_SALESMAN', '=', 'kecurangan.ID_SALES')
             ->select(
@@ -243,16 +261,18 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // ======================================
-        // 🔥 TOTAL ASS (type = 7)
-        // ======================================
+
+        /* ================================================================
+           TOTAL ASS (TYPE_SALESMAN = 7)
+        ================================================================ */
         $totalAssAktif = DB::table('salesman')
             ->where('TYPE_SALESMAN', 7)
             ->count();
 
-        // ======================================
-        // RETURN VIEW
-        // ======================================
+
+        /* ================================================================
+           RETURN VIEW
+        ================================================================ */
         return view('dashboard', compact(
             'totalDistributorAktif',
             'totalSalesAktif',

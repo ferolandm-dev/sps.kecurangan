@@ -4,36 +4,53 @@
 'activePage' => 'welcome',
 ])
 
-
 @section('content')
 
+<!-- =========================================
+     MAIN WRAPPER (FULL BACKGROUND)
+========================================= -->
 <div class="welcome-content-bg">
 
-    {{-- LOGO SPS --}}
+    <!-- =========================================
+         LOGO SPS
+    ========================================== -->
     <div class="welcome-logo mt-4 fadeUp fade-delay-1">
         <img src="{{ asset('assets/img/SPS LOGO.png') }}" class="welcome-logo-img">
     </div>
 
-    {{-- FANCY DATE --}}
+    <!-- =========================================
+         FANCY DATE (TANGGAL)
+    ========================================== -->
     <div id="wibDate" class="welcome-date fancy-date fadeUp fade-delay-2"></div>
 
-    {{-- JAM WAKTU INDONESIA BARAT --}}
+    <!-- =========================================
+         CLOCK (WIB)
+    ========================================== -->
     <div id="wibClock" class="welcome-clock fadeUp fade-delay-2"></div>
 
-
+    <!-- =========================================
+         GREETING UTAMA (PAGI/SIANG/SORE/MALAM)
+    ========================================== -->
     <h1 class="welcome-title fadeUp fade-delay-3">
         <span id="greetingText"></span>, {{ strtoupper(auth()->user()->name) }}!
     </h1>
 
+    <!-- =========================================
+         MOOD TEXT (SESUAI WAKTU)
+    ========================================== -->
     <p id="greetingMood" class="welcome-mood fadeUp fade-delay-4"></p>
 
-    {{-- QUICK MENU RANDOM 5 ITEM SESUAI AKSES + ROUTE OTOMATIS (FIXED) --}}
+
+    <!-- =========================================
+         QUICK MENU (RANDOM 5 MENU SESUAI AKSES)
+    ========================================== -->
     <div class="quick-menu fadeUp fade-delay-4">
+
         @php
         use Illuminate\Support\Str;
         use Illuminate\Support\Facades\Route;
 
-        // Ambil semua menu yang user punya akses
+        // Ambil menu sesuai akses user
         $accessibleMenus = DB::table('user_access')
         ->where('user_id', auth()->id())
         ->where('can_access', 1)
@@ -41,78 +58,93 @@
         ->pluck('sub_menu')
         ->toArray();
 
-        // Shuffle dan ambil 5 item (pastikan koleksi terdefinisi)
+        // Acak dan ambil max 5 menu
         $randomMenus = collect($accessibleMenus)->shuffle()->take(5)->values();
 
-        // Ambil semua nama route Laravel (named routes)
+        // Ambil semua route name
         $allRoutes = collect(Route::getRoutes())
         ->map(fn($r) => $r->getName())
         ->filter()
         ->values();
         @endphp
 
-        {{-- jika tidak ada menu yg bisa diakses, tampilkan pesan singkat atau kosong --}}
-        @if($randomMenus->isEmpty())
-        {{-- optional: tampilkan nothing atau placeholder --}}
-        @else
+        @if(!$randomMenus->isEmpty())
         @foreach($randomMenus as $label)
+
         @php
         $label = trim((string) $label);
         $labelLower = strtolower($label);
 
-        // === KHUSUS ASS (MASTER & DATA) ===
+        /* =========================================
+        RULE KHUSUS UNTUK MENU ASS
+        ========================================== */
         if (Str::contains($labelLower, 'ass')) {
 
-        // DATA ASS → /asisten_manager/data
+        // Data ASS -> /asisten_manager/data
         if (Str::startsWith($labelLower, 'data ')) {
         $url = url('/asisten_manager/data');
         }
-
-        // MASTER ASS → /asisten_manager
+        // Master ASS -> /asisten_manager
         else {
         $url = url('/asisten_manager');
         }
         }
 
-        // === KHUSUS MENU DATA LAINNYA ===
+        /* =========================================
+        RULE KHUSUS UNTUK MENU DATA LAIN
+        ========================================== */
         elseif (Str::startsWith($labelLower, 'data ')) {
+
         $dataSlug = Str::slug(str_replace('data ', '', $labelLower));
 
+        // Khusus Distributor -> plural
         if ($dataSlug === 'distributor') {
-        $url = url('/distributor/data'); // khusus distributor plural
+        $url = url('/distributor/data');
         } else {
         $url = url('/' . $dataSlug . '/data');
         }
         }
 
-        // === ROUTE OTOMATIS NORMAL ===
+        /* =========================================
+        ROUTE OTOMATIS NORMAL (DEFAULT)
+        ========================================== */
         else {
-        $words = array_filter(explode(' ', $labelLower), fn($w) => $w !== '');
+        $words = array_filter(explode(' ', $labelLower));
         $filtered = array_values(array_filter($words, fn($w) => $w !== 'master'));
 
-        $main = empty($filtered) ? (end($words) ?: $labelLower) : end($filtered);
+        $main = empty($filtered)
+        ? (end($words) ?: $labelLower)
+        : end($filtered);
 
+        // Cari route berdasarkan kata terakhir
         $bestRoute = $allRoutes->first(fn($r) => Str::contains(strtolower($r), $main));
 
+        // Jika tidak ketemu, coba berdasarkan kata pertama
         if (!$bestRoute && !empty($filtered)) {
         $first = $filtered[0];
-        $bestRoute = $allRoutes->first(fn($r) => Str::contains(strtolower($r), $first));
+        $bestRoute = $allRoutes->first(fn($r) =>
+        Str::contains(strtolower($r), $first)
+        );
         }
 
         $slug = Str::slug($main);
 
+        // Jika route valid
         if ($bestRoute && Route::has($bestRoute)) {
         try {
         $url = route($bestRoute);
         } catch (\Throwable $e) {
         $url = url('/' . $slug);
         }
-        } else {
+        }
+        // Jika tidak ada route → manual slug
+        else {
         $url = url('/' . $slug);
         }
         }
         @endphp
 
+        <!-- Link menu -->
         <a href="{{ $url }}" class="quick-item">
             {{ $label }}
         </a>
@@ -122,9 +154,13 @@
     </div>
 
 
-    {{-- CARD CONTAINER --}}
+    <!-- =========================================
+         CARD WELCOME / AKSES USER
+    ========================================== -->
     <div class="welcome-card-container fadeUp fade-delay-3">
+
         @php
+        // Cek apakah user punya minimal satu akses
         $hasAccess = DB::table('user_access')
         ->where('user_id', auth()->id())
         ->where(fn($q) =>
@@ -152,6 +188,7 @@
             </p>
             @endif
 
+            <!-- Tombol logout -->
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="welcome-btn">
                 <i class="now-ui-icons media-1_button-power"></i>
@@ -165,13 +202,12 @@
     </div>
 
 </div>
-
 @endsection
 
 @push('styles')
 <style>
 /* =========================================
-   FULL BACKGROUND
+   FULL BACKGROUND AREA
 ========================================= */
 .welcome-content-bg {
     width: 100%;
@@ -188,8 +224,9 @@
     background-position: center !important;
 }
 
+
 /* =========================================
-   LOGO
+   LOGO (HEADER AREA)
 ========================================= */
 .welcome-logo-img {
     height: clamp(60px, 12vw, 95px);
@@ -197,8 +234,9 @@
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
+
 /* =========================================
-   TITLE
+   GREETING TITLE (PAGI/SIANG/SORE/MALAM)
 ========================================= */
 .welcome-title {
     font-size: clamp(22px, 5vw, 42px);
@@ -206,7 +244,6 @@
     color: #ffffff;
     text-align: center;
     letter-spacing: clamp(1px, 0.6vw, 2px);
-
     margin-top: clamp(8px, 1vw, 18px);
 
     text-shadow:
@@ -214,8 +251,9 @@
         0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+
 /* =========================================
-   CARD WRAPPER
+   CARD WRAPPER (CONTAINER)
 ========================================= */
 .welcome-card-container {
     width: 100%;
@@ -224,51 +262,54 @@
     margin-top: clamp(18px, 3vw, 30px);
 }
 
-/* ===============================
-   WELCOME CARD (COMPACT + SOLID WHITE)
-=============================== */
 
+/* =========================================
+   WELCOME CARD (COMPACT WHITE CARD)
+========================================= */
 .welcome-card {
     max-width: 380px;
     width: 100%;
 
     background: #ffffff !important;
-    /* 🔥 FULL WHITE, NO TRANSPARENCY */
     border-radius: 18px;
 
     padding: clamp(14px, 3vw, 22px) clamp(12px, 3vw, 22px);
 
     border: 1px solid rgba(0, 0, 0, 0.05);
-    /* border lembut */
 
     box-shadow:
         0 8px 22px rgba(0, 0, 0, 0.06),
         0 16px 32px rgba(41, 177, 74, 0.10);
 
-    backdrop-filter: none !important;
-
     text-align: center;
-    /* 🔥 matikan blur */
+    backdrop-filter: none !important;
 }
 
-/* Card container lebih kecil */
+
+/* =========================================
+   CARD ELEMENTS (ICON, TEXT)
+========================================= */
 .welcome-card-container {
     margin-top: clamp(12px, 2.5vw, 20px);
 }
 
-/* Icon lebih kecil */
 .welcome-icon {
     font-size: clamp(30px, 6vw, 48px);
     margin-bottom: clamp(8px, 2vw, 14px);
+    color: #29b14a !important;
+    text-shadow: none !important;
 }
 
-/* Deskripsi compact */
 .welcome-desc {
     font-size: clamp(13px, 2.3vw, 15px);
     margin-bottom: clamp(14px, 3vw, 22px);
     line-height: 1.45;
 }
 
+
+/* =========================================
+   LOGOUT BUTTON (POWER BUTTON)
+========================================= */
 .welcome-btn {
     display: inline-flex;
     align-items: center;
@@ -277,50 +318,35 @@
     padding: clamp(7px, 1.8vw, 10px) clamp(14px, 3.5vw, 20px);
 
     background: #ffffff !important;
-    /* 🔥 background putih */
     color: #29b14a !important;
-    /* icon hijau */
     border: 2px solid #29b14a;
-    /* 🔥 border hijau */
-    border-radius: 40px;
 
+    border-radius: 40px;
     font-size: clamp(12px, 2vw, 15px);
     font-weight: 600;
 
     box-shadow: 0 4px 12px rgba(41, 177, 74, 0.15);
-    /* soft shadow */
-    transition: 0.25s ease;
 
     text-decoration: none !important;
+    transition: 0.25s ease;
 }
 
-/* Hover effect */
 .welcome-btn:hover {
     background: #ff1e00ff !important;
-    /* hijau */
     color: #ffffff !important;
-    /* icon putih */
     border-color: #ff1e00ff;
 
     transform: translateY(-2px);
     box-shadow: 0 10px 22px rgba(41, 177, 74, 0.35);
 }
 
-/* Icon power lebih besar & rapi */
 .welcome-btn i {
     font-size: 20px;
 }
 
-.welcome-icon {
-    color: #29b14a !important;
-    -webkit-text-stroke: 0px transparent;
-    text-shadow: none !important;
-    /* jika mau hilangkan shadow */
-}
-
 
 /* =========================================
-   ANIMATION
+   ENTRANCE ANIMATIONS
 ========================================= */
 .fadeUp {
     opacity: 0;
@@ -352,8 +378,9 @@
     }
 }
 
+
 /* =========================================
-   SUPER SMOOTH RESPONSIVE BREAKPOINTS
+   EXTRA MOBILE TWEAKS
 ========================================= */
 @media (max-width: 400px) {
     .welcome-card {
@@ -361,31 +388,53 @@
     }
 }
 
-/* CLOCK */
+
+/* =========================================
+   CLOCK (JAM WIB)
+========================================= */
 .welcome-clock {
     font-size: clamp(16px, 3.2vw, 22px);
     font-weight: 600;
     color: #ffffff;
     margin-top: 5px;
     letter-spacing: 1px;
+
     text-shadow:
         0 2px 4px rgba(0, 0, 0, 0.20),
         0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
-.welcome-greet {
-    font-size: clamp(18px, 4vw, 28px);
-    font-weight: 600;
+
+/* =========================================
+   GREETING MOOD TEXT
+========================================= */
+.welcome-mood {
+    font-size: clamp(12px, 2.5vw, 16px);
+    font-weight: 500;
     color: #ffffff;
-    margin-bottom: 5px;
+
+    margin-top: -25px !important;
+
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+
+    text-align: center;
+
     text-shadow:
         0 2px 4px rgba(0, 0, 0, 0.20),
-        0 4px 8px rgba(0, 0, 0, 0.18);
+        0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* ===============================
-   FANCY DATE STYLE
-=============================== */
+.welcome-mood.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   DATE STYLE
+========================================= */
 .fancy-date {
     font-size: clamp(15px, 3vw, 20px);
     font-weight: 600;
@@ -398,9 +447,10 @@
         0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* ===============================
-   QUICK MENU / SHORTCUT
-=============================== */
+
+/* =========================================
+   QUICK MENU ITEMS
+========================================= */
 .quick-menu {
     display: flex;
     flex-wrap: wrap;
@@ -417,10 +467,10 @@
     padding: 9px 15px;
     background: rgba(255, 255, 255, 0.92);
     border-radius: 14px;
+
     color: #29b14a;
     font-weight: 600;
     text-decoration: none !important;
-    /* 🔥 Hilangkan underline */
 
     font-size: clamp(13px, 2.4vw, 15px);
 
@@ -435,9 +485,7 @@
     transform: translateY(-3px);
     background: rgba(255, 255, 255, 1);
     color: #29b14a !important;
-    /* 🔥 Matikan hover merah */
     text-decoration: none !important;
-    /* 🔥 Tetap tanpa underline */
 
     box-shadow:
         0 10px 28px rgba(41, 177, 74, 0.35),
@@ -447,7 +495,6 @@
 .quick-item:focus,
 .quick-item:active {
     color: #29b14a !important;
-    /* 🔥 Tidak berubah warna saat ditekan */
     text-decoration: none !important;
 }
 
@@ -456,36 +503,10 @@
     color: #29b14a;
 }
 
-/* ===============================
-   GREETING MOOD TEXT
-=============================== */
-.welcome-mood {
-    font-size: clamp(12px, 2.5vw, 16px);
-    /* lebih kecil */
-    font-weight: 500;
-    color: #ffffff;
-    margin-top: -25px !important;
-    /* lebih rapat ke title */
-    opacity: 0;
-    transform: translateY(8px);
-    /* lebih kecil biar smooth */
-    transition: opacity 0.6s ease, transform 0.6s ease;
-    text-align: center;
 
-    text-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.20),
-        0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.welcome-mood.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ===============================
-   FIX: HILANGKAN SCROLL DI HALAMAN
-=============================== */
-
+/* =========================================
+   REMOVE BODY SCROLL (LANDING PAGE)
+========================================= */
 html,
 body {
     height: 100%;
@@ -497,22 +518,22 @@ body {
     height: 100vh;
     overflow: hidden;
     padding-top: 14px !important;
-    /* lebih kecil lagi */
     padding-bottom: 6px !important;
 }
 
-/* Kurangi jarak antar elemen */
+
+/* =========================================
+   MICRO SPACING OPTIMIZATION
+========================================= */
 .welcome-logo {
     margin-top: 4px !important;
 }
 
-/* Fancy date lebih hemat tempat */
 .fancy-date {
     margin-top: 20px !important;
     font-size: clamp(12px, 2.4vw, 16px) !important;
 }
 
-/* Jam lebih kecil */
 .welcome-clock {
     margin-top: 0 !important;
     font-size: clamp(12px, 2.6vw, 17px) !important;
@@ -520,16 +541,13 @@ body {
 
 .welcome-title {
     margin-top: 15px !important;
-    /* rapat */
 }
 
 .quick-menu {
     margin-top: 20px !important;
     gap: 7px !important;
-    /* lebih rapat */
 }
 
-/* Card lebih compact */
 .welcome-card {
     padding: 14px 16px !important;
     margin-top: 50px !important;
@@ -537,38 +555,47 @@ body {
 </style>
 @endpush
 
+
 @push('js')
+
+<!-- =========================================
+     REALTIME CLOCK WIB (JAM + DETIK)
+========================================= -->
 <script>
 function updateWIBClock() {
     const now = new Date();
 
-    // Konversi ke WIB (GMT+7)
-    const wibTime = new Date(now.toLocaleString("en-US", {
-        timeZone: "Asia/Jakarta"
-    }));
+    // Konversi zona waktu ke WIB
+    const wibTime = new Date(
+        now.toLocaleString("en-US", {
+            timeZone: "Asia/Jakarta"
+        })
+    );
 
-    let h = String(wibTime.getHours()).padStart(2, '0');
-    let m = String(wibTime.getMinutes()).padStart(2, '0');
-    let s = String(wibTime.getSeconds()).padStart(2, '0');
+    const h = String(wibTime.getHours()).padStart(2, '0');
+    const m = String(wibTime.getMinutes()).padStart(2, '0');
+    const s = String(wibTime.getSeconds()).padStart(2, '0');
 
     document.getElementById("wibClock").textContent = `${h}:${m}:${s} WIB`;
 }
 
-// Update awal
+// Render awal + interval tiap detik
 updateWIBClock();
-
-// Update setiap 1 detik untuk menampilkan detik
 setInterval(updateWIBClock, 1000);
 </script>
 
 
+
+<!-- =========================================
+     GREETING PAGI / SIANG / SORE / MALAM
+========================================= -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
     function setGreeting() {
         const now = new Date();
 
-        // Waktu WIB
+        // Ambil waktu WIB
         const wib = new Date(
             now.toLocaleString("en-US", {
                 timeZone: "Asia/Jakarta"
@@ -579,6 +606,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let greeting = "";
         let mood = "";
 
+        // Penentuan waktu salam
         if (hour >= 5 && hour < 11) {
             greeting = "PAGI";
             mood = "Semangat memulai hari!";
@@ -593,36 +621,38 @@ document.addEventListener("DOMContentLoaded", function() {
             mood = "Terima kasih atas kerja keras hari ini.";
         }
 
-        // Update Greeting Utama
+        // Update teks greeting
         const targetGreeting = document.getElementById("greetingText");
-        if (targetGreeting) {
-            targetGreeting.textContent = greeting;
-        }
+        if (targetGreeting) targetGreeting.textContent = greeting;
 
-        // Update Mood Text
+        // Update mood/kesan
         const targetMood = document.getElementById("greetingMood");
-        if (targetMood) {
-            targetMood.textContent = mood;
-        }
+        if (targetMood) targetMood.textContent = mood;
     }
 
-    // Jalankan saat halaman dimuat
+    // Render pertama
     setGreeting();
 
     // Update setiap 30 menit
     setInterval(setGreeting, 30 * 60 * 1000);
-
 });
 </script>
 
+
+
+<!-- =========================================
+     FANCY DATE WIB (HARI, TANGGAL, BULAN, TAHUN)
+========================================= -->
 <script>
-// ======== FANCY DATE WIB =========
 function updateWIBDate() {
     const now = new Date();
 
-    const wib = new Date(now.toLocaleString("en-US", {
-        timeZone: "Asia/Jakarta"
-    }));
+    // Mengubah waktu JS ke WIB
+    const wib = new Date(
+        now.toLocaleString("en-US", {
+            timeZone: "Asia/Jakarta"
+        })
+    );
 
     const hari = [
         "Minggu", "Senin", "Selasa", "Rabu",
@@ -635,21 +665,15 @@ function updateWIBDate() {
         "September", "Oktober", "November", "Desember"
     ];
 
-    const dayName = hari[wib.getDay()];
-    const day = wib.getDate();
-    const month = bulan[wib.getMonth()];
-    const year = wib.getFullYear();
+    const text =
+        `${hari[wib.getDay()]}, ${wib.getDate()} ${bulan[wib.getMonth()]} ${wib.getFullYear()}`;
 
-    document.getElementById("wibDate").textContent =
-        `${dayName}, ${day} ${month} ${year}`;
+    document.getElementById("wibDate").textContent = text;
 }
 
-// initial render
+// Render pertama + update tiap jam
 updateWIBDate();
-
-// update setiap 1 jam
 setInterval(updateWIBDate, 3600000);
 </script>
-
 
 @endpush

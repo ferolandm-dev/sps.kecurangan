@@ -7,14 +7,16 @@ use Illuminate\Support\Facades\DB;
 
 class SanksiController extends Controller
 {
-    /**
-     * Tampilkan semua data sanksi.
-     */
+    // ============================================================
+    //                     TAMPILKAN LIST SANKSI
+    // ============================================================
     public function index(Request $request)
     {
         $query = DB::table('sanksi');
 
+        // ------------------------------------------------------------
         // 🔍 Pencarian
+        // ------------------------------------------------------------
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -24,7 +26,9 @@ class SanksiController extends Controller
             });
         }
 
+        // ------------------------------------------------------------
         // 🔁 Sorting
+        // ------------------------------------------------------------
         $allowedSorts = ['ID', 'JENIS', 'KETERANGAN', 'NILAI'];
         $sortBy = strtoupper($request->get('sort_by', 'ID'));
         $sortOrder = $request->get('sort_order', 'asc');
@@ -37,7 +41,9 @@ class SanksiController extends Controller
             $sortOrder = 'asc';
         }
 
-        // 🔁 Pagination atau tampil semua
+        // ------------------------------------------------------------
+        // 🔁 Pagination atau Tampilkan Semua
+        // ------------------------------------------------------------
         if ($request->has('all')) {
             $sanksi = $query->orderBy($sortBy, $sortOrder)->get();
         } else {
@@ -49,23 +55,25 @@ class SanksiController extends Controller
         return view('sanksi.index', compact('sanksi'));
     }
 
-    /**
-     * Form tambah sanksi baru.
-     */
+
+    // ============================================================
+    //                      FORM TAMBAH SANKSI
+    // ============================================================
     public function create()
     {
         return view('sanksi.create');
     }
 
-    /**
-     * Simpan data sanksi baru.
-     */
+
+    // ============================================================
+    //                      SIMPAN DATA SANKSI
+    // ============================================================
     public function store(Request $request)
     {
         $request->validate([
-            'jenis' => 'required|string|max:100',
+            'jenis'      => 'required|string|max:100',
             'keterangan' => 'nullable|string',
-            'nilai' => 'required|numeric|min:0',
+            'nilai'      => 'required|numeric|min:0',
         ]);
 
         DB::table('sanksi')->insert([
@@ -79,9 +87,10 @@ class SanksiController extends Controller
         return redirect()->route('sanksi.index')->with('success', 'Data sanksi berhasil ditambahkan!');
     }
 
-    /**
-     * Form edit data sanksi.
-     */
+
+    // ============================================================
+    //                      FORM EDIT SANKSI
+    // ============================================================
     public function edit($id)
     {
         $sanksi = DB::table('sanksi')->where('ID', $id)->first();
@@ -93,15 +102,16 @@ class SanksiController extends Controller
         return view('sanksi.edit', compact('sanksi'));
     }
 
-    /**
-     * Update data sanksi.
-     */
+
+    // ============================================================
+    //                      UPDATE DATA SANKSI
+    // ============================================================
     public function update(Request $request, $id)
     {
         $request->validate([
-            'jenis' => 'required|string|max:100',
+            'jenis'      => 'required|string|max:100',
             'keterangan' => 'nullable|string',
-            'nilai' => 'required|numeric|min:0',
+            'nilai'      => 'required|numeric|min:0',
         ]);
 
         DB::table('sanksi')->where('ID', $id)->update([
@@ -114,9 +124,10 @@ class SanksiController extends Controller
         return redirect()->route('sanksi.index')->with('success', 'Data sanksi berhasil diperbarui!');
     }
 
-    /**
-     * Hapus data sanksi.
-     */
+
+    // ============================================================
+    //                        HAPUS DATA SANKSI
+    // ============================================================
     public function destroy($id)
     {
         DB::table('sanksi')->where('ID', $id)->delete();
@@ -124,9 +135,10 @@ class SanksiController extends Controller
         return redirect()->route('sanksi.index')->with('success', 'Data sanksi berhasil dihapus!');
     }
 
-    /**
-     * Ambil deskripsi berdasarkan JENIS.
-     */
+
+    // ============================================================
+    //              AMBIL DESKRIPSI BERDASARKAN JENIS
+    // ============================================================
     public function getDeskripsiByJenis($jenis)
     {
         $data = DB::table('sanksi')
@@ -138,9 +150,10 @@ class SanksiController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Ambil nilai berdasarkan JENIS & KETERANGAN.
-     */
+
+    // ============================================================
+    //      AMBIL NILAI BERDASARKAN JENIS & KETERANGAN
+    // ============================================================
     public function getNilaiByDeskripsi($jenis, $deskripsi)
     {
         $decodedDeskripsi = urldecode($deskripsi);

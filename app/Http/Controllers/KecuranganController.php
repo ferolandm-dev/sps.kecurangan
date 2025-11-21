@@ -422,10 +422,13 @@ class KecuranganController extends Controller
             ->value('NAMA_DISTRIBUTOR');
 
         return response()->json([
-            'nama_sales'  => $sales->NAMA_SALESMAN,
-            'distributor' => $distributor ?? '-'
+            'nama_sales'     => $sales->NAMA_SALESMAN,
+            'distributor'    => $distributor ?? '-',
+            'type_salesman'  => $sales->TYPE_SALESMAN,  // 🔥 WAJIB
+            'id_salesman'    => $sales->ID_SALESMAN,    // opsional tapi berguna
         ]);
     }
+
 
     /* ==========================================================
      | AJAX: GET ASS LIST

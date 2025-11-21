@@ -695,31 +695,57 @@ $(document).ready(function() {
         $('#nama_sales').val('');
         $('#distributor').val('');
         $('#nama_ass').val('');
-        $('#id_ass').html('<option value="">-- Pilih Asisten Manager --</option>');
+        $('#id_ass').html('<option value="">-- Pilih ASS --</option>');
 
         if (!idSales) return;
 
         $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
+
             $('#nama_sales').val(data.nama_sales);
             $('#distributor').val(data.distributor);
 
-            // ambil ASS yang distributor-nya sama
+            // ==========================================
+            // 🔥 JIKA TYPE SALES = 7 → ASS = DIRINYA SENDIRI
+            // ==========================================
+            if (data.type_salesman == 7) {
+
+                const opt = `
+                <option value="${data.id_salesman}"
+                    data-nama="${data.nama_sales}">
+                    ${data.id_salesman} - ${data.nama_sales}
+                </option>
+            `;
+
+                $('#id_ass').html(opt).trigger('change');
+                $('#nama_ass').val(data.nama_sales);
+
+                return; // STOP, tidak load daftar ASS dari distributor
+            }
+
+            // ==========================================
+            // 🔥 JIKA TYPE ≠ 7 → AMBIL ASS NORMAL
+            // ==========================================
             $.getJSON(`/kecurangan/ass/${idSales}`, function(list) {
-                let opt = '<option value="">-- Pilih Asisten Manager --</option>';
+                let opt = '<option value="">-- Pilih ASS --</option>';
 
                 list.forEach(a => {
-                    opt +=
-                        `<option value="${a.ID_SALESMAN}">${a.NAMA_SALESMAN}</option>`;
+                    opt += `
+                    <option value="${a.ID_SALESMAN}"
+                        data-nama="${a.NAMA_SALESMAN}">
+                        ${a.ID_SALESMAN} - ${a.NAMA_SALESMAN}
+                    </option>
+                `;
                 });
+
                 $('#id_ass').html(opt).trigger('change');
             });
         });
     });
 
-
-    // ketika ass dipilih
+    // Ketika ASS dipilih
     $('#id_ass').on('change', function() {
-        const nama = $(this).find('option:selected').text();
+        const selected = $(this).find('option:selected');
+        const nama = selected.data('nama') || "";
         $('#nama_ass').val(nama);
     });
 

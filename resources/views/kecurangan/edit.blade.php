@@ -818,42 +818,60 @@ $(document).ready(function() {
     });
 
     // ---------------------------------------------------------------------
-    // SALES -> DISTRIBUTOR -> ASS
+    // SALES -> DISTRIBUTOR -> ASS (TYPE 7 = DIRI SENDIRI)
     // ---------------------------------------------------------------------
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
 
         $('#nama_sales').val('');
         $('#distributor').val('');
-        $('#id_ass').empty().append('<option value="">-- Pilih Asisten Manager --</option>');
         $('#nama_ass').val('');
+        $('#id_ass').html('<option value="">-- Pilih ASS --</option>');
 
         if (!idSales) return;
 
         $.getJSON(`/kecurangan/sales/${idSales}`, function(data) {
+
             $('#nama_sales').val(data.nama_sales);
             $('#distributor').val(data.distributor);
 
-            // Load ASS sesuai distributor Sales
-            $.getJSON(`/kecurangan/ass/${idSales}`, function(assList) {
+            // ===============================
+            // 🔥 JIKA TYPE SALES = 7 → ASS = DIRINYA SENDIRI
+            // ===============================
+            if (data.type_salesman == 7) {
 
-                let html = '<option value="">-- Pilih Asisten Manager --</option>';
+                const opt = `
+                <option value="${data.id_salesman}"
+                    data-nama="${data.nama_sales}">
+                    ${data.id_salesman} - ${data.nama_sales}
+                </option>
+            `;
 
-                assList.forEach(a => {
+                $('#id_ass').html(opt).trigger('change');
+                $('#nama_ass').val(data.nama_sales); // hanya nama saja
+
+                return; // STOP — tidak load ASS lain
+            }
+
+            // ===============================
+            // 🔥 Normal → Load ASS distributor
+            // ===============================
+            $.getJSON(`/kecurangan/ass/${idSales}`, function(list) {
+                let html = '<option value="">-- Pilih ASS --</option>';
+
+                list.forEach(a => {
                     html += `
-<option value="${a.ID_SALESMAN}"
-    data-nama="${a.NAMA_SALESMAN}"
-    data-id="${a.ID_SALESMAN}">
-    ${a.ID_SALESMAN} - ${a.NAMA_SALESMAN}
-</option>`;
-
+                    <option value="${a.ID_SALESMAN}"
+                        data-nama="${a.NAMA_SALESMAN}">
+                        ${a.ID_SALESMAN} - ${a.NAMA_SALESMAN}
+                    </option>`;
                 });
-
 
                 $('#id_ass').html(html).trigger('change');
             });
         });
     });
+
 
     // ---------------------------------------------------------------------
     // KETIKA ASS DIPILIH → Tampilkan nama (tanpa ID)
@@ -865,31 +883,52 @@ $(document).ready(function() {
 
 
     // ---------------------------------------------------------------------
-    // AUTOFILL DATA SAAT EDIT
+    // AUTOFILL EDIT PAGE
     // ---------------------------------------------------------------------
     const initialSales = $('#id_sales').val();
     const initialAss = "{{ $kecurangan->ID_ASS }}";
 
     if (initialSales) {
 
-        $.getJSON(`/kecurangan/ass/${initialSales}`, function(assList) {
-            let html = '<option value="">-- Pilih Asisten Manager --</option>';
+        $.getJSON(`/kecurangan/sales/${initialSales}`, function(data) {
 
-            assList.forEach(a => {
-                html += `
-            <option value="${a.ID_SALESMAN}"
-                data-nama="${a.NAMA_SALESMAN}"
-                ${a.ID_SALESMAN === initialAss ? 'selected' : ''}>
-                ${a.NAMA_SALESMAN}
-            </option>
-        `;
+            // Jika TYPE = 7 → ASS = dirinya sendiri
+            if (data.type_salesman == 7) {
+
+                const opt = `
+                <option value="${data.id_salesman}"
+                    data-nama="${data.nama_sales}"
+                    ${data.id_salesman == initialAss ? 'selected' : ''}>
+                    ${data.id_salesman} - ${data.nama_sales}
+                </option>
+            `;
+
+                $('#id_ass').html(opt).trigger('change');
+                $('#nama_ass').val(data.nama_sales);
+
+                return;
+            }
+
+            // Jika bukan type 7 → load list ASS normal
+            $.getJSON(`/kecurangan/ass/${initialSales}`, function(list) {
+
+                let html = '<option value="">-- Pilih ASS --</option>';
+
+                list.forEach(a => {
+                    html += `
+                    <option value="${a.ID_SALESMAN}"
+                        data-nama="${a.NAMA_SALESMAN}"
+                        ${a.ID_SALESMAN == initialAss ? 'selected' : ''}>
+                        ${a.ID_SALESMAN} - ${a.NAMA_SALESMAN}
+                    </option>`;
+                });
+
+                $('#id_ass').html(html).trigger('change');
             });
 
-            $('#id_ass').html(html).trigger('change');
         });
-
     }
-
+    
     // ---------------------------------------------------------------------
     // JENIS → DESKRIPSI → NILAI SANKSI
     // ---------------------------------------------------------------------

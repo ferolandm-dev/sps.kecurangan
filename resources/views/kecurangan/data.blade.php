@@ -1014,22 +1014,37 @@ initSelect2InModal("#modalExportPdf");
 function loadKeterangan(jenis, targetSelect) {
     $(targetSelect).empty().append(`<option value="">Memuat...</option>`);
 
+    // Jika jenis belum dipilih
+    if (!jenis) {
+        $(targetSelect).html(`<option value="">Semua Keterangan</option>`);
+        return;
+    }
+
     $.ajax({
-        url: "{{ route('kecurangan.getKeteranganByJenis') }}",
+        url: "/kecurangan/get-keterangan/" + encodeURIComponent(jenis),
         type: "GET",
-        data: {
-            jenis_sanksi: jenis
-        },
         success: function(data) {
+
+            // Reset dropdown
             $(targetSelect).empty().append(`<option value="">Semua Keterangan</option>`);
+
+            // Tambahkan opsi dari DB
             data.forEach(item => {
-                $(targetSelect).append(
-                    `<option value="${item.keterangan}">${item.keterangan}</option>`);
+                $(targetSelect).append(`
+                    <option value="${item.KETERANGAN}">${item.KETERANGAN}</option>
+                `);
             });
+
+            // Refresh Select2 / Trigger change
             $(targetSelect).trigger('change');
+        },
+        error: function() {
+            $(targetSelect).html(`<option value="">Gagal memuat</option>`);
         }
     });
 }
+
+
 
 // Filter
 $("#filter_jenis_sanksi_filter").change(function() {

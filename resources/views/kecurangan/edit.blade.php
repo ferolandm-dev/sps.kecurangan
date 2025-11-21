@@ -928,41 +928,72 @@ $(document).ready(function() {
 
         });
     }
-    
-    // ---------------------------------------------------------------------
-    // JENIS → DESKRIPSI → NILAI SANKSI
-    // ---------------------------------------------------------------------
-    $('#jenis_sanksi').on('change', function() {
-        const jenis = $(this).val();
 
-        $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
+    // ---------------------------------------------------------------------
+    // JENIS → DESKRIPSI → NILAI SANKSI (EDIT + CREATE)
+    // ---------------------------------------------------------------------
+
+    function loadDeskripsi(jenis, selectedDeskripsi = null) {
+        $('#deskripsi_sanksi').html('<option value="">-- Pilih Deskripsi --</option>');
+        $('#nilai_sanksi').val('');
+
+        if (!jenis) return;
+
+        $.getJSON(`/kecurangan/deskripsi/${jenis}`, function(data) {
             let options = '<option value="">-- Pilih Deskripsi --</option>';
 
             data.forEach(item => {
-                options +=
-                    `<option value="${item.keterangan}">${item.keterangan}</option>`;
+                options += `
+                <option value="${item.KETERANGAN}"
+                    ${item.KETERANGAN == selectedDeskripsi ? 'selected' : ''}>
+                    ${item.KETERANGAN}
+                </option>`;
             });
 
             $('#deskripsi_sanksi').html(options).trigger('change');
         });
-    });
+    }
 
-    $('#deskripsi_sanksi').on('change', function() {
-        const jenis = $('#jenis_sanksi').val();
-        const deskripsi = $(this).val();
+    function loadNilai(jenis, deskripsi) {
 
         if (!jenis || !deskripsi) {
             $('#nilai_sanksi').val('');
             return;
         }
 
-        $.getJSON(`/sanksi/nilai/${jenis}/${encodeURIComponent(deskripsi)}`, function(data) {
-            const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
+        $.getJSON(`/kecurangan/nilai/${jenis}/${encodeURIComponent(deskripsi)}`, function(data) {
+
+            let rawNilai = data?.NILAI ?? 0;
+            let nilai = parseInt(rawNilai);
+            if (isNaN(nilai)) nilai = 0;
+
+            const formatted = new Intl.NumberFormat('id-ID').format(nilai);
             $('#nilai_sanksi').val('Rp ' + formatted);
+
         }).fail(() => {
-            $('#nilai_sanksi').val('');
+            $('#nilai_sanksi').val('Rp 0');
         });
+    }
+
+
+    $('#jenis_sanksi').on('change', function() {
+        const jenis = $(this).val();
+        loadDeskripsi(jenis);
     });
+
+    $('#deskripsi_sanksi').on('change', function() {
+        const jenis = $('#jenis_sanksi').val();
+        const deskripsi = $(this).val();
+        loadNilai(jenis, deskripsi);
+    });
+
+    const initialJenis = $('#jenis_sanksi').val();
+    const initialDeskripsi = "{{ $kecurangan->KETERANGAN_SANKSI }}";
+
+    if (initialJenis) {
+        loadDeskripsi(initialJenis, initialDeskripsi);
+    }
+
 
 });
 </script>

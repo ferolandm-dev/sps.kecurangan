@@ -20,8 +20,9 @@ class KecuranganController extends Controller
             ->select('ID_SALESMAN', 'NAMA_SALESMAN')
             ->get();
 
-        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('jenis');
-        $keteranganSanksi = DB::table('sanksi')->get();
+        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('JENIS');
+        $keteranganSanksi = DB::table('sanksi')->select('ID','JENIS','KETERANGAN','NILAI')->get();
+
 
         $query = DB::table('kecurangan')
             ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
@@ -74,8 +75,9 @@ class KecuranganController extends Controller
             ->select('ID_SALESMAN as id_sales', 'NAMA_SALESMAN as nama_sales')
             ->get();
 
-        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('jenis');
-        $keteranganSanksi = DB::table('sanksi')->get();
+        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('JENIS');
+        $keteranganSanksi = DB::table('sanksi')->select('ID','JENIS','KETERANGAN','NILAI')->get();
+
 
         $query = DB::table('kecurangan')
             ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
@@ -155,9 +157,12 @@ class KecuranganController extends Controller
             ->select('ID_SALESMAN','NAMA_SALESMAN')
             ->get();
 
-        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('jenis');
+        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('JENIS');
 
-        return view('kecurangan.create', compact('sales', 'jenisSanksi'));
+        $keteranganSanksi = DB::table('sanksi')->select('ID','JENIS','KETERANGAN','NILAI')->get();
+
+return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSanksi'));
+
     }
 
     /* ==========================================================
@@ -193,6 +198,8 @@ class KecuranganController extends Controller
         $nilaiSanksi = $request->nilai_sanksi 
             ? str_replace(['Rp', '.', ' ', ','], '', $request->nilai_sanksi)
             : 0;
+
+
 
         $id = DB::table('kecurangan')->insertGetId([
             'ID_SALES'          => $request->id_sales,
@@ -231,53 +238,60 @@ class KecuranganController extends Controller
      | EDIT PAGE
      ========================================================== */
     public function edit($id)
-    {
-        $kecurangan = DB::table('kecurangan')
-            ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
-            ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
-            ->select(
-                'kecurangan.*',
-                'salesman.NAMA_SALESMAN as NAMA_SALES',
-                'ass.NAMA_SALESMAN as NAMA_ASS'
-            )
-            ->where('kecurangan.ID', $id)
-            ->first();
+{
+    $kecurangan = DB::table('kecurangan')
+        ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
+        ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
+        ->select(
+            'kecurangan.*',
+            'salesman.NAMA_SALESMAN as NAMA_SALES',
+            'ass.NAMA_SALESMAN as NAMA_ASS'
+        )
+        ->where('kecurangan.ID', $id)
+        ->first();
 
-        if (!$kecurangan) {
-            return redirect()->route('kecurangan.index')->with('error', 'Data tidak ditemukan.');
-        }
-
-        // Sales sekarang bisa TYPE_SALESMAN 1 dan 7
-        $sales = DB::table('salesman')
-            ->whereIn('TYPE_SALESMAN', [1, 7])
-            ->select('ID_SALESMAN', 'NAMA_SALESMAN')
-            ->get();
-
-        // Ambil daftar ASS (TYPE 7)
-        $assList = DB::table('salesman')
-            ->where('TYPE_SALESMAN', 7)
-            ->select('ID_SALESMAN', 'NAMA_SALESMAN')
-            ->get();
-
-        $jenisSanksi = DB::table('sanksi')->distinct()->pluck('jenis');
-
-        $fotos = DB::table('kecurangan_foto')
-            ->where('ID_KECURANGAN', $id)
-            ->get()
-            ->map(function ($f) {
-                $f->url = asset('storage/' . $f->PATH);
-                return $f;
-            });
-
-        return view('kecurangan.edit', compact(
-            'kecurangan',
-            'sales',
-            'assList',
-            'jenisSanksi',
-            'fotos'
-        ));
+    if (!$kecurangan) {
+        return redirect()->route('kecurangan.index')->with('error', 'Data tidak ditemukan.');
     }
 
+    // Sales TYPE 1 & 7
+    $sales = DB::table('salesman')
+        ->whereIn('TYPE_SALESMAN', [1, 7])
+        ->select('ID_SALESMAN', 'NAMA_SALESMAN')
+        ->get();
+
+    // ASS TYPE 7
+    $assList = DB::table('salesman')
+        ->where('TYPE_SALESMAN', 7)
+        ->select('ID_SALESMAN', 'NAMA_SALESMAN')
+        ->get();
+
+    // Jenis Sanksi
+    $jenisSanksi = DB::table('sanksi')->distinct()->pluck('JENIS');
+
+    // List lengkap: Jenis, Deskripsi, Nilai (untuk non-AJAX JS)
+    $keteranganSanksi = DB::table('sanksi')
+        ->select('ID', 'JENIS', 'KETERANGAN', 'NILAI')
+        ->get();
+
+    // Foto
+    $fotos = DB::table('kecurangan_foto')
+        ->where('ID_KECURANGAN', $id)
+        ->get()
+        ->map(function ($f) {
+            $f->url = asset('storage/' . $f->PATH);
+            return $f;
+        });
+
+    return view('kecurangan.edit', compact(
+        'kecurangan',
+        'sales',
+        'assList',
+        'jenisSanksi',
+        'keteranganSanksi',
+        'fotos'
+    ));
+}
 
     /* ==========================================================
      | UPDATE
@@ -430,6 +444,33 @@ class KecuranganController extends Controller
     }
 
 
+    public function getKeteranganByJenis($jenis)
+    {
+        $list = DB::table('sanksi')
+            ->where('JENIS', $jenis)
+            ->select('KETERANGAN')
+            ->get();
+
+        return response()->json($list);
+    }
+
+    public function getNilai($jenis, $deskripsi)
+    {
+        $deskripsi = urldecode($deskripsi);
+
+        $row = DB::table('sanksi')
+            ->where('JENIS', $jenis)
+            ->where('KETERANGAN', $deskripsi)
+            ->select('NILAI')
+            ->first();
+
+        if (!$row) {
+            return response()->json(['NILAI' => 0]);
+        }
+
+        return response()->json(['NILAI' => $row->NILAI]);
+    }
+
     /* ==========================================================
      | AJAX: GET ASS LIST
      ========================================================== */
@@ -474,59 +515,61 @@ class KecuranganController extends Controller
      | EXPORT PDF
      ========================================================== */
     public function exportPDF(Request $request)
-    {
-        $query = DB::table('kecurangan')
-            ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
-            ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
-            ->select(
-                'kecurangan.*',
-                'salesman.NAMA_SALESMAN as nama_sales',
-                'ass.NAMA_SALESMAN as nama_ass',
-                'salesman.ID_DISTRIBUTOR as distributor'
-            );
+{
+    $query = DB::table('kecurangan')
+        ->where('VALIDASI', 1)
+        ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
+        ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
+        ->select(
+            'kecurangan.*',
+            'salesman.NAMA_SALESMAN as nama_sales',
+            'ass.NAMA_SALESMAN as nama_ass',
+            'salesman.ID_DISTRIBUTOR as distributor'
+        );
 
-        if ($request->filled('search')) {
-            $s = $request->search;
-            $query->where(function ($q) use ($s) {
-                $q->where('salesman.NAMA_SALESMAN', 'like', "%{$s}%")
-                  ->orWhere('kecurangan.TOKO', 'like', "%{$s}%")
-                  ->orWhere('kecurangan.KETERANGAN_SANKSI', 'like', "%{$s}%")
-                  ->orWhere('kecurangan.JENIS_SANKSI', 'like', "%{$s}%");
-            });
-        }
-
-        if ($request->filled('sales')) {
-            $query->where('kecurangan.ID_SALES', $request->sales);
-        }
-
-        if ($request->filled('jenis_sanksi')) {
-            $query->where('kecurangan.JENIS_SANKSI', $request->jenis_sanksi);
-        }
-
-        if ($request->filled('keterangan_sanksi')) {
-            $query->where('kecurangan.KETERANGAN_SANKSI', $request->keterangan_sanksi);
-        }
-
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('kecurangan.TANGGAL', [
-                $request->start_date,
-                $request->end_date
-            ]);
-        }
-
-        $data = $query->orderBy('kecurangan.TANGGAL', 'desc')->get();
-
-        $pdf = \PDF::loadView('pdf.kecurangan', [
-            'data' => $data,
-            'startDate' => $request->start_date,
-            'endDate' => $request->end_date,
-            'sales' => $request->filled('sales')
-                ? DB::table('salesman')->where('ID_SALESMAN', $request->sales)->first()
-                : null
-        ])->setPaper('a4', 'landscape');
-
-        return $pdf->download('laporan_kecurangan.pdf');
+    if ($request->filled('search')) {
+        $s = $request->search;
+        $query->where(function ($q) use ($s) {
+            $q->where('salesman.NAMA_SALESMAN', 'like', "%{$s}%")
+              ->orWhere('kecurangan.TOKO', 'like', "%{$s}%")
+              ->orWhere('kecurangan.KETERANGAN_SANKSI', 'like', "%{$s}%")
+              ->orWhere('kecurangan.JENIS_SANKSI', 'like', "%{$s}%");
+        });
     }
+
+    if ($request->filled('sales')) {
+        $query->where('kecurangan.ID_SALES', $request->sales);
+    }
+
+    if ($request->filled('jenis_sanksi')) {
+        $query->where('kecurangan.JENIS_SANKSI', $request->jenis_sanksi);
+    }
+
+    if ($request->filled('keterangan_sanksi')) {
+        $query->where('kecurangan.KETERANGAN_SANKSI', $request->keterangan_sanksi);
+    }
+
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $query->whereBetween('kecurangan.TANGGAL', [
+            $request->start_date,
+            $request->end_date
+        ]);
+    }
+
+    $data = $query->orderBy('kecurangan.TANGGAL', 'desc')->get();
+
+    $pdf = \PDF::loadView('pdf.kecurangan', [
+        'data' => $data,
+        'startDate' => $request->start_date,
+        'endDate' => $request->end_date,
+        'sales' => $request->filled('sales')
+            ? DB::table('salesman')->where('ID_SALESMAN', $request->sales)->first()
+            : null
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->download('laporan_kecurangan.pdf');
+}
+
 
     /* ==========================================================
      | EXPORT EXCEL

@@ -237,66 +237,61 @@ Route::prefix('specialist-manager')
 
 Route::prefix('kecurangan')->group(function () {
 
-    // ===============================
-    // 📋 MASTER KECURANGAN
-    // ===============================
     Route::middleware('check.access:Master,Master Kecurangan')->group(function () {
 
-    // INDEX
-    Route::get('/', [KecuranganController::class, 'index'])
-        ->middleware('check.access:Master,Master Kecurangan,access')
-        ->name('kecurangan.index');
+        Route::get('/', [KecuranganController::class, 'index'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.index');
 
-    // CREATE PAGE
-    Route::get('/create', [KecuranganController::class, 'create'])
-        ->middleware('check.access:Master,Master Kecurangan,create')
-        ->name('kecurangan.create');
+        Route::get('/create', [KecuranganController::class, 'create'])
+            ->middleware('check.access:Master,Master Kecurangan,create')
+            ->name('kecurangan.create');
 
-    // === GET SALES (AJAX) ===
-    Route::get('/sales/{id}', [KecuranganController::class, 'getSales'])
-        ->middleware('check.access:Master,Master Kecurangan,access')
-        ->name('kecurangan.getSales');
+        Route::get('/sales/{id}', [KecuranganController::class, 'getSales'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.getSales');
 
-    // === GET ASS LIST (AJAX, TYPE_SALESMAN = 7) ===
-    Route::get('/ass/list', [KecuranganController::class, 'getAss'])
-        ->middleware('check.access:Master,Master Kecurangan,access')
-        ->name('kecurangan.getAss');
+        Route::get('/ass/list', [KecuranganController::class, 'getAss'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.getAss');
 
-    // === GET ASS (AJAX) ===
-    Route::get('/ass/{idSales}', [KecuranganController::class, 'getAss'])
-        ->middleware('check.access:Master,Master Kecurangan,access')
-        ->name('kecurangan.getAss');
+        Route::get('/ass/{idSales}', [KecuranganController::class, 'getAss'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.getAss');
 
-    // === GET DESKRIPSI SANKSI (AJAX) ===
-    Route::get('/get-keterangan', [KecuranganController::class, 'getKeteranganByJenis'])
-        ->middleware('check.access:Master,Master Kecurangan,access')
-        ->name('kecurangan.getKeteranganByJenis');
+        // **INI YANG BENAR**
+        Route::get('/get-keterangan/{jenis}', [KecuranganController::class, 'getKeteranganByJenis'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.getKeteranganByJenis');
 
-    // STORE
-    Route::post('/', [KecuranganController::class, 'store'])
-        ->middleware('check.access:Master,Master Kecurangan,create')
-        ->name('kecurangan.store');
+        Route::get('/deskripsi/{jenis}', [KecuranganController::class, 'getKeteranganByJenis'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.getDeskripsi');
 
-    // EDIT PAGE
-    Route::get('/{id}/edit', [KecuranganController::class, 'edit'])
-        ->middleware('check.access:Master,Master Kecurangan,edit')
-        ->name('kecurangan.edit');
+        Route::get('/nilai/{jenis}/{deskripsi}', [KecuranganController::class, 'getNilai'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.getNilai');
 
-    // UPDATE
-    Route::put('/{id}', [KecuranganController::class, 'update'])
-        ->middleware('check.access:Master,Master Kecurangan,edit')
-        ->name('kecurangan.update');
+        Route::post('/', [KecuranganController::class, 'store'])
+            ->middleware('check.access:Master,Master Kecurangan,create')
+            ->name('kecurangan.store');
 
-    // DELETE
-    Route::delete('/{id}', [KecuranganController::class, 'destroy'])
-        ->middleware('check.access:Master,Master Kecurangan,delete')
-        ->name('kecurangan.destroy');
+        Route::get('/{id}/edit', [KecuranganController::class, 'edit'])
+            ->middleware('check.access:Master,Master Kecurangan,edit')
+            ->name('kecurangan.edit');
 
-    // VALIDASI
-    Route::post('/validasi/{id}', [KecuranganController::class, 'validasi'])
-        ->middleware('check.access:Master,Master Kecurangan,edit')
-        ->name('kecurangan.validasi');
-});
+        Route::put('/{id}', [KecuranganController::class, 'update'])
+            ->middleware('check.access:Master,Master Kecurangan,edit')
+            ->name('kecurangan.update');
+
+        Route::delete('/{id}', [KecuranganController::class, 'destroy'])
+            ->middleware('check.access:Master,Master Kecurangan,delete')
+            ->name('kecurangan.destroy');
+
+        Route::post('/validasi/{id}', [KecuranganController::class, 'validasi'])
+            ->middleware('check.access:Master,Master Kecurangan,edit')
+            ->name('kecurangan.validasi');
+    });
 
 
     // ===============================

@@ -91,7 +91,7 @@
                 <th>ID Sales</th>
                 <th>Nama Sales</th>
                 <th>Distributor</th>
-                <th>Specialist Manager</th>
+                <th>Nama ASS</th>
                 <th>Jenis Sanksi</th>
                 <th>Keterangan Sanksi</th>
                 <th>Nilai Sanksi</th>
@@ -103,59 +103,39 @@
             </tr>
         </thead>
 
+
         <tbody>
             @php $totalNilaiSanksi = 0; @endphp
 
             @forelse ($data as $index => $item)
             @php
-                $nilai = !empty($item->NILAI_SANKSI) ? $item->NILAI_SANKSI : 0;
-                $totalNilaiSanksi += $nilai;
+            $nilai = $item->NILAI_SANKSI ?? 0;
+            $totalNilaiSanksi += $nilai;
             @endphp
 
             <tr>
                 <td style="text-align:center;">{{ $index + 1 }}</td>
-
                 <td>{{ $item->ID_SALES }}</td>
-
                 <td>{{ $item->nama_sales }}</td>
-
                 <td>{{ $item->DISTRIBUTOR }}</td>
-
-                <td>{{ $item->nama_specialist_manager ?? '-' }}</td>
-
+                <td>{{ $item->nama_ass ?? '-' }}</td>
                 <td>{{ $item->JENIS_SANKSI ?? '-' }}</td>
-
                 <td>{{ $item->KETERANGAN_SANKSI ?? '-' }}</td>
-
-                <td>
-                    @if ($nilai > 0)
-                        Rp {{ number_format($nilai, 0, ',', '.') }}
-                    @else
-                        -
-                    @endif
-                </td>
-
+                <td>Rp {{ number_format($nilai, 0, ',', '.') }}</td>
                 <td>{{ $item->TOKO }}</td>
-
                 <td style="text-align:center;">{{ $item->KUNJUNGAN }}</td>
-
-                <td style="text-align:center;">
-                    {{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}
-                </td>
-
+                <td style="text-align:center;">{{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}</td>
                 <td>{{ $item->KETERANGAN ?: '-' }}</td>
-
                 <td style="text-align:center;">{{ $item->KUARTAL }}</td>
             </tr>
 
             @empty
             <tr>
-                <td colspan="13" style="text-align:center; color:#888;">
-                    Tidak ada data
-                </td>
+                <td colspan="13" style="text-align:center; color:#888;">Tidak ada data</td>
             </tr>
             @endforelse
         </tbody>
+
 
         <tfoot>
             <tr>

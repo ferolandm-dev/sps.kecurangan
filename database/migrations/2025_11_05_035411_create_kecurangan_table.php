@@ -6,36 +6,38 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Jalankan migrasi.
-     */
     public function up(): void
     {
         Schema::create('kecurangan', function (Blueprint $table) {
-            $table->id();
 
-            $table->string('id_sales', 10);
-            $table->string('nama_sales', 100);
-            $table->string('id_asisten_manager', 10)->nullable();
-            $table->string('nama_asisten_manager', 100)->nullable();
-            $table->string('distributor', 100);
-            $table->string('jenis_sanksi', 100)->nullable();
-            $table->text('keterangan_sanksi')->nullable();
-            $table->decimal('nilai_sanksi', 15, 2)->nullable()->default(0);
-            $table->string('toko', 100);
-            $table->string('kunjungan', 100);
-            $table->date('tanggal');
-            $table->text('keterangan')->nullable();
-            $table->string('kuartal')->nullable();
-            $table->boolean('validasi')->default(false);
+            // Primary key
+            $table->bigIncrements('ID');
 
-            $table->timestamps();
+            // Columns
+            $table->string('ID_SALES', 10);
+            $table->string('ID_ASS', 10);
+            $table->char('ID_SPC_MANAGER', 8)->nullable();
+            $table->string('DISTRIBUTOR', 100);
+
+            $table->string('JENIS_SANKSI', 100)->nullable();
+            $table->text('KETERANGAN_SANKSI')->nullable();
+            $table->decimal('NILAI_SANKSI', 15, 2)->default(0);
+
+            $table->string('TOKO', 100);
+            $table->string('KUNJUNGAN', 100);
+            $table->date('TANGGAL');
+
+            $table->text('KETERANGAN')->nullable();
+            $table->string('KUARTAL', 255)->nullable();
+
+            $table->tinyInteger('VALIDASI')->default(0);
+
+            // timestamps
+            $table->timestamp('CREATED_AT')->nullable();
+            $table->timestamp('UPDATED_AT')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('kecurangan');

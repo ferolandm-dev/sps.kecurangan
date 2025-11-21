@@ -43,13 +43,14 @@ class KecuranganExport implements
     public function collection()
     {
         $query = DB::table('kecurangan')
+            ->where('VALIDASI', 1)
             ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
-            ->leftJoin('specialist_manager', 'kecurangan.ID_SPC_MANAGER', '=', 'specialist_manager.ID_SPC_MANAGER')
+            ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
             ->select(
                 'kecurangan.ID_SALES',
                 'salesman.NAMA_SALESMAN',
                 'kecurangan.DISTRIBUTOR',
-                'specialist_manager.NAMA as NAMA_SPECIALIST_MANAGER',
+                'ass.NAMA_SALESMAN as NAMA_ASS',
                 'kecurangan.JENIS_SANKSI',
                 'kecurangan.KETERANGAN_SANKSI',
                 'kecurangan.NILAI_SANKSI',
@@ -61,7 +62,7 @@ class KecuranganExport implements
             )
             ->where('kecurangan.VALIDASI', 1);
 
-        // === FILTERS ===
+        // === FILTER ===
         if (!empty($this->sales)) {
             $query->where('kecurangan.ID_SALES', $this->sales);
         }
@@ -75,7 +76,10 @@ class KecuranganExport implements
         }
 
         if ($this->mode === 'date' && $this->startDate && $this->endDate) {
-            $query->whereBetween('kecurangan.TANGGAL', [$this->startDate, $this->endDate]);
+            $query->whereBetween('kecurangan.TANGGAL', [
+                $this->startDate,
+                $this->endDate
+            ]);
         }
 
         return $query->orderBy('kecurangan.TANGGAL', 'desc')->get();
@@ -87,12 +91,12 @@ class KecuranganExport implements
             $row->ID_SALES,
             $row->NAMA_SALESMAN,
             $row->DISTRIBUTOR,
-            $row->NAMA_SPECIALIST_MANAGER,
+            $row->NAMA_ASS ?? '-',
             $row->JENIS_SANKSI ?? '-',
             $row->KETERANGAN_SANKSI ?? '-',
             $row->NILAI_SANKSI 
                 ? 'Rp ' . number_format($row->NILAI_SANKSI, 0, ',', '.') 
-                : '-',
+                : 'Rp 0',
             $row->TOKO,
             (string) $row->KUNJUNGAN,
             \Carbon\Carbon::parse($row->TANGGAL)->format('d/m/Y'),
@@ -107,7 +111,7 @@ class KecuranganExport implements
             'ID Sales',
             'Nama Sales',
             'Distributor',
-            'Specialist Manager',
+            'Nama ASS',
             'Jenis Sanksi',
             'Keterangan Sanksi',
             'Nilai Sanksi',
@@ -122,7 +126,7 @@ class KecuranganExport implements
     public function columnFormats(): array
     {
         return [
-            'I' => NumberFormat::FORMAT_TEXT, // kolom kunjungan
+            'I' => NumberFormat::FORMAT_TEXT, // kolom KUNJUNGAN
         ];
     }
 }

@@ -6,25 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Jalankan migrasi.
-     */
     public function up(): void
     {
-        Schema::create('sanksi', function (Blueprint $table) {
-            $table->id();
-            $table->string('jenis', 100); // contoh: "Teguran", "Denda", dll
-            $table->text('keterangan')->nullable(); // deskripsi atau alasan sanksi
-            $table->decimal('nilai', 15, 2)->default(0); // nilai dalam rupiah
-            $table->timestamps();
+        Schema::create('nama_tabel_kamu', function (Blueprint $table) {
+
+            // Primary Key
+            $table->bigIncrements('ID');
+
+            // Columns
+            $table->string('JENIS', 100);
+            $table->text('KETERANGAN')->nullable();
+            $table->decimal('NILAI', 15, 2)->default(0);
+
+            // Timestamps
+            $table->timestamp('CREATED_AT')->nullable();
+            $table->timestamp('UPDATED_AT')->nullable();
         });
     }
 
-    /**
-     * Batalkan migrasi.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('sanksi');
+        Schema::dropIfExists('nama_tabel_kamu');
     }
 };

@@ -756,32 +756,44 @@ $(document).ready(function() {
     $('#jenis_sanksi').on('change', function() {
         const jenis = $(this).val();
 
-        $('#deskripsi_sanksi').html('<option value="">-- Pilih --</option>');
+        $('#deskripsi_sanksi').html('<option value="">-- Pilih Deskripsi --</option>');
         $('#nilai_sanksi').val('');
 
         if (!jenis) return;
 
         $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
+
             let opt = '<option value="">-- Pilih Deskripsi --</option>';
+
             data.forEach(item => {
-                opt += `<option value="${item.keterangan}">${item.keterangan}</option>`;
+                opt += `<option value="${item.KETERANGAN}">${item.KETERANGAN}</option>`;
             });
 
             $('#deskripsi_sanksi').html(opt);
         });
     });
 
+
+    // ============================
+    // DESKRIPSI → LOAD NILAI
+    // ============================
     $('#deskripsi_sanksi').on('change', function() {
         const jenis = $('#jenis_sanksi').val();
         const deskripsi = $(this).val();
 
-        if (!jenis || !deskripsi) {
-            $('#nilai_sanksi').val('');
-            return;
-        }
+        $('#nilai_sanksi').val('');
 
-        $.getJSON(`/sanksi/nilai/${jenis}/${encodeURIComponent(deskripsi)}`, function(data) {
-            const formatted = new Intl.NumberFormat('id-ID').format(data.nilai);
+        if (!jenis || !deskripsi) return;
+
+        $.getJSON(`/kecurangan/nilai/${jenis}/${encodeURIComponent(deskripsi)}`, function(resp) {
+
+            // Ambil nilai dari response
+            const nilai = resp?.NILAI ?? 0;
+
+            // Format ke mata uang Indonesia
+            const formatted = new Intl.NumberFormat('id-ID').format(nilai);
+
+            // Tampilkan ke input
             $('#nilai_sanksi').val('Rp ' + formatted);
         });
     });

@@ -159,29 +159,25 @@
     </div>
 </div>
 @endsection
-@push('js')
-<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
-<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
-<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@endpush
 @push('styles')
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+
+<!-- SELECT2 CSS (BENAR) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <style>
 input:invalid,
 textarea:invalid,
 select:invalid {
     box-shadow: none !important;
     border-color: #ced4da !important;
-    /* warna abu normal */
 }
 
 input:focus,
 textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
-    /* hijau atau sesuai tema */
 }
 
 body,
@@ -189,144 +185,68 @@ body,
 .main-panel {
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
     background-attachment: fixed !important;
-    /* supaya smooth */
 }
-
 
 .panel-header-sps {
     background: transparent !important;
-    box-shadow: none !important;
 }
-
 
 .content {
     background: transparent !important;
 }
 
-/* ========================================
-   NAVBAR MATCHING — SAME GRADIENT AS HEADER
-========================================= */
-
+/* Navbar */
 .navbar-soft {
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    border: none !important;
-    box-shadow: none !important;
-
-    /* Tinggi navbar sesuai permintaan */
     height: 95px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
-/* Brand */
 .navbar-soft .navbar-brand {
     color: #ffffff !important;
-    font-size: 22px !important;
     font-weight: 700;
 }
 
-/* Icons */
-.navbar-soft .nav-link i {
-    color: #ffffff !important;
-    font-size: 22px;
-    transition: .2s ease;
-}
-
-.navbar-soft .nav-link:hover i {
-    color: #333 !important;
-}
-
-.navbar-soft {
-    transition: none !important; /* matikan transisi container */
-}
-
-.navbar-soft .nav-link i,
-.navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important; /* biarkan hover tetap smooth */
-}
-
-/* ===========================================================
-   GLOBAL SOFT UI BUTTON STYLE
-=========================================================== */
+/* Button global */
 .btn {
-    border: none !important;
     border-radius: 12px !important;
     font-weight: 600 !important;
-    padding: 8px 18px !important;
-    transition: all 0.25s ease-in-out !important;
+    transition: 0.25s !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* SUCCESS BUTTON (Hijau) */
+/* Success button */
 .btn-success {
     background: linear-gradient(135deg, #29b14a, #34d058) !important;
     color: #fff !important;
 }
 
-.btn-success:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-}
-
-/* DANGER BUTTON (Merah) */
-.btn-danger {
-    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
-    color: white !important;
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
-}
-
-/* SECONDARY BUTTON (Abu) */
+/* Secondary button */
 .btn-secondary {
     background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
     color: #333 !important;
 }
 
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
-}
-
-/* WARNING BUTTON (Kuning lembut) */
-.btn-warning {
-    background: linear-gradient(135deg, #eee733, #faf26b) !important;
-    color: #333 !important;
-}
-
-.btn-warning:hover {
-    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
-}
-
-/* ROUND STYLE */
+/* Round Style */
 .btn-round {
     border-radius: 30px !important;
 }
-
-/* ICON ALIGNMENT FIX */
-.btn i {
-    font-size: 15px;
-    margin-right: 6px;
-}
-
-/* DISABLED BUTTON STYLE */
-.btn:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
 </style>
+@endpush
+
+
+@push('js')
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
+
+<!-- SELECT2 JS (BENAR) -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
 $(document).ready(function() {
     $('#jenis').select2({

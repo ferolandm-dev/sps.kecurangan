@@ -130,19 +130,20 @@
                                         {{ $loop->iteration + (method_exists($sanksi, 'firstItem') ? $sanksi->firstItem() - 1 : 0) }}
                                     </td>
 
-                                    <td>{{ $item->jenis }}</td>
+                                    <td>{{ $item->JENIS }}</td>
 
-                                    <td class="text-truncate" style="max-width: 300px;" title="{{ $item->keterangan }}">
-                                        {{ $item->keterangan }}
+                                    <td class="text-truncate" style="max-width: 300px;" title="{{ $item->KETERANGAN }}">
+                                        {{ $item->KETERANGAN }}
                                     </td>
 
                                     <td style="text-align:center;">
-                                        Rp {{ number_format($item->nilai, 0, ',', '.') }}
+                                        Rp {{ number_format($item->NILAI, 0, ',', '.') }}
                                     </td>
+
 
                                     <td class="text-center">
                                         @if (checkAccess('Master', 'Master Sanksi', 'edit'))
-                                        <a href="{{ route('sanksi.edit', $item->id) }}"
+                                        <a href="{{ route('sanksi.edit', $item->ID) }}"
                                             class="btn btn-warning btn-icon btn-sm btn-round"
                                             style="background:#eee733;border:none;" title="Edit">
                                             <i class="now-ui-icons ui-2_settings-90"></i>
@@ -150,18 +151,17 @@
                                         @endif
 
                                         @if (checkAccess('Master', 'Master Sanksi', 'delete'))
-                                        <form action="{{ route('sanksi.destroy', $item->id) }}" method="POST"
+                                        <form action="{{ route('sanksi.destroy', $item->ID) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
 
                                             <button type="button"
                                                 class="btn btn-danger btn-icon btn-sm btn-round btn-confirm"
-                                                data-action="delete" data-url="{{ route('sanksi.destroy', $item->id) }}"
+                                                data-action="delete" data-url="{{ route('sanksi.destroy', $item->ID) }}"
                                                 title="Hapus" style="background:#e74c3c;border:none;">
                                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                                             </button>
-
                                         </form>
                                         @endif
                                     </td>

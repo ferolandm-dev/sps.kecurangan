@@ -146,7 +146,7 @@
                                     </th>
 
                                     {{-- SORT: Nilai --}}
-                                    <th style="width:20%; text-align:center;">
+                                    <th style="width:20%;">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
                                                 'sort_by' => 'nilai',
                                                 'sort_order' =>
@@ -183,7 +183,7 @@
                                     </td>
 
                                     {{-- NILAI SANKSI --}}
-                                    <td style="text-align:center;">
+                                    <td>
                                         Rp {{ number_format($item->NILAI, 0, ',', '.') }}
                                     </td>
 

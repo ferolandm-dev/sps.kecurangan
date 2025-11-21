@@ -119,10 +119,16 @@ class KecuranganController extends Controller
         }
 
         $allowedSorts = [
-            'ID_SALES', 'nama_sales', 'DISTRIBUTOR', 'nama_ass',
-            'JENIS_SANKSI', 'KETERANGAN_SANKSI', 'NILAI_SANKSI',
-            'TOKO', 'KUNJUNGAN', 'TANGGAL', 'KUARTAL'
+            'ID_SALES',
+            'nama_sales',
+            'DISTRIBUTOR',
+            'nama_ass',
+            'TOKO',
+            'KUNJUNGAN',
+            'TANGGAL',
+            'KUARTAL'
         ];
+
 
         $sortBy = $request->get('sort_by', 'TANGGAL');
         $sortOrder = $request->get('sort_order', 'desc');

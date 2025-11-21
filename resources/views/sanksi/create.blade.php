@@ -117,7 +117,7 @@
                              PILIH JENIS SANKSI
                         ============================ --}}
                         <div class="form-group">
-                            <label for="jenis">Jenis Sanksi</label>
+                            <label for="jenis">Jenis Sanksi *</label>
                             <select name="jenis" id="jenis" class="form-control select2" required>
                                 <option value="">-- Pilih Jenis --</option>
                                 <option value="Sanksi">Sanksi</option>
@@ -130,7 +130,7 @@
                              KETERANGAN
                         ============================ --}}
                         <div class="form-group">
-                            <label for="keterangan">Keterangan</label>
+                            <label for="keterangan">Keterangan *</label>
                             <textarea name="keterangan" id="keterangan" rows="3" class="form-control"
                                 placeholder="Tuliskan keterangan atau alasan sanksi..."
                                 style="border:1px solid #ced4da;border-radius:6px;padding:10px 12px;background:#fff;resize:none;"></textarea>
@@ -141,7 +141,7 @@
                              NILAI (RUPIAH)
                         ============================ --}}
                         <div class="form-group">
-                            <label for="nilai">Nilai (Rupiah)</label>
+                            <label for="nilai">Nilai (Rupiah) *</label>
                             <input type="number" name="nilai" id="nilai" class="form-control"
                                 placeholder="Contoh: 50000" min="0" step="100" required>
                         </div>

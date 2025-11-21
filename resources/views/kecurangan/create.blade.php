@@ -83,20 +83,24 @@
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== DETAIL SPECIALIST MANAGER ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Specialist Manager
-                        </h6>
+                        {{-- ===================== DETAIL ASS ===================== --}}
+                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
 
-                        <input type="hidden" name="id_specialist_manager" id="id_specialist_manager">
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">ID ASS</label>
+                            <select name="id_ass" id="id_ass" class="form-control select2" required
+                                style="border-radius:12px;">
+                                <option value="">-- Pilih ASS --</option>
+                            </select>
+                        </div>
 
                         <div class="col-md-3 pl-0">
                             <div class="form-group has-label">
-                                <label class="text-dark font-weight-bold">Nama Specialist Manager</label>
-                                <input type="text" id="nama_specialist_manager" name="nama_specialist_manager"
-                                    class="form-control" readonly style="border-radius:12px;">
+                                <label class="text-dark font-weight-bold">Nama ASS</label>
+                                <input type="text" id="nama_ass" name="nama_ass" class="form-control" readonly
+                                    style="border-radius:12px;">
                             </div>
                         </div>
-
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
@@ -536,13 +540,13 @@ button#modalNext.btn {
 $(document).ready(function() {
 
     // === Select2 Setup ===
-    $('#id_sales, #jenis_sanksi, #deskripsi_sanksi').select2({
+    $('#id_sales, #jenis_sanksi, #deskripsi_sanksi, #id_ass').select2({
         placeholder: "-- Pilih --",
         width: '100%'
     });
 
     // ------------------------------------------
-    // FOTO PREVIEW (Tetap sama)
+    // FOTO PREVIEW
     // ------------------------------------------
     let selectedFiles = [];
     let currentIndex = 0;
@@ -563,8 +567,10 @@ $(document).ready(function() {
 
     $fileInput.on('change', function() {
         const incoming = Array.from(this.files || []);
-        const newFiles = incoming.filter(f => !selectedFiles.some(sf => sf.name === f.name && sf
-            .size === f.size));
+        const newFiles = incoming.filter(f =>
+            !selectedFiles.some(sf => sf.name === f.name && sf.size === f.size)
+        );
+
         selectedFiles = [...selectedFiles, ...newFiles].slice(0, MAX_FILES);
         renderPreview();
         syncInputFiles();
@@ -574,6 +580,7 @@ $(document).ready(function() {
         $previewContainer.empty();
         selectedFiles.forEach((file, index) => {
             if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) return;
+
             const reader = new FileReader();
             reader.onload = e => {
                 const html = `
@@ -581,8 +588,9 @@ $(document).ready(function() {
                         <img src="${e.target.result}" class="preview-img" data-index="${index}"
                              style="width:100px;height:100px;object-fit:cover;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
                         <button type="button" class="btn btn-danger btn-sm btn-remove" data-index="${index}"
-                             style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
-                    </div>`;
+                                style="position:absolute;top:-8px;right:-8px;border-radius:50%;padding:2px 6px;">×</button>
+                    </div>
+                `;
                 $previewContainer.append(html);
             };
             reader.readAsDataURL(file);
@@ -591,29 +599,27 @@ $(document).ready(function() {
 
     $(document).on('click', '.btn-remove', function(e) {
         e.stopPropagation();
-        const idx = Number($(this).data('index'));
-        selectedFiles.splice(idx, 1);
+        selectedFiles.splice(Number($(this).data('index')), 1);
         renderPreview();
         syncInputFiles();
     });
 
     // ------------------------------------------
-    // MODAL PREVIEW FOTO (SAMA DENGAN EDIT)
+    // MODAL PREVIEW FOTO
     // ------------------------------------------
     function collectAllPreviewElements() {
-        const arr = [];
-        $('#preview-container').find('img.preview-img').each(function() {
-            arr.push($(this));
-        });
-        return arr;
+        return $('#preview-container')
+            .find('img.preview-img')
+            .map(function() {
+                return $(this);
+            })
+            .get();
     }
 
     $(document).on('click', '.preview-img', function() {
         const allEls = collectAllPreviewElements();
-        let idx = allEls.findIndex(el => el[0] === this);
-        if (idx === -1) return;
+        currentIndex = allEls.findIndex(el => el[0] === this);
 
-        currentIndex = idx;
         showModalImageByIndex(currentIndex);
 
         $('#modalPreview').modal({
@@ -626,8 +632,7 @@ $(document).ready(function() {
     function showModalImageByIndex(index) {
         const allEls = collectAllPreviewElements();
         if (!allEls[index]) return;
-
-        $('#modalImage').attr('src', allEls[index].attr('src') || '');
+        $('#modalImage').attr('src', allEls[index].attr('src'));
     }
 
     $('#modalNext').on('click', function() {
@@ -642,16 +647,14 @@ $(document).ready(function() {
         showModalImageByIndex(currentIndex);
     });
 
-    // keyboard navigation
     $(document).on('keydown', function(e) {
         if (!$('#modalPreview').hasClass('show')) return;
 
         if (e.key === 'Escape') $('#modalPreview').modal('hide');
-        else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
-        else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
+        if (e.key === 'ArrowRight') $('#modalNext').click();
+        if (e.key === 'ArrowLeft') $('#modalPrev').click();
     });
 
-    // disable scroll when modal open
     $('#modalPreview')
         .on('show.bs.modal', function() {
             $('body').css('overflow', 'hidden');
@@ -669,24 +672,30 @@ $(document).ready(function() {
         changeMonth: true,
         changeYear: true,
         onSelect: function(dateText) {
-            const [d, m, y] = dateText.split('/');
-            const bln = parseInt(m);
-            const th = parseInt(y.length === 2 ? '20' + y : y);
-            const kuartal = bln <= 3 ? 'Q1 ' + th : bln <= 6 ? 'Q2 ' + th : bln <= 9 ? 'Q3 ' + th :
-                'Q4 ' + th;
+            const [d, m, yRaw] = dateText.split('/');
+            const year = yRaw.length === 2 ? parseInt("20" + yRaw) : parseInt(yRaw);
+            const month = parseInt(m);
+
+            const kuartal =
+                month <= 3 ? `Q1 ${year}` :
+                month <= 6 ? `Q2 ${year}` :
+                month <= 9 ? `Q3 ${year}` :
+                `Q4 ${year}`;
+
             $('#kuartal').val(kuartal);
         }
     });
 
     // ------------------------------------------
-    // LOAD SALESMAN + SPECIALIST MANAGER
+    // LOAD SALES + LOAD ASS (TYPE_SALESMAN = 7)
     // ------------------------------------------
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
 
-        // reset form
-        $('#nama_sales, #distributor, #nama_specialist_manager').val('');
-        $('#id_specialist_manager').val('');
+        $('#nama_sales').val('');
+        $('#distributor').val('');
+        $('#nama_ass').val('');
+        $('#id_ass').html('<option value="">-- Pilih Asisten Manager --</option>');
 
         if (!idSales) return;
 
@@ -694,23 +703,33 @@ $(document).ready(function() {
             $('#nama_sales').val(data.nama_sales);
             $('#distributor').val(data.distributor);
 
-            // Ambil Specialist Manager
-            if (data.id_specialist_manager) {
-                $.getJSON(`/kecurangan/specialist-manager/${data.id_specialist_manager}`,
-                    function(sm) {
-                        $('#id_specialist_manager').val(sm.id_specialist_manager);
-                        $('#nama_specialist_manager').val(sm.nama_specialist_manager);
-                    });
-            }
+            // ambil ASS yang distributor-nya sama
+            $.getJSON(`/kecurangan/ass/${idSales}`, function(list) {
+                let opt = '<option value="">-- Pilih Asisten Manager --</option>';
 
+                list.forEach(a => {
+                    opt +=
+                        `<option value="${a.ID_SALESMAN}">${a.NAMA_SALESMAN}</option>`;
+                });
+                $('#id_ass').html(opt).trigger('change');
+            });
         });
     });
+
+
+    // ketika ass dipilih
+    $('#id_ass').on('change', function() {
+        const nama = $(this).find('option:selected').text();
+        $('#nama_ass').val(nama);
+    });
+
 
     // ------------------------------------------
     // SANKSI / DESKRIPSI / NILAI
     // ------------------------------------------
     $('#jenis_sanksi').on('change', function() {
         const jenis = $(this).val();
+
         $('#deskripsi_sanksi').html('<option value="">-- Pilih --</option>');
         $('#nilai_sanksi').val('');
 
@@ -718,8 +737,10 @@ $(document).ready(function() {
 
         $.getJSON(`/sanksi/deskripsi/${jenis}`, function(data) {
             let opt = '<option value="">-- Pilih Deskripsi --</option>';
-            data.forEach(item => opt +=
-                `<option value="${item.keterangan}">${item.keterangan}</option>`);
+            data.forEach(item => {
+                opt += `<option value="${item.keterangan}">${item.keterangan}</option>`;
+            });
+
             $('#deskripsi_sanksi').html(opt);
         });
     });
@@ -741,4 +762,5 @@ $(document).ready(function() {
 
 });
 </script>
+
 @endpush

@@ -81,7 +81,6 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-
         // ======================================
         // 📆 Total kecurangan bulan ini
         // ======================================
@@ -158,7 +157,7 @@ class DashboardController extends Controller
 
         $kasusPerQuarter = [];
         $sanksiPerQuarter = [];
-        foreach ([1,2,3,4] as $q) {
+        foreach ([1, 2, 3, 4] as $q) {
             $row = $quarterSummary->firstWhere('quarter', $q);
             $kasusPerQuarter[] = $row->total_kasus ?? 0;
             $sanksiPerQuarter[] = $row->total_sanksi ?? 0;
@@ -226,9 +225,8 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-
         // ======================================
-        // 🔥 Kasus terbaru (sinkron dengan tabel kecurangan)
+        // 🔥 Kasus terbaru
         // ======================================
         $recentFraudCases = DB::table('kecurangan')
             ->leftJoin('salesman', 'salesman.ID_SALESMAN', '=', 'kecurangan.ID_SALES')
@@ -245,14 +243,16 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // ======================================
+        // 🔥 TOTAL ASS (type = 7)
+        // ======================================
+        $totalAssAktif = DB::table('salesman')
+            ->where('TYPE_SALESMAN', 7)
+            ->count();
 
         // ======================================
-        // TOTAL ASS
+        // RETURN VIEW
         // ======================================
-        $totalAssAktif = DB::table('specialist_manager')
-            ->distinct('ID_SPC_MANAGER')
-            ->count('ID_SPC_MANAGER');
-
         return view('dashboard', compact(
             'totalDistributorAktif',
             'totalSalesAktif',

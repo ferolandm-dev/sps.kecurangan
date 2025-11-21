@@ -119,12 +119,13 @@
 
                                     <th class="col-nama-ass" style="width:300px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                        'sort_by' => 'nama_specialist_manager',
-                        'sort_order' => (request('sort_by') === 'nama_specialist_manager' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                    'sort_by' => 'nama_ass',
+                    'sort_order' => (request('sort_by') === 'nama_ass' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
                                         </a>
                                     </th>
+
 
                                     <th class="col-jenis-sanksi" style="width:150px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
@@ -180,7 +181,7 @@
                                     <td class="text-center">{{ $item->ID_SALES }}</td>
                                     <td>{{ $item->nama_sales }}</td>
                                     <td>{{ $item->DISTRIBUTOR }}</td>
-                                    <td>{{ $item->nama_specialist_manager }}</td>
+                                    <td>{{ $item->nama_ass }}</td>
                                     <td>{{ $item->JENIS_SANKSI }}</td>
                                     <td>{{ $item->KETERANGAN_SANKSI }}</td>
                                     <td>Rp {{ number_format($item->NILAI_SANKSI, 0, ',', '.') }}</td>

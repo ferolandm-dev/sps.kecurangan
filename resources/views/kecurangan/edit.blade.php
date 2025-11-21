@@ -96,18 +96,30 @@
 
                         <hr class="my-4" style="border-color:#29b14a;">
 
-                        {{-- ===================== DETAIL SPECIALIST MANAGER ===================== --}}
-                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Specialist Manager
-                        </h6>
+                        {{-- ===================== DETAIL ASS ===================== --}}
+                        <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail ASS</h6>
 
-                        <input type="hidden" name="id_specialist_manager" id="id_specialist_manager"
-                            value="{{ $kecurangan->ID_SPC_MANAGER }}">
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Pilih ASS</label>
+                            <select name="id_ass" id="id_ass" class="form-control select2" required
+                                style="border-radius:12px;">
+                                <option value="">-- Pilih ASS --</option>
+
+                                @foreach ($assList as $ass)
+                                <option value="{{ $ass->ID_SALESMAN }}" data-nama="{{ $ass->NAMA_SALESMAN }}"
+                                    {{ $kecurangan->ID_ASS == $ass->ID_SALESMAN ? 'selected' : '' }}>
+                                    {{ $ass->NAMA_SALESMAN }}
+                                </option>
+
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="col-md-3 pl-0">
                             <div class="form-group has-label">
-                                <label class="text-dark font-weight-bold">Nama Specialist Manager</label>
-                                <input type="text" id="nama_specialist_manager" name="nama_specialist_manager"
-                                    class="form-control" readonly value="{{ $kecurangan->NAMA_SPECIALIST_MANAGER }}">
+                                <label class="text-dark font-weight-bold">Nama ASS</label>
+                                <input type="text" id="nama_ass" name="nama_ass" class="form-control" readonly
+                                    value="{{ $kecurangan->NAMA_ASS }}" style="border-radius:12px;">
                             </div>
                         </div>
 
@@ -633,7 +645,7 @@ button#modalNext.btn {
 $(document).ready(function() {
 
     // === Select2 Setup ===
-    $('#id_sales, #jenis_sanksi, #deskripsi_sanksi').select2({
+    $('#id_sales, #jenis_sanksi, #deskripsi_sanksi, #id_ass').select2({
         placeholder: "-- Pilih --",
         width: '100%'
     });
@@ -699,7 +711,6 @@ $(document).ready(function() {
         });
     }
 
-    // remove preview foto baru
     $(document).on('click', '.btn-remove-new', function(e) {
         e.stopPropagation();
         const idx = Number($(this).data('index'));
@@ -708,7 +719,6 @@ $(document).ready(function() {
         syncInputFiles();
     });
 
-    // delete foto lama
     $(document).on('click', '.btn-delete-existing', function(e) {
         e.stopPropagation();
         const $wrap = $(this).closest('.existing-photo');
@@ -750,7 +760,6 @@ $(document).ready(function() {
     function showModalImageByIndex(index) {
         const allEls = collectAllPreviewElements();
         if (!allEls[index]) return;
-
         $('#modalImage').attr('src', allEls[index].attr('src') || '');
     }
 
@@ -766,14 +775,6 @@ $(document).ready(function() {
         showModalImageByIndex(currentIndex);
     });
 
-    $(document).on('keydown', function(e) {
-        if (!$('#modalPreview').hasClass('show')) return;
-
-        if (e.key === 'Escape') $('#modalPreview').modal('hide');
-        else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
-        else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
-    });
-
     $('#modalPreview').on('show.bs.modal', function() {
         $('body').css('overflow', 'hidden');
     }).on('hidden.bs.modal', function() {
@@ -781,9 +782,6 @@ $(document).ready(function() {
         $('body').css('overflow', 'auto');
     });
 
-    // ---------------------------------------------------------------------
-    // VALIDASI FOTO
-    // ---------------------------------------------------------------------
     $('form').on('submit', function() {
         syncInputFiles();
         const existingCount = $existingContainer.find('.existing-photo').length;
@@ -820,15 +818,15 @@ $(document).ready(function() {
     });
 
     // ---------------------------------------------------------------------
-    // SALES -> DISTRIBUTOR -> SPECIALIST MANAGER
+    // SALES -> DISTRIBUTOR -> ASS
     // ---------------------------------------------------------------------
     $('#id_sales').on('change', function() {
         const idSales = $(this).val();
 
         $('#nama_sales').val('');
         $('#distributor').val('');
-        $('#nama_specialist_manager').val('');
-        $('#id_specialist_manager').val('');
+        $('#id_ass').empty().append('<option value="">-- Pilih Asisten Manager --</option>');
+        $('#nama_ass').val('');
 
         if (!idSales) return;
 
@@ -836,59 +834,64 @@ $(document).ready(function() {
             $('#nama_sales').val(data.nama_sales);
             $('#distributor').val(data.distributor);
 
-            if (data.id_specialist_manager) {
-                $.getJSON(`/kecurangan/specialist-manager/${data.id_specialist_manager}`,
-                    function(sm) {
-                        $('#id_specialist_manager').val(sm.id_specialist_manager);
-                        $('#nama_specialist_manager').val(sm.nama_specialist_manager);
-                    });
-            }
+            // Load ASS sesuai distributor Sales
+            $.getJSON(`/kecurangan/ass/${idSales}`, function(assList) {
+
+                let html = '<option value="">-- Pilih Asisten Manager --</option>';
+
+                assList.forEach(a => {
+                    html += `
+<option value="${a.ID_SALESMAN}"
+    data-nama="${a.NAMA_SALESMAN}"
+    data-id="${a.ID_SALESMAN}">
+    ${a.ID_SALESMAN} - ${a.NAMA_SALESMAN}
+</option>`;
+
+                });
+
+
+                $('#id_ass').html(html).trigger('change');
+            });
         });
     });
 
     // ---------------------------------------------------------------------
-    // AUTOFILL Specialist Manager + Sanksi SAAT EDIT
+    // KETIKA ASS DIPILIH → Tampilkan nama (tanpa ID)
+    // ---------------------------------------------------------------------
+    $('#id_ass').on('change', function() {
+        const nama = $(this).find('option:selected').data('nama') || "";
+        $('#nama_ass').val(nama);
+    });
+
+
+    // ---------------------------------------------------------------------
+    // AUTOFILL DATA SAAT EDIT
     // ---------------------------------------------------------------------
     const initialSales = $('#id_sales').val();
-    const selectedJenis = "{{ $kecurangan->JENIS_SANKSI }}";
-    const selectedDesk = "{{ $kecurangan->KETERANGAN_SANKSI }}";
+    const initialAss = "{{ $kecurangan->ID_ASS }}";
 
     if (initialSales) {
 
-        // Prefill nama sales + distributor + SM
-        $.getJSON(`/kecurangan/sales/${initialSales}`, function(data) {
-            $('#nama_sales').val(data.nama_sales);
-            $('#distributor').val(data.distributor);
+        $.getJSON(`/kecurangan/ass/${initialSales}`, function(assList) {
+            let html = '<option value="">-- Pilih Asisten Manager --</option>';
 
-            if (data.id_specialist_manager) {
-                $.getJSON(`/kecurangan/specialist-manager/${data.id_specialist_manager}`, function(sm) {
-                    $('#id_specialist_manager').val(sm.id_specialist_manager);
-                    $('#nama_specialist_manager').val(sm.nama_specialist_manager);
-                });
-            }
-        });
-
-        // Prefill jenis sanksi
-        $('#jenis_sanksi').val(selectedJenis).trigger('change');
-
-        // Prefill deskripsi sanksi SETELAH dropdown diisi ulang
-        $.getJSON(`/sanksi/deskripsi/${selectedJenis}`, function(data) {
-
-            let options = '<option value="">-- Pilih Deskripsi --</option>';
-
-            data.forEach(item => {
-                options += `<option value="${item.keterangan}" 
-                ${item.keterangan === selectedDesk ? 'selected':''}>
-                    ${item.keterangan}
-                </option>`;
+            assList.forEach(a => {
+                html += `
+            <option value="${a.ID_SALESMAN}"
+                data-nama="${a.NAMA_SALESMAN}"
+                ${a.ID_SALESMAN === initialAss ? 'selected' : ''}>
+                ${a.NAMA_SALESMAN}
+            </option>
+        `;
             });
 
-            $('#deskripsi_sanksi').html(options).trigger('change');
+            $('#id_ass').html(html).trigger('change');
         });
+
     }
 
     // ---------------------------------------------------------------------
-    // ON CHANGE – Jenis Sanksi → Refresh Deskripsi
+    // JENIS → DESKRIPSI → NILAI SANKSI
     // ---------------------------------------------------------------------
     $('#jenis_sanksi').on('change', function() {
         const jenis = $(this).val();
@@ -905,9 +908,6 @@ $(document).ready(function() {
         });
     });
 
-    // ---------------------------------------------------------------------
-    // ON CHANGE – Deskripsi → Nilai Sanksi
-    // ---------------------------------------------------------------------
     $('#deskripsi_sanksi').on('change', function() {
         const jenis = $('#jenis_sanksi').val();
         const deskripsi = $(this).val();
@@ -925,8 +925,6 @@ $(document).ready(function() {
         });
     });
 
-
 });
 </script>
-
 @endpush

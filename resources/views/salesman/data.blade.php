@@ -228,8 +228,7 @@
             </div>
 
             <div class="modal-body" style="font-size:15px; color:#333;">
-
-                <div class="table-responsive">
+                <div class="table-wrapper-fixed table-responsive">
                     <table class="table table-bordered table-striped"
                         style="background:white; border-radius:10px; overflow:hidden;">
                         <thead style="background:#e74c3c; color:white;">
@@ -243,9 +242,12 @@
                         </thead>
                         <tbody id="tableKecurangan"></tbody>
                     </table>
-
-                    <div id="kecuranganPagination" class="mt-2"></div>
                 </div>
+                <div id="kecuranganBottom" class="mt-2">
+                    <div id="kecuranganTotal"></div>
+                    <div id="kecuranganPagination"></div>
+                </div>
+
 
             </div>
 
@@ -540,6 +542,35 @@ body,
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
 }
+
+/* Kunci tinggi modal, bukan hanya modal-body */
+#modalKecurangan .modal-content {
+    height: 650px;
+    /* BEBAS, langsung fixin modal keseluruhan */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal-body mengambil ruang fleksibel */
+#modalKecurangan .modal-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0 !important;
+}
+
+/* Tabel area scroll */
+#modalKecurangan .table-wrapper-fixed {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Pagination selalu di paling bawah */
+#kecuranganPagination {
+    flex-shrink: 0;
+    margin-top: 10px;
+}
 </style>
 @endpush
 @push('js')
@@ -555,7 +586,6 @@ function showKecurangan(idSales, pageUrl = null) {
     $("#kecuranganPagination").html("");
     $("#modalKecurangan").modal('show');
 
-    // URL CORRECT
     let url = pageUrl ?? ("{{ url('/salesman/get-kecurangan') }}/" + idSales);
 
     $.get(url, function(res) {
@@ -584,13 +614,25 @@ function showKecurangan(idSales, pageUrl = null) {
         }
 
         $("#tableKecurangan").html(rows);
-        $("#kecuranganPagination").html(res.pagination);
 
-        // pagination click
+        // Total nilai SANKSI ditempatkan paling atas
+        let totalHTML = `
+            <div class="mb-2 text-right">
+                <p class="text-danger font-weight-bold" style="font-size:14px;">
+                    Total Nilai Sanksi: Rp ${new Intl.NumberFormat("id-ID").format(res.total_nilai ?? 0)}
+                </p>
+            </div>
+        `;
+
+        $("#kecuranganPagination").html(totalHTML); // total dulu
+        $("#kecuranganPagination").append(res.pagination); // pagination di bawahnya
+
+        // Pagination click
         $("#kecuranganPagination a.page-link").click(function(e) {
             e.preventDefault();
             showKecurangan(idSales, $(this).attr("href"));
         });
+
 
     }).fail(function(xhr) {
         console.log("AJAX Error:", xhr.responseText);

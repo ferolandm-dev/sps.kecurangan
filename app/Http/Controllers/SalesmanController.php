@@ -70,20 +70,28 @@ class SalesmanController extends Controller
     return view('salesman.data', compact('salesman', 'sortBy', 'sortOrder'));
 }
 
-public function getKecurangan(Request $request, $id)
-{
-    $data = DB::table('kecurangan')
-        ->where('ID_SALES', $id)
-        ->where('VALIDASI', 1)
-        ->orderBy('TANGGAL', 'desc')
-        ->paginate(7);
+    public function getKecurangan(Request $request, $id)
+    {
+        $data = DB::table('kecurangan')
+            ->where('ID_SALES', $id)
+            ->where('VALIDASI', 1)
+            ->orderBy('TANGGAL', 'desc')
+            ->paginate(7);
 
-    return response()->json([
-        'data'       => $data->items(),
-        'first'      => $data->firstItem(),
-        'pagination' => $data->links('pagination::modal')->render()
-    ]);
-}
+        // ➕ Hitung total nilai sanksi
+        $totalNilai = DB::table('kecurangan')
+            ->where('ID_SALES', $id)
+            ->where('VALIDASI', 1)
+            ->sum('NILAI_SANKSI');
+
+        return response()->json([
+            'data'       => $data->items(),
+            'first'      => $data->firstItem(),
+            'pagination' => $data->links('pagination::modal')->render(),
+            'total_nilai' => $totalNilai
+        ]);
+    }
+
 
 
 

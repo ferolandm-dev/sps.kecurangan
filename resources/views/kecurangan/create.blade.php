@@ -51,7 +51,7 @@
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Sales</h6>
 
                         <div class="form-group">
-                            <label class="text-dark font-weight-bold">ID Sales</label>
+                            <label class="text-dark font-weight-bold">ID Sales *</label>
                             <select name="id_sales" id="id_sales" class="form-control select2" required
                                 style="border-radius:12px;">
                                 <option value="">-- Pilih Sales --</option>
@@ -87,7 +87,7 @@
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Asisten Manager</h6>
 
                         <div class="form-group">
-                            <label class="text-dark font-weight-bold">ID ASS</label>
+                            <label class="text-dark font-weight-bold">ID ASS *</label>
                             <select name="id_ass" id="id_ass" class="form-control select2" required
                                 style="border-radius:12px;">
                                 <option value="">-- Pilih ASS --</option>
@@ -96,7 +96,7 @@
 
                         <div class="col-md-3 pl-0">
                             <div class="form-group has-label">
-                                <label class="text-dark font-weight-bold">Nama ASS</label>
+                                <label class="text-dark font-weight-bold">Nama ASS *</label>
                                 <input type="text" id="nama_ass" name="nama_ass" class="form-control" readonly
                                     style="border-radius:12px;">
                             </div>
@@ -110,7 +110,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                                    <label class="text-dark font-weight-bold">Jenis Sanksi *</label>
                                     <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required>
                                         <option value="">-- Pilih Jenis --</option>
                                         @foreach($jenisSanksi as $jenis)
@@ -122,7 +122,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="text-dark font-weight-bold">Deskripsi Sanksi</label>
+                                    <label class="text-dark font-weight-bold">Deskripsi Sanksi *</label>
                                     <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
                                         required></select>
                                 </div>
@@ -137,19 +137,19 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="text-dark font-weight-bold">Toko</label>
-                                <input type="text" name="toko" class="form-control" required
+                                <label class="text-dark font-weight-bold">Toko (Customer)</label>
+                                <select name="toko" id="customer_id" class="form-control select2"
                                     style="border-radius:12px;">
+                                    <option value="">-- Tidak Isi Toko --</option>
+                                </select>
                             </div>
-
                             <div class="col-md-3">
                                 <label class="text-dark font-weight-bold">Kunjungan</label>
-                                <input type="text" name="kunjungan" class="form-control" required
-                                    style="border-radius:12px;">
+                                <input type="text" name="kunjungan" class="form-control" style="border-radius:12px;">
                             </div>
 
                             <div class="col-md-3">
-                                <label class="text-dark font-weight-bold">Tanggal</label>
+                                <label class="text-dark font-weight-bold">Tanggal *</label>
                                 <input type="text" name="tanggal" id="tanggal" class="form-control" required
                                     placeholder="dd/mm/yyyy" style="border-radius:12px;">
                             </div>
@@ -545,6 +545,12 @@ $(document).ready(function() {
         width: '100%'
     });
 
+    $('#customer_id').select2({
+        placeholder: "-- Pilih --",
+        allowClear: true,
+        width: '100%'
+    });
+
     // ------------------------------------------
     // FOTO PREVIEW
     // ------------------------------------------
@@ -749,6 +755,31 @@ $(document).ready(function() {
         $('#nama_ass').val(nama);
     });
 
+    // ================================
+    // LOAD CUSTOMER (TOKO) BY SALES
+    // ================================
+    $('#id_sales').on('change', function() {
+        const idSales = $(this).val();
+
+        $('#customer_id').html('<option value="">-- Tidak Isi Toko --</option>');
+
+        if (!idSales) return;
+
+        $.getJSON(`/kecurangan/customer/${idSales}`, function(data) {
+
+            let opt = '<option value="">-- Tidak Isi Toko --</option>';
+
+            data.forEach(c => {
+                opt += `
+                <option value="${c.NAMA_CUST}">
+                    ${c.ID_CUST} - ${c.NAMA_CUST}
+                </option>
+            `;
+            });
+
+            $('#customer_id').html(opt).trigger('change');
+        });
+    });
 
     // ------------------------------------------
     // SANKSI / DESKRIPSI / NILAI

@@ -576,7 +576,7 @@ function showKecurangan(idSales, pageUrl = null) {
                         <td class="text-center">${indexStart + i}</td>
                         <td>${row.JENIS_SANKSI ?? '-'}</td>
                         <td>${row.KETERANGAN_SANKSI ?? '-'}</td>
-                        <td>${row.NILAI_SANKSI ?? '0'}</td>
+                        <td> Rp ${new Intl.NumberFormat("id-ID").format(row.NILAI_SANKSI ?? 0)}</td>
                         <td>${row.TANGGAL}</td>
                     </tr>
                 `;

@@ -291,6 +291,11 @@ Route::prefix('kecurangan')->group(function () {
         Route::post('/validasi/{id}', [KecuranganController::class, 'validasi'])
             ->middleware('check.access:Master,Master Kecurangan,edit')
             ->name('kecurangan.validasi');
+
+        Route::get('/customer/{idSales}', [KecuranganController::class, 'getCustomer'])
+            ->middleware('check.access:Master,Master Kecurangan,access')
+            ->name('kecurangan.getCustomer');
+
     });
 
 

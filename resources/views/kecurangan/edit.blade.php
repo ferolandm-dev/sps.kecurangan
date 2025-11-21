@@ -61,7 +61,7 @@
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail Sales</h6>
 
                         <div class="form-group">
-                            <label class="text-dark font-weight-bold">ID Sales</label>
+                            <label class="text-dark font-weight-bold">ID Sales *</label>
                             <select name="id_sales" id="id_sales" class="form-control select2" required
                                 style="border-radius:12px;">
                                 <option value="">-- Pilih Sales --</option>
@@ -100,7 +100,7 @@
                         <h6 class="heading-small text-success mb-3" style="font-weight:600;">Detail ASS</h6>
 
                         <div class="form-group">
-                            <label class="text-dark font-weight-bold">Pilih ASS</label>
+                            <label class="text-dark font-weight-bold">Pilih ASS *</label>
                             <select name="id_ass" id="id_ass" class="form-control select2" required
                                 style="border-radius:12px;">
                                 <option value="">-- Pilih ASS --</option>
@@ -131,7 +131,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                                    <label class="text-dark font-weight-bold">Jenis Sanksi *</label>
                                     <select name="jenis_sanksi" id="jenis_sanksi" class="form-control select2" required>
                                         <option value="">-- Pilih Jenis --</option>
                                         @foreach($jenisSanksi as $jenis)
@@ -147,7 +147,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="text-dark font-weight-bold">Deskripsi Sanksi</label>
+                                    <label class="text-dark font-weight-bold">Deskripsi Sanksi *</label>
                                     <select name="deskripsi_sanksi" id="deskripsi_sanksi" class="form-control select2"
                                         required>
                                         {{-- prefill existing --}}
@@ -173,18 +173,25 @@
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label class="text-dark font-weight-bold">Toko</label>
-                                <input type="text" name="toko" class="form-control" required style="border-radius:12px;"
-                                    value="{{ old('toko', $kecurangan->TOKO) }}">
+                                <select name="toko" id="customer_id" class="form-control select2"
+                                    style="border-radius:12px;">
+                                    <option value="">-- Tidak Isi Toko --</option>
+
+                                    {{-- Prefill data toko di halaman edit --}}
+                                    @if(!empty($kecurangan->TOKO))
+                                    <option value="{{ $kecurangan->TOKO }}" selected>{{ $kecurangan->TOKO }}</option>
+                                    @endif
+                                </select>
                             </div>
 
                             <div class="col-md-3">
                                 <label class="text-dark font-weight-bold">Kunjungan</label>
-                                <input type="text" name="kunjungan" class="form-control" required
-                                    style="border-radius:12px;" value="{{ old('kunjungan', $kecurangan->KUNJUNGAN) }}">
+                                <input type="text" name="kunjungan" class="form-control" style="border-radius:12px;"
+                                    value="{{ old('kunjungan', $kecurangan->KUNJUNGAN) }}">
                             </div>
 
                             <div class="col-md-3">
-                                <label class="text-dark font-weight-bold">Tanggal</label>
+                                <label class="text-dark font-weight-bold">Tanggal *</label>
                                 <input type="text" name="tanggal" id="tanggal" class="form-control" required
                                     placeholder="dd/mm/yyyy" style="border-radius:12px;"
                                     value="{{ \Carbon\Carbon::parse($kecurangan->TANGGAL)->format('d/m/Y') }}">
@@ -650,6 +657,12 @@ $(document).ready(function() {
         width: '100%'
     });
 
+    $('#customer_id').select2({
+        placeholder: "-- Pilih --",
+        allowClear: true,
+        width: '100%'
+    });
+
     // ---------------------------------------------------------------------
     // FOTO BARU + FOTO LAMA
     // ---------------------------------------------------------------------
@@ -890,6 +903,33 @@ $(document).ready(function() {
 
     if (initialSales) {
 
+        // ================================
+        // AUTOLOAD CUSTOMER UNTUK EDIT PAGE
+        // ================================
+        const initialCust = "{{ $kecurangan->TOKO }}";
+
+        if (initialSales) {
+            $.getJSON(`/kecurangan/customer/${initialSales}`, function(data) {
+
+                let html = '<option value="">-- Tidak Isi Toko --</option>';
+
+                data.forEach(c => {
+                    html += `
+                <option value="${c.NAMA_CUST}">
+                    ${c.ID_CUST} - ${c.NAMA_CUST}
+                </option>
+            `;
+                });
+
+                $('#customer_id').html(html);
+
+                // Set toko lama
+                if (initialCust) {
+                    $('#customer_id').val(initialCust).trigger('change');
+                }
+            });
+        }
+
         $.getJSON(`/kecurangan/sales/${initialSales}`, function(data) {
 
             // Jika TYPE = 7 → ASS = dirinya sendiri
@@ -928,6 +968,41 @@ $(document).ready(function() {
 
         });
     }
+
+    // ================================
+    // LOAD CUSTOMER (TOKO) BY SALES — EDIT MODE
+    // ================================
+    $('#id_sales').on('change', function() {
+        const idSales = $(this).val();
+
+        // Reset dulu
+        $('#customer_id').html('<option value="">-- Tidak Isi Toko --</option>');
+
+        if (!idSales) return;
+
+        $.getJSON(`/kecurangan/customer/${idSales}`, function(data) {
+
+            let html = '<option value="">-- Tidak Isi Toko --</option>';
+
+            data.forEach(c => {
+                html += `
+                <option value="${c.NAMA_CUST}">
+                    ${c.ID_CUST} - ${c.NAMA_CUST}
+                </option>
+            `;
+            });
+
+            $('#customer_id').html(html);
+
+            // Prefill value lama jika ada
+            const oldCust = "{{ $kecurangan->TOKO }}";
+            if (oldCust) {
+                $('#customer_id').val(oldCust).trigger('change');
+            } else {
+                $('#customer_id').val('').trigger('change');
+            }
+        });
+    });
 
     // ---------------------------------------------------------------------
     // JENIS → DESKRIPSI → NILAI SANKSI (EDIT + CREATE)

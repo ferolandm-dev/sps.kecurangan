@@ -161,7 +161,7 @@ class KecuranganController extends Controller
 
         $keteranganSanksi = DB::table('sanksi')->select('ID','JENIS','KETERANGAN','NILAI')->get();
 
-return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSanksi'));
+        return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSanksi'));
 
     }
 
@@ -174,8 +174,8 @@ return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSank
             'id_sales' => 'required',
             'id_ass' => 'required',
             'distributor' => 'required',
-            'toko' => 'required',
-            'kunjungan' => 'required',
+            'toko' => 'nullable|string',
+            'kunjungan' => 'nullable|string',
             'tanggal' => 'required|date_format:d/m/Y',
             'jenis_sanksi' => 'required|string|max:100',
             'deskripsi_sanksi' => 'required|string',
@@ -205,8 +205,8 @@ return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSank
             'ID_SALES'          => $request->id_sales,
             'ID_ASS'            => $request->id_ass,
             'DISTRIBUTOR'       => $request->distributor,
-            'TOKO'              => $request->toko,
-            'KUNJUNGAN'         => $request->kunjungan,
+            'TOKO'              => $request->toko ?: '-',
+            'KUNJUNGAN'         => $request->kunjungan ?: '-',
             'TANGGAL'           => $tanggal,
             'KETERANGAN'        => $request->keterangan,
             'KUARTAL'           => $kuartal,
@@ -302,8 +302,8 @@ return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSank
             'id_sales' => 'required',
             'id_ass' => 'required',
             'distributor' => 'required',
-            'toko' => 'required',
-            'kunjungan' => 'required',
+            'toko' => 'nullable|string',
+            'kunjungan' => 'nullable|string',
             'tanggal' => 'required|date_format:d/m/Y',
             'jenis_sanksi' => 'required|string|max:100',
             'deskripsi_sanksi' => 'required|string',
@@ -329,8 +329,8 @@ return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSank
                 'ID_SALES'          => $request->id_sales,
                 'ID_ASS'            => $request->id_ass,
                 'DISTRIBUTOR'       => $request->distributor,
-                'TOKO'              => $request->toko,
-                'KUNJUNGAN'         => $request->kunjungan,
+                'TOKO'              => $request->toko ?: '-',
+                'KUNJUNGAN'         => $request->kunjungan ?: '-',
                 'TANGGAL'           => $tanggal,
                 'KETERANGAN'        => $request->keterangan,
                 'KUARTAL'           => $kuartal,
@@ -443,6 +443,18 @@ return view('kecurangan.create', compact('sales', 'jenisSanksi', 'keteranganSank
         ]);
     }
 
+
+    public function getCustomer($idSales)
+    {
+        $customer = DB::table('customer')
+            ->where('ID_SALESMAN', $idSales)       
+            ->where('STATUS', 1)                 
+            ->select('ID_CUST', 'NAMA_CUST')
+            ->orderBy('NAMA_CUST', 'asc')
+            ->get();
+
+        return response()->json($customer);
+    }
 
     public function getKeteranganByJenis($jenis)
     {

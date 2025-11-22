@@ -13,9 +13,7 @@ class UserAccessTableSeeder extends Seeder
 
         DB::table('user_access')->insert([
 
-            // =============================
             // Dashboard
-            // =============================
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Dashboard',
@@ -29,9 +27,7 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
-            // =============================
-            // Master
-            // =============================
+            // Master Sanksi
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Master',
@@ -45,6 +41,7 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
+            // Master Kecurangan
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Master',
@@ -58,9 +55,7 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
-            // =============================
-            // Data
-            // =============================
+            // Data Distributor
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Data',
@@ -74,6 +69,21 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
+            // Data ASS
+            [
+                'user_id'     => 1,
+                'main_menu'   => 'Data',
+                'sub_menu'    => 'Data ASS',
+                'can_access'  => 1,
+                'can_create'  => 0,
+                'can_edit'    => 0,
+                'can_delete'  => 0,
+                'can_print'   => 1,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ],
+
+            // Data Salesman
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Data',
@@ -87,6 +97,7 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
+            // Data Kecurangan
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Data',
@@ -100,9 +111,7 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
-            // =============================
-            // Pengaturan
-            // =============================
+            // Pengaturan → User Management
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Pengaturan',
@@ -116,6 +125,7 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
+            // Pengaturan → Menu Management
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Pengaturan',

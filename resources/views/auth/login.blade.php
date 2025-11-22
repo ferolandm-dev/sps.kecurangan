@@ -1,5 +1,5 @@
 @extends('layouts.login', [
-'namePage' => 'LOGIN SPS',
+'namePage' => 'LOGIN SCS',
 'class' => 'login-page',
 'activePage' => 'login',
 ])

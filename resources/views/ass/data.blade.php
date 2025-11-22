@@ -1,23 +1,19 @@
 @extends('layouts.app', [
-'namePage' => 'Data Sales',
+'namePage' => 'Data ASS',
 'class' => 'sidebar-mini',
-'activePage' => 'data_sales',
+'activePage' => 'data_ass',
 ])
 
 @section('content')
 
-{{-- ============================================================
-     HEADER PANEL
-     ============================================================ --}}
+{{-- HEADER --}}
 <div class="panel-header panel-header-sm panel-header-sps"></div>
 
 <div class="content">
     <div class="row">
         <div class="col-md-12">
 
-            {{-- ============================================================
-                 ALERT SUCCESS
-                 ============================================================ --}}
+            {{-- SUCCESS ALERT --}}
             @if (session('success'))
             <div class="alert alert-success alert-with-icon alert-dismissible fade show" data-notify="container"
                 role="alert"
@@ -31,51 +27,49 @@
             @endif
 
 
-            {{-- ============================================================
-                 CARD DATA SALESMAN
-                 ============================================================ --}}
+            {{-- CARD --}}
             <div class="card" style="border-radius: 20px;">
 
-                {{-- ===================== CARD HEADER ===================== --}}
+                {{-- CARD HEADER --}}
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Data Salesman') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Data ASS') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
 
-                        {{-- ===================== FORM PENCARIAN ===================== --}}
-                        <form action="{{ route('salesman.data') }}" method="GET" class="mr-2">
+                        {{-- SEARCH --}}
+                        <form action="{{ route('ass.data') }}" method="GET" class="mr-2">
                             <div class="search-group">
                                 <input type="text" name="search" class="form-control search-input"
-                                    placeholder="Cari salesman..." value="{{ request('search') }}">
+                                    placeholder="Cari ASS..." value="{{ request('search') }}">
                                 <button class="btn search-btn" type="submit">
                                     <i class="now-ui-icons ui-1_zoom-bold"></i>
                                 </button>
                             </div>
                         </form>
 
-                        {{-- ===================== TAMPILKAN SEMUA ===================== --}}
+                        {{-- SHOW ALL --}}
                         @if (request()->has('all'))
-                        <a href="{{ route('salesman.data', request()->except('all')) }}"
+                        <a href="{{ route('ass.data', request()->except('all')) }}"
                             class="btn btn-warning btn-round mr-2"
                             style="background:#eee733;color:#000;border:none;margin-top:10px;">
                             <i class="now-ui-icons arrows-1_refresh-69"></i> Tampilkan Halaman
                         </a>
                         @else
-                        <a href="{{ route('salesman.data', array_merge(request()->query(), ['all' => true])) }}"
+                        <a href="{{ route('ass.data', array_merge(request()->query(), ['all' => true])) }}"
                             class="btn btn-success btn-round mr-2"
                             style="background:#29b14a;border:none;margin-top:10px;">
                             <i class="now-ui-icons ui-1_zoom-bold"></i> Tampilkan Semua
                         </a>
                         @endif
 
-                        {{-- ===================== EXPORT BUTTON ===================== --}}
-                        @if (checkAccess('Data', 'Data Salesman', 'print'))
-                        <a href="{{ route('salesman.exportExcel') }}" class="btn btn-success btn-round mr-2"
+                        {{-- EXPORT --}}
+                        @if (checkAccess('Data', 'Data ASS', 'print'))
+                        <a href="{{ route('ass.exportExcel') }}" class="btn btn-success btn-round mr-2"
                             style="margin-top:10px;background:#29b14a;border:none;">
                             <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
                         </a>
 
-                        <a href="{{ route('salesman.exportPdf') }}" class="btn btn-danger btn-round"
+                        <a href="{{ route('ass.exportPdf') }}" class="btn btn-danger btn-round"
                             style="margin-top:10px;background:#e74c3c;border:none;">
                             <i class="now-ui-icons files_paper mr-1"></i> PDF
                         </a>
@@ -84,10 +78,9 @@
                 </div>
 
 
-                {{-- ===================== CARD BODY ===================== --}}
+                {{-- CARD BODY --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
 
-                    {{-- ===================== TABEL DATA ===================== --}}
                     <div class="table-responsive">
                         <table class="table table-hover align-middle text-nowrap mb-0 table-fixed"
                             style="color:#333; table-layout:fixed; width:100%;">
@@ -95,17 +88,17 @@
                                 <tr>
                                     <th class="text-center" style="width:5%;">#</th>
 
-                                    <th style="width:20%; padding-left: 100px;">
-                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
+                                    <th style="width:20%; padding-left:100px;">
+                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
                                                 'sort_by' => 'ID_SALESMAN',
                                                 'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                             ])) }}" class="text-success text-decoration-none">
-                                            ID Salesman
+                                            ID ASS
                                         </a>
                                     </th>
 
-                                    <th style="width:20%; padding-left: 100px;">
-                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
+                                    <th style="width:20%; padding-left:100px;">
+                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
                                                 'sort_by' => 'ID_DISTRIBUTOR',
                                                 'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                             ])) }}" class="text-success text-decoration-none">
@@ -113,56 +106,58 @@
                                         </a>
                                     </th>
 
-                                    <th style="width:25%; padding-left: 100px;">
-                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
+                                    <th style="width:25%; padding-left:100px;">
+                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
                                                 'sort_by' => 'NAMA_SALESMAN',
                                                 'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                             ])) }}" class="text-success text-decoration-none">
-                                            Nama Salesman
+                                            Nama ASS
                                         </a>
                                     </th>
 
-                                    <th class="text-center" style="width:80%; padding-left: 100px;">
+                                    <th class="text-center" style="width:80%; padding-left:100px;">
                                         Total Kecurangan
                                     </th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @forelse ($salesman as $item)
+                                @forelse ($ass as $item)
                                 <tr>
                                     <td class="text-center">
-                                        {{ $loop->iteration + ($salesman->firstItem() - 1) }}
+                                        @if(method_exists($ass, 'firstItem'))
+                                        {{ $loop->iteration + ($ass->firstItem() - 1) }}
+                                        @else
+                                        {{ $loop->iteration }}
+                                        @endif
                                     </td>
 
-                                    <td style="padding-left: 100px;">{{ $item->ID_SALESMAN }}</td>
-                                    <td style="padding-left: 100px;">{{ $item->ID_DISTRIBUTOR }}</td>
-                                    <td style="padding-left: 100px;">{{ $item->NAMA_SALESMAN }}</td>
+                                    <td style="padding-left:100px;">{{ $item->ID_SALESMAN }}</td>
+                                    <td style="padding-left:100px;">{{ $item->ID_DISTRIBUTOR }}</td>
+                                    <td style="padding-left:100px;">{{ $item->NAMA_SALESMAN }}</td>
 
-                                    <td class="text-center" style="padding-left: 100px;">
+                                    <td class="text-center" style="padding-left:100px;">
                                         <span class="badge-soft text-danger font-weight-bold" style="cursor:pointer;"
                                             onclick="showKecurangan('{{ $item->ID_SALESMAN }}')">
                                             {{ $item->total_kecurangan }}
                                         </span>
                                     </td>
                                 </tr>
-
                                 @empty
                                 <tr>
                                     <td colspan="13" class="text-center text-muted">
-                                        Belum ada data salesman
+                                        Belum ada data ASS
                                     </td>
                                 </tr>
                                 @endforelse
                             </tbody>
                         </table>
-
                     </div>
 
-                    {{-- ===================== PAGINATION ===================== --}}
+                    {{-- PAGINATION --}}
                     @if (!request()->has('all'))
                     <div class="d-flex justify-content-center mt-3">
-                        {{ $salesman->links('pagination::bootstrap-4') }}
+                        {{ $ass->links('pagination::bootstrap-4') }}
                     </div>
                     @endif
 
@@ -174,45 +169,39 @@
 </div>
 
 
-{{-- ============================================================
-     MODAL KEKURANGAN
-     ============================================================ --}}
+{{-- MODAL --}}
 <div class="modal fade" id="modalKecurangan" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:750px;">
         <div class="modal-content border-0"
             style="background:rgba(255,255,255,0.97); border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3);">
 
             <div class="modal-header" style="border-bottom:none;">
-                <h5 class="modal-title text-danger" style="font-weight:600;">Daftar Kecurangan</h5>
+                <h5 class="modal-title text-danger" style="font-weight:600;">Daftar Kecurangan (ASS)</h5>
             </div>
 
-            {{-- ===================== MODAL BODY ===================== --}}
             <div class="modal-body kecurangan-body" style="font-size:15px; color:#333;">
-
                 <div id="kecuranganTotal"></div>
-                {{-- Tabel Scroll --}}
+
                 <div class="table-wrapper-fixed table-responsive">
                     <table class="table table-bordered table-striped"
                         style="background:white; border-radius:10px; overflow:hidden;">
                         <thead style="background:#e74c3c; color:white;">
                             <tr>
-                                <th class="text-center" style="width:10%;">#</th>
-                                <th class="text-center" style="width:20%;">Jenis Sanksi</th>
-                                <th class="text-center" style="width:30%;">Keterangan Sanksi</th>
-                                <th class="text-center" style="width:20%;">Nilai Sanksi</th>
-                                <th class="text-center" style="width:20%;">Tanggal</th>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Jenis Sanksi</th>
+                                <th class="text-center">Keterangan</th>
+                                <th class="text-center">Nilai</th>
+                                <th class="text-center">Tanggal</th>
                             </tr>
                         </thead>
                         <tbody id="tableKecurangan"></tbody>
                     </table>
                 </div>
 
-                {{-- Total + Pagination --}}
-                <div class="kecurangan-bottom mt-2">
-                    <div id="kecuranganPagination"></div>
-                </div>
+                <div id="kecuranganPagination" class="mt-2 text-center"></div>
 
             </div>
+
             <div class="modal-footer" style="border-top:none;">
                 <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
             </div>
@@ -245,7 +234,6 @@ input:focus,
 textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
-    /* warna hijau fokus */
 }
 
 
@@ -258,7 +246,6 @@ body,
 .main-panel {
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
     background-attachment: fixed !important;
-    /* smooth scroll */
 }
 
 
@@ -584,88 +571,91 @@ body,
 @endpush
 
 @push('js')
-{{-- ========== LOAD JS ========== --}}
 <script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
 
 <script>
-/* ========== OPEN MODAL & LOAD DATA ========== */
-function showKecurangan(idSales, pageUrl = null) {
+/* ============================================================
+   OPEN MODAL & LOAD DATA KECURANGAN ASS
+   ============================================================ */
+function showKecurangan(idAss, pageUrl = null) {
 
-    /* ========== LOADING STATE ========== */
+    // === Loading state ===
     $("#tableKecurangan").html(`
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-3">Loading...</td>
-                </tr>
-            `);
+        <tr>
+            <td colspan="5" class="text-center text-muted py-3">Loading...</td>
+        </tr>
+    `);
 
     $("#kecuranganPagination").html("");
     $("#modalKecurangan").modal('show');
 
-    /* ========== URL HANDLING ========== */
-    let url = pageUrl ?? ("{{ url('/salesman/get-kecurangan') }}/" + idSales);
+    // === URL handler (ASS) ===
+    let url = pageUrl ?? ("{{ url('/ass/get-kecurangan') }}/" + idAss);
 
-    /* ========== AJAX FETCH ========== */
+    // === AJAX ===
     $.get(url, function(res) {
 
-        /* ========== RENDER TABLE ROWS ========== */
-        let indexStart = res.first ?? 1;
+        // Ambil data paginator
+        let pg = res.data;
+        let list = pg.data || [];
+        let indexStart = pg.from ?? 1;
+
+
         let rows = "";
 
-        if (!res.data || res.data.length === 0) {
+        if (list.length === 0) {
             rows = `
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-3">Tidak ada data</td>
-                        </tr>
-                    `;
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-3">Tidak ada data</td>
+                </tr>
+            `;
         } else {
-            res.data.forEach((row, i) => {
+            list.forEach((row, i) => {
                 rows += `
-                            <tr>
-                                <td class="text-center">${indexStart + i}</td>
-                                <td>${row.JENIS_SANKSI ?? '-'}</td>
-                                <td>${row.KETERANGAN_SANKSI ?? '-'}</td>
-                                <td> Rp ${new Intl.NumberFormat("id-ID").format(row.NILAI_SANKSI ?? 0)}</td>
-                                <td>${row.TANGGAL}</td>
-                            </tr>
-                        `;
+                    <tr>
+                        <td class="text-center">${indexStart + i}</td>
+                        <td>${row.JENIS_SANKSI ?? '-'}</td>
+                        <td>${row.KETERANGAN_SANKSI ?? '-'}</td>
+                        <td>Rp ${new Intl.NumberFormat("id-ID").format(row.NILAI_SANKSI ?? 0)}</td>
+                        <td>${row.TANGGAL}</td>
+                    </tr>
+                `;
             });
         }
 
         $("#tableKecurangan").html(rows);
 
-        /* ========== RENDER TOTAL ========== */
-        let totalHTML = `
-                    <div class="mb-2 text-right">
-                        <p class="text-danger font-weight-bold" style="font-size:14px;">
-                            Total Nilai Sanksi: Rp ${new Intl.NumberFormat("id-ID").format(res.total_nilai ?? 0)}
-                        </p>
-                    </div>
-                `;
+        // === Total nilai ===
+        $("#kecuranganTotal").html(`
+            <div class="mb-2 text-right">
+                <p class="text-danger font-weight-bold" style="font-size:14px;">
+                    Total Nilai Sanksi: Rp ${new Intl.NumberFormat("id-ID").format(res.total_nilai ?? 0)}
+                </p>
+            </div>
+        `);
 
-        $("#kecuranganTotal").html(totalHTML);
+        // === Pagination ===
+        $("#kecuranganPagination").html(res.pagination);
 
-        /* ========== RENDER PAGINATION ========== */
-        $("#kecuranganPagination").append(res.pagination);
-
-        /* ========== PAGINATION AJAX HANDLER ========== */
+        // === Pagination AJAX linking ===
         $("#kecuranganPagination a.page-link").click(function(e) {
             e.preventDefault();
-            showKecurangan(idSales, $(this).attr("href"));
+            showKecurangan(idAss, $(this).attr("href"));
         });
 
     }).fail(function(xhr) {
 
-        /* ========== ERROR STATE ========== */
         console.log("AJAX Error:", xhr.responseText);
 
         $("#tableKecurangan").html(`
-                    <tr>
-                        <td colspan="5" class="text-center text-danger py-3">Gagal memuat data</td>
-                    </tr>
-                `);
+            <tr>
+                <td colspan="5" class="text-center text-danger py-3">Gagal memuat data</td>
+            </tr>
+        `);
     });
 
 }
 </script>
+
 @endpush

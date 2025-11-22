@@ -83,31 +83,21 @@
 
                                     <th style="padding-left: 100px; width:30%;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
-                'sort_by' => 'ID_DISTRIBUTOR',
-                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-            ])) }}" class="text-success text-decoration-none">
+                                                'sort_by' => 'ID_DISTRIBUTOR',
+                                                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                            ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
 
                                     <th style="padding-left: 100px;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
-                'sort_by' => 'NAMA_DISTRIBUTOR',
-                'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-            ])) }}" class="text-success text-decoration-none">
+                                                'sort_by' => 'NAMA_DISTRIBUTOR',
+                                                'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                            ])) }}" class="text-success text-decoration-none">
                                             Nama Distributor
                                         </a>
                                     </th>
-
-                                    {{-- Kolom lain (JANGAN DIHAPUS) --}}
-                                    <!-- <th>Kota</th>
-                                    <th>Region</th>
-                                    <th>SPV</th>
-                                    <th>Logistic</th>
-                                    <th>Provinsi</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
-                                    <th>Accuracy</th> -->
                                 </tr>
                             </thead>
 
@@ -120,20 +110,9 @@
 
                                     <td style="padding-left: 100px">{{ $d->ID_DISTRIBUTOR }}</td>
                                     <td style="padding-left: 100px">{{ $d->NAMA_DISTRIBUTOR }}</td>
-
-                                    {{-- Kolom lain (JANGAN DIHAPUS) --}}
-                                    <!-- <td>{{ $d->ID_KOTA ?? '-' }}</td>
-                                    <td>{{ $d->ID_REGION ?? '-' }}</td>
-                                    <td>{{ $d->ID_SPV ?? '-' }}</td>
-                                    <td>{{ $d->ID_LOGISTIC ?? '-' }}</td>
-                                    <td>{{ $d->ID_PROV ?? '-' }}</td>
-                                    <td>{{ $d->LATITUDE_DIST ?? '-' }}</td>
-                                    <td>{{ $d->LONGITUDE_DIST ?? '-' }}</td>
-                                    <td>{{ $d->ACCURACY_DIST ?? '-' }}</td> -->
                                 </tr>
                                 @empty
                                 <tr>
-                                    <!-- colspan disesuaikan dengan jumlah kolom yang terlihat (3 aktif saat ini) -->
                                     <td colspan="3" class="text-center text-muted">Belum ada data distributor</td>
                                 </tr>
                                 @endforelse

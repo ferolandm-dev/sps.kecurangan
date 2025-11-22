@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     MenuController,
     DistributorController,
     SalesmanController,
+    AssController,
     SpecialistManagerController,
     AsistenManagerController,
     SanksiController,
@@ -210,87 +211,30 @@ Route::middleware('auth')->group(function () {
         });
 
 
-/* ============================================================
-   DATA: SPECIALIST MANAGER
-   ============================================================ */
-
-    Route::prefix('specialist-manager')
-        ->middleware('check.access:Data,Data Specialist Manager')
-        ->group(function () {
-
-            Route::get('/data', [SpecialistManagerController::class, 'data'])
-                ->middleware('check.access:Data,Data Specialist Manager,access')
-                ->name('specialist_manager.data');
-
-            Route::get('/export-excel', [SpecialistManagerController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data Specialist Manager,print')
-                ->name('specialist_manager.exportExcel');
-
-            Route::get('/export-pdf', [SpecialistManagerController::class, 'exportPdf'])
-                ->middleware('check.access:Data,Data Specialist Manager,print')
-                ->name('specialist_manager.exportPdf');
-
-            Route::get('/get-user/{namaManager}', [SpecialistManagerController::class, 'getUserByManager'])
-                ->middleware('check.access:Data,Data Specialist Manager,access')
-                ->name('specialist_manager.getUser');
-        });
-
-
-/* ============================================================
-   MASTER: ASS
-   ============================================================ */
-
-    Route::prefix('asisten_manager')
-        ->middleware('check.access:Master,Master ASS')
-        ->group(function () {
-
-            Route::get('/', [AsistenManagerController::class, 'index'])
-                ->middleware('check.access:Master,Master ASS,access')
-                ->name('asisten_manager.index');
-
-            Route::get('/create', [AsistenManagerController::class, 'create'])
-                ->middleware('check.access:Master,Master ASS,create')
-                ->name('asisten_manager.create');
-
-            Route::post('/', [AsistenManagerController::class, 'store'])
-                ->middleware('check.access:Master,Master ASS,create')
-                ->name('asisten_manager.store');
-
-            Route::get('/{id}/edit', [AsistenManagerController::class, 'edit'])
-                ->middleware('check.access:Master,Master ASS,edit')
-                ->name('asisten_manager.edit');
-
-            Route::put('/{id}', [AsistenManagerController::class, 'update'])
-                ->middleware('check.access:Master,Master ASS,edit')
-                ->name('asisten_manager.update');
-
-            Route::delete('/{id}', [AsistenManagerController::class, 'destroy'])
-                ->middleware('check.access:Master,Master ASS,delete')
-                ->name('asisten_manager.destroy');
-        });
-
-
-/* ============================================================
+    /* ============================================================
    DATA: ASS
    ============================================================ */
 
-    Route::prefix('asisten_manager')
+    Route::prefix('ass')
         ->middleware('check.access:Data,Data ASS')
         ->group(function () {
 
-            Route::get('/data', [AsistenManagerController::class, 'data'])
+            Route::get('/data', [AssController::class, 'data'])
                 ->middleware('check.access:Data,Data ASS,access')
-                ->name('asisten_manager.data');
+                ->name('ass.data');
 
-            Route::get('/export-excel', [AsistenManagerController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data ASS,print')
-                ->name('asisten_manager.exportExcel');
+            Route::get('/get-kecurangan/{idSales}', [AssController::class, 'getKecurangan'])
+                ->middleware('check.access:Data,Data ASS,access')
+                ->name('ass.getKecurangan');
 
-            Route::get('/export-pdf', [AsistenManagerController::class, 'exportPDF'])
+            Route::get('/export-excel', [AssController::class, 'exportExcel'])
                 ->middleware('check.access:Data,Data ASS,print')
-                ->name('asisten_manager.exportPDF');
+                ->name('ass.exportExcel');
+
+            Route::get('/export-pdf', [AssController::class, 'exportPdf'])
+                ->middleware('check.access:Data,Data ASS,print')
+                ->name('ass.exportPdf');
         });
-
 
 /* ============================================================
    MASTER: SANKSI

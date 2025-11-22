@@ -1014,7 +1014,7 @@ $(document).ready(function() {
 
         if (!jenis) return;
 
-        $.getJSON(`/kecurangan/deskripsi/${jenis}`, function(data) {
+        $.getJSON(`/kecurangan/get-keterangan/${jenis}`, function(data) {
             let options = '<option value="">-- Pilih Deskripsi --</option>';
 
             data.forEach(item => {

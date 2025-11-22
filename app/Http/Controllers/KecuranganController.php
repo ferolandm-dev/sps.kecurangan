@@ -450,18 +450,58 @@ class KecuranganController extends Controller
     }
 
 
+    //* ==========================================================
+    // | AJAX: GET CUSTOMER
+    // ==========================================================
     public function getCustomer($idSales)
     {
-        $customer = DB::table('customer')
-            ->where('ID_SALESMAN', $idSales)       
-            ->where('STATUS', 1)                 
-            ->select('ID_CUST', 'NAMA_CUST')
-            ->orderBy('NAMA_CUST', 'asc')
-            ->get();
+        // Ambil data salesman dulu
+        $salesman = DB::table('salesman')
+            ->where('ID_SALESMAN', $idSales)
+            ->select('ID_DISTRIBUTOR')
+            ->first();
+
+        if (!$salesman) {
+            return response()->json([]);
+        }
+
+        $distributor = $salesman->ID_DISTRIBUTOR;
+
+        // Distributor khusus
+        $specialDistributor = ['SJB01', 'SUN01'];
+
+        if (in_array($distributor, $specialDistributor)) {
+
+            // Ambil customer berdasarkan distributor ATAU ID_SALESMAN
+            $customer = DB::table('customer')
+                ->where('STATUS', 1)
+                ->where(function ($q) use ($distributor, $idSales) {
+                    $q->where('ID_DISTRIBUTOR', $distributor)
+                    ->orWhere('ID_SALESMAN', $idSales);
+                })
+                ->select('ID_CUST', 'NAMA_CUST')
+                ->orderBy('NAMA_CUST', 'asc')
+                ->get();
+
+        } else {
+
+            // Ambil customer berdasarkan ID_SALESMAN
+            $customer = DB::table('customer')
+                ->where('ID_SALESMAN', $idSales)
+                ->where('STATUS', 1)
+                ->select('ID_CUST', 'NAMA_CUST')
+                ->orderBy('NAMA_CUST', 'asc')
+                ->get();
+        }
 
         return response()->json($customer);
     }
 
+
+
+    //* ==========================================================
+    // | AJAX: GET KETERANGAN
+    // ==========================================================
     public function getKeteranganByJenis($jenis)
     {
         $list = DB::table('sanksi')

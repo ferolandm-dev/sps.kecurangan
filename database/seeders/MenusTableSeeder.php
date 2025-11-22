@@ -12,11 +12,12 @@ class MenusTableSeeder extends Seeder
         DB::table('menus')->truncate();
 
         DB::table('menus')->insert([
-            // Dashboard
+
+            // DASHBOARD
             [
                 'main_menu'  => 'Dashboard',
                 'sub_menu'   => null,
-                'icon'       => 'now-ui-icons business_chart-pie-36',
+                'icon'       => 'now-ui-icons business_chart-bar-32',
                 'route'      => 'dashboard',
                 'main_order' => 1,
                 'order'      => 0,
@@ -26,11 +27,11 @@ class MenusTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
-    
+            // MASTER
             [
                 'main_menu'  => 'Master',
                 'sub_menu'   => 'Master Sanksi',
-                'icon'       => null,
+                'icon'       => 'now-ui-icons business_money-coins',
                 'route'      => 'sanksi.index',
                 'main_order' => 2,
                 'order'      => 4,
@@ -39,10 +40,11 @@ class MenusTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+
             [
                 'main_menu'  => 'Master',
                 'sub_menu'   => 'Master Kecurangan',
-                'icon'       => 'now-ui-icons design_bullet-list-67',
+                'icon'       => 'now-ui-icons sport_user-run',
                 'route'      => 'kecurangan.index',
                 'main_order' => 2,
                 'order'      => 5,
@@ -56,7 +58,7 @@ class MenusTableSeeder extends Seeder
             [
                 'main_menu'  => 'Data',
                 'sub_menu'   => 'Data Distributor',
-                'icon'       => 'now-ui-icons design_bullet-list-67',
+                'icon'       => 'now-ui-icons shopping_shop',
                 'route'      => 'distributor.data',
                 'main_order' => 3,
                 'order'      => 1,
@@ -65,10 +67,11 @@ class MenusTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+
             [
                 'main_menu'  => 'Data',
                 'sub_menu'   => 'Data Salesman',
-                'icon'       => 'now-ui-icons design_bullet-list-67',
+                'icon'       => 'now-ui-icons business_badge',
                 'route'      => 'salesman.data',
                 'main_order' => 3,
                 'order'      => 2,
@@ -77,14 +80,14 @@ class MenusTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            
+
             [
                 'main_menu'  => 'Data',
                 'sub_menu'   => 'Data Kecurangan',
-                'icon'       => 'now-ui-icons design_bullet-list-67',
+                'icon'       => 'now-ui-icons travel_info',
                 'route'      => 'kecurangan.data',
                 'main_order' => 3,
-                'order'      => 4,
+                'order'      => 3, // SESUAI DATA INSERT KAMU
                 'can_crud'   => 0,
                 'can_print'  => 1,
                 'created_at' => now(),
@@ -104,6 +107,7 @@ class MenusTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+
             [
                 'main_menu'  => 'Pengaturan',
                 'sub_menu'   => 'Menu Management',

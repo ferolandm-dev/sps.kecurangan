@@ -16,7 +16,7 @@ class SalesmanController extends Controller
     public function data(Request $request)
 {
     $query = DB::table('salesman')
-        ->whereIn('TYPE_SALESMAN', [1, 7])
+        ->whereIn('TYPE_SALESMAN', [1])
         ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
         ->select(
             'salesman.*',

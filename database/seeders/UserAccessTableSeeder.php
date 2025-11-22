@@ -12,6 +12,7 @@ class UserAccessTableSeeder extends Seeder
         DB::table('user_access')->truncate();
 
         DB::table('user_access')->insert([
+
             // =============================
             // Dashboard
             // =============================
@@ -28,6 +29,9 @@ class UserAccessTableSeeder extends Seeder
                 'updated_at'  => now(),
             ],
 
+            // =============================
+            // Master
+            // =============================
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Master',
@@ -40,6 +44,7 @@ class UserAccessTableSeeder extends Seeder
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
+
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Master',
@@ -54,7 +59,7 @@ class UserAccessTableSeeder extends Seeder
             ],
 
             // =============================
-            // DATA
+            // Data
             // =============================
             [
                 'user_id'     => 1,
@@ -68,6 +73,7 @@ class UserAccessTableSeeder extends Seeder
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
+
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Data',
@@ -80,7 +86,7 @@ class UserAccessTableSeeder extends Seeder
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
-            
+
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Data',
@@ -95,7 +101,7 @@ class UserAccessTableSeeder extends Seeder
             ],
 
             // =============================
-            // PENGATURAN
+            // Pengaturan
             // =============================
             [
                 'user_id'     => 1,
@@ -109,6 +115,7 @@ class UserAccessTableSeeder extends Seeder
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
+
             [
                 'user_id'     => 1,
                 'main_menu'   => 'Pengaturan',

@@ -22,7 +22,7 @@ class AssController extends Controller
                 'salesman.*',
                 'distributor.NAMA_DISTRIBUTOR',
                 DB::raw('(SELECT COUNT(*) FROM kecurangan 
-                        WHERE kecurangan.ID_ASS = salesman.ID_SALESMAN 
+                        WHERE kecurangan.ID_SALES = salesman.ID_SALESMAN
                         AND kecurangan.VALIDASI = 1) AS total_kecurangan') // 🔥 ASS → ambil dari kolom ID_ASS
             );
 
@@ -73,18 +73,18 @@ class AssController extends Controller
     public function getKecurangan(Request $request, $id)
     {
         $data = DB::table('kecurangan')
-            ->where('ID_ASS', $id)
+            ->where('ID_SALES', $id)
             ->where('VALIDASI', 1)
             ->orderBy('TANGGAL', 'desc')
-            ->paginate(7);   // <= paginator utuh
+            ->paginate(7);   
 
         $totalNilai = DB::table('kecurangan')
-            ->where('ID_ASS', $id)
+            ->where('ID_SALES', $id)
             ->where('VALIDASI', 1)
             ->sum('NILAI_SANKSI');
 
         return response()->json([
-            'data'        => $data,   // <= kirim Paginator penuh
+            'data'        => $data,   
             'pagination'  => $data->links('pagination::modal')->render(),
             'total_nilai' => $totalNilai
         ]);
@@ -112,8 +112,8 @@ class AssController extends Controller
                 'salesman.*',
                 'distributor.NAMA_DISTRIBUTOR',
                 DB::raw('(SELECT COUNT(*) FROM kecurangan 
-                        WHERE kecurangan.ID_ASS = salesman.ID_SALESMAN 
-                        AND kecurangan.VALIDASI = 1) AS total_kecurangan')
+                    WHERE kecurangan.ID_SALES = salesman.ID_SALESMAN 
+                    AND kecurangan.VALIDASI = 1) AS total_kecurangan')
             )
             ->get();
 

@@ -222,6 +222,7 @@ class DashboardController extends Controller
         $latestYear = DB::table('kecurangan')->max(DB::raw('YEAR(TANGGAL)')) ?? date('Y');
 
         $fraudCalendar = DB::table('kecurangan')
+            ->where('VALIDASI', 1)
             ->whereYear('TANGGAL', $latestYear)
             ->groupBy('TANGGAL')
             ->pluck(DB::raw('COUNT(*) as total'), 'TANGGAL');

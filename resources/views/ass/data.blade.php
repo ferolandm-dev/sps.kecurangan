@@ -211,8 +211,6 @@
 </div>
 @endsection
 
-
-
 @push ('styles')
 {{-- ========== LOAD CSS ========== --}}
 <link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">

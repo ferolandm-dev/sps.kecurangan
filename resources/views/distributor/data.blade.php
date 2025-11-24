@@ -71,33 +71,35 @@
                         @endif
                     </div>
                 </div>
-
-
                 {{-- TABLE --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle text-nowrap mb-0" style="color:#333;">
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th class="text-center" style="width:5%;">#</th>
+                                    <th class="text-center" style="width:5%">#</th>
 
-                                    <th style="padding-left: 100px; width:30%;">
+                                    <th style="width:20%;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
-                                                'sort_by' => 'ID_DISTRIBUTOR',
-                                                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'ID_DISTRIBUTOR',
+                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
 
-                                    <th style="padding-left: 100px;">
+                                    <th style="width:20%;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
-                                                'sort_by' => 'NAMA_DISTRIBUTOR',
-                                                'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'NAMA_DISTRIBUTOR',
+                'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nama Distributor
                                         </a>
                                     </th>
+
+                                    <th style="width:252px;"></th>
+
+                                    <th class="text-center" style="width:150px;"></th>
                                 </tr>
                             </thead>
 
@@ -108,16 +110,24 @@
                                         {{ $loop->iteration + (method_exists($distributor, 'firstItem') ? $distributor->firstItem() - 1 : 0) }}
                                     </td>
 
-                                    <td style="padding-left: 100px">{{ $d->ID_DISTRIBUTOR }}</td>
-                                    <td style="padding-left: 100px">{{ $d->NAMA_DISTRIBUTOR }}</td>
+                                    <td>{{ $d->ID_DISTRIBUTOR }}</td>
+                                    <td>{{ $d->NAMA_DISTRIBUTOR }}</td>
+
+                                    {{-- Empty cell mengikuti kolom Salesman --}}
+                                    <td></td>
+
+                                    {{-- Empty total column --}}
+                                    <td class="text-center"></td>
                                 </tr>
+
                                 @empty
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted">Belum ada data distributor</td>
+                                    <td colspan="5" class="text-center text-muted">
+                                        Belum ada data distributor
+                                    </td>
                                 </tr>
                                 @endforelse
                             </tbody>
-
                         </table>
                     </div>
 
@@ -147,14 +157,12 @@ textarea:invalid,
 select:invalid {
     box-shadow: none !important;
     border-color: #ced4da !important;
-    /* warna abu normal */
 }
 
 input:focus,
 textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
-    /* hijau atau sesuai tema */
 }
 
 body,
@@ -162,7 +170,6 @@ body,
 .main-panel {
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
     background-attachment: fixed !important;
-    /* supaya smooth */
 }
 
 
@@ -411,6 +418,48 @@ body,
     background: linear-gradient(135deg, #25a344, #2fc655) !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
+}
+
+/* ============================================
+   RESPONSIVE TABLE – Header tidak pecah
+============================================ */
+.table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Header & cell tidak boleh turun baris */
+table.table th,
+table.table td {
+    white-space: nowrap !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+/* Header rata kiri */
+table.table th {
+    text-align: left !important;
+}
+
+/* Kolom nomor */
+table.table th:first-child,
+table.table td:first-child {
+    text-align: center !important;
+    width: 40px !important;
+    padding-left: 0 !important;
+}
+
+/* Kolom total kecurangan */
+table.table th:last-child,
+table.table td:last-child {
+    text-align: center !important;
+    width: 150px !important;
+    padding-left: 0 !important;
 }
 </style>
 @endpush

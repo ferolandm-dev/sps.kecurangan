@@ -89,44 +89,45 @@
 
                     {{-- ===================== TABEL DATA ===================== --}}
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle text-nowrap mb-0 table-fixed"
+                        <table class="table table-hover align-middle mb-0" style="color:#333; width:100%;"
                             style="color:#333; table-layout:fixed; width:100%;">
                             <thead style="color:#29b14a;">
                                 <tr>
                                     <th class="text-center" style="width:5%;">#</th>
 
-                                    <th style="width:20%; padding-left: 100px;">
-                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
-                                                'sort_by' => 'ID_SALESMAN',
-                                                'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                                    <th style="width:20%;">
+                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
+                    'sort_by' => 'ID_SALESMAN',
+                    'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                ])) }}" class="text-success text-decoration-none">
                                             ID Salesman
                                         </a>
                                     </th>
 
-                                    <th style="width:20%; padding-left: 100px;">
-                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
-                                                'sort_by' => 'ID_DISTRIBUTOR',
-                                                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                                    <th style="width:20%;">
+                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
+                    'sort_by' => 'ID_DISTRIBUTOR',
+                    'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
 
-                                    <th style="width:25%; padding-left: 100px;">
-                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
-                                                'sort_by' => 'NAMA_SALESMAN',
-                                                'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
-                                            Nama Salesman
+                                    <th style="width:35%;">
+                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
+                    'sort_by' => 'NAMA_SALESMAN',
+                    'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                ])) }}" class="text-success text-decoration-none">
+                                            Nama ASS
                                         </a>
                                     </th>
 
-                                    <th class="text-center" style="width:80%; padding-left: 100px;">
+                                    <th class="text-center" style="width:150px;">
                                         Total Kecurangan
                                     </th>
                                 </tr>
                             </thead>
+
 
                             <tbody>
                                 @forelse ($salesman as $item)
@@ -135,11 +136,11 @@
                                         {{ $loop->iteration + ($salesman->firstItem() - 1) }}
                                     </td>
 
-                                    <td style="padding-left: 100px;">{{ $item->ID_SALESMAN }}</td>
-                                    <td style="padding-left: 100px;">{{ $item->ID_DISTRIBUTOR }}</td>
-                                    <td style="padding-left: 100px;">{{ $item->NAMA_SALESMAN }}</td>
+                                    <td>{{ $item->ID_SALESMAN }}</td>
+                                    <td>{{ $item->ID_DISTRIBUTOR }}</td>
+                                    <td>{{ $item->NAMA_SALESMAN }}</td>
 
-                                    <td class="text-center" style="padding-left: 100px;">
+                                    <td class="text-center">
                                         <span class="badge-soft text-danger font-weight-bold" style="cursor:pointer;"
                                             onclick="showKecurangan('{{ $item->ID_SALESMAN }}')">
                                             {{ $item->total_kecurangan }}
@@ -196,11 +197,11 @@
                         style="background:white; border-radius:10px; overflow:hidden;">
                         <thead style="background:#e74c3c; color:white;">
                             <tr>
-                                <th class="text-center" style="width:10%;">#</th>
-                                <th class="text-center" style="width:20%;">Jenis Sanksi</th>
-                                <th class="text-center" style="width:30%;">Keterangan Sanksi</th>
-                                <th class="text-center" style="width:20%;">Nilai Sanksi</th>
-                                <th class="text-center" style="width:20%;">Tanggal</th>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Jenis Sanksi</th>
+                                <th class="text-center">Keterangan Sanksi</th>
+                                <th class="text-center">Nilai Sanksi</th>
+                                <th class="text-center">Tanggal</th>
                             </tr>
                         </thead>
                         <tbody id="tableKecurangan"></tbody>
@@ -566,18 +567,52 @@ body,
     text-align: center;
 }
 
-/* ============================================================
-   MOBILE ADJUSTMENT (Modal terlihat nyaman di layar kecil)
-   ============================================================ */
+/* ============================================
+   RESPONSIVE TABLE – Header tidak pecah
+============================================ */
+.table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Header & cell tidak boleh turun baris */
+table.table th,
+table.table td {
+    white-space: nowrap !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+/* Header rata kiri */
+table.table th {
+    text-align: left !important;
+}
+
+/* Kolom nomor */
+table.table th:first-child,
+table.table td:first-child {
+    text-align: center !important;
+    width: 40px !important;
+    padding-left: 0 !important;
+}
+
+/* Kolom total kecurangan */
+table.table th:last-child,
+table.table td:last-child {
+    text-align: center !important;
+    width: 150px !important;
+    padding-left: 0 !important;
+}
+
+/* Mobile font */
 @media (max-width: 576px) {
-
-    #modalKecurangan .modal-dialog {
-        max-width: 95% !important;
-        margin: 8px auto;
-    }
-
-    #modalKecurangan .table-wrapper-fixed {
-        max-height: 45vh;
+    table.table {
+        font-size: 12px !important;
     }
 }
 </style>

@@ -78,44 +78,44 @@
                 </div>
 
 
-                {{-- CARD BODY --}}
+                {{-- ===================== CARD BODY ===================== --}}
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
 
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle text-nowrap mb-0 table-fixed"
+                        <table class="table table-hover align-middle mb-0" style="color:#333; width:100%;"
                             style="color:#333; table-layout:fixed; width:100%;">
                             <thead style="color:#29b14a;">
                                 <tr>
                                     <th class="text-center" style="width:5%;">#</th>
 
-                                    <th style="width:20%; padding-left:100px;">
+                                    <th style="width:20%;">
                                         <a href="{{ route('ass.data', array_merge(request()->query(), [
-                                                'sort_by' => 'ID_SALESMAN',
-                                                'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                    'sort_by' => 'ID_SALESMAN',
+                    'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                ])) }}" class="text-success text-decoration-none">
                                             ID ASS
                                         </a>
                                     </th>
 
-                                    <th style="width:20%; padding-left:100px;">
+                                    <th style="width:20%;">
                                         <a href="{{ route('ass.data', array_merge(request()->query(), [
-                                                'sort_by' => 'ID_DISTRIBUTOR',
-                                                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                    'sort_by' => 'ID_DISTRIBUTOR',
+                    'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
 
-                                    <th style="width:25%; padding-left:100px;">
+                                    <th style="width:35%;">
                                         <a href="{{ route('ass.data', array_merge(request()->query(), [
-                                                'sort_by' => 'NAMA_SALESMAN',
-                                                'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                    'sort_by' => 'NAMA_SALESMAN',
+                    'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
                                         </a>
                                     </th>
 
-                                    <th class="text-center" style="width:80%; padding-left:100px;">
+                                    <th class="text-center" style="width:150px;">
                                         Total Kecurangan
                                     </th>
                                 </tr>
@@ -132,11 +132,11 @@
                                         @endif
                                     </td>
 
-                                    <td style="padding-left:100px;">{{ $item->ID_SALESMAN }}</td>
-                                    <td style="padding-left:100px;">{{ $item->ID_DISTRIBUTOR }}</td>
-                                    <td style="padding-left:100px;">{{ $item->NAMA_SALESMAN }}</td>
+                                    <td>{{ $item->ID_SALESMAN }}</td>
+                                    <td>{{ $item->ID_DISTRIBUTOR }}</td>
+                                    <td>{{ $item->NAMA_SALESMAN }}</td>
 
-                                    <td class="text-center" style="padding-left:100px;">
+                                    <td class="text-center">
                                         <span class="badge-soft text-danger font-weight-bold" style="cursor:pointer;"
                                             onclick="showKecurangan('{{ $item->ID_SALESMAN }}')">
                                             {{ $item->total_kecurangan }}
@@ -567,6 +567,48 @@ body,
         max-height: 45vh;
     }
 }
+
+.table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Header & cell tidak boleh turun baris */
+table.table th,
+table.table td {
+    white-space: nowrap !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+/* Header rata kiri */
+table.table th {
+    text-align: left !important;
+}
+
+/* Kolom nomor */
+table.table th:first-child,
+table.table td:first-child {
+    text-align: center !important;
+    width: 40px !important;
+    padding-left: 0 !important;
+}
+
+/* Kolom total kecurangan */
+table.table th:last-child,
+table.table td:last-child {
+    text-align: center !important;
+    width: 150px !important;
+    padding-left: 0 !important;
+}
+
+/* Mobile font */
+@media (max-width: 576px) {
+    table.table {
+        font-size: 12px !important;
+    }
+}
+
 </style>
 @endpush
 

@@ -5,10 +5,6 @@
 ])
 
 @section('content')
-@php
-$isAdmin = ($user->id == 1);
-@endphp
-
 <div class="panel-header panel-header-sm panel-header-sps"></div>
 
 <div class="content">
@@ -67,7 +63,6 @@ $isAdmin = ($user->id == 1);
                     <div class="col-md-12">
                         <div class="menu-access-box">
                             <div class="d-flex align-items-center mb-2">
-
                                 {{-- Jika tidak ada sub menu, checkbox di kiri --}}
                                 @if (!$hasSubMenu)
                                 @php
@@ -76,16 +71,9 @@ $isAdmin = ($user->id == 1);
                                 @endphp
 
                                 <label class="custom-checkbox mb-0 mr-2">
-
-                                    {{-- Hidden supaya value tetap terkirim (WAJIB untuk admin) --}}
-                                    <input type="hidden" name="access[{{ $main }}][_main_][can_access]"
-                                        value="{{ $access && $access->can_access ? 1 : 0 }}">
-
-                                    {{-- Checkbox tampil tapi read-only --}}
-                                    <input type="checkbox" value="1"
-                                        {{ $access && $access->can_access ? 'checked' : '' }}
-                                        {{ $isAdmin ? 'disabled' : '' }}>
-
+                                    <input type="hidden" name="access[{{ $main }}][_main_][can_access]" value="0">
+                                    <input type="checkbox" name="access[{{ $main }}][_main_][can_access]" value="1"
+                                        {{ $access && $access->can_access ? 'checked' : '' }}>
                                     <span class="checkmark"></span>
                                 </label>
                                 @endif
@@ -95,8 +83,7 @@ $isAdmin = ($user->id == 1);
                                 </h5>
                             </div>
 
-
-                            {{-- Jika punya submenu --}}
+                            {{-- Jika punya sub menu, tampilkan di dalam kotak --}}
                             @if ($hasSubMenu)
                             @foreach ($filteredSubs as $sub)
                             @php
@@ -107,101 +94,69 @@ $isAdmin = ($user->id == 1);
                             @endphp
 
                             <div class="custom-checkbox-group ml-3">
-
-                                {{-- ACCESS --}}
                                 <label class="custom-checkbox">
-
                                     <input type="hidden" name="access[{{ $main }}][{{ $sub->sub_menu }}][can_access]"
-                                        value="{{ $access && $access->can_access ? 1 : 0 }}">
-
-                                    <input type="checkbox" value="1"
-                                        {{ $access && $access->can_access ? 'checked' : '' }}
-                                        {{ $isAdmin ? 'disabled' : '' }}>
-
+                                        value="0">
+                                    <input type="checkbox" name="access[{{ $main }}][{{ $sub->sub_menu }}][can_access]"
+                                        value="1" {{ $access && $access->can_access ? 'checked' : '' }}>
                                     <span class="checkmark"></span>
                                     <span class="label-text">{{ ucfirst($sub->sub_menu) }}</span>
                                 </label>
 
-
                                 <div class="ml-4 crud-options">
-
-                                    {{-- CRUD --}}
                                     @if ($canCrud === 1)
-
-                                    {{-- CREATE --}}
                                     <label class="custom-checkbox small-checkbox">
-
                                         <input type="hidden"
-                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_create]"
-                                            value="{{ $access && $access->can_create ? 1 : 0 }}">
-
-                                        <input type="checkbox" value="1"
-                                            {{ $access && $access->can_create ? 'checked' : '' }}
-                                            {{ $isAdmin ? 'disabled' : '' }}>
-
+                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_create]" value="0">
+                                        <input type="checkbox"
+                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_create]" value="1"
+                                            {{ $access && $access->can_create ? 'checked' : '' }}>
                                         <span class="checkmark"></span>
                                         <span class="label-text">Create</span>
                                     </label>
 
-                                    {{-- EDIT --}}
                                     <label class="custom-checkbox small-checkbox">
-
                                         <input type="hidden" name="access[{{ $main }}][{{ $sub->sub_menu }}][can_edit]"
-                                            value="{{ $access && $access->can_edit ? 1 : 0 }}">
-
-                                        <input type="checkbox" value="1"
-                                            {{ $access && $access->can_edit ? 'checked' : '' }}
-                                            {{ $isAdmin ? 'disabled' : '' }}>
-
+                                            value="0">
+                                        <input type="checkbox"
+                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_edit]" value="1"
+                                            {{ $access && $access->can_edit ? 'checked' : '' }}>
                                         <span class="checkmark"></span>
                                         <span class="label-text">Edit</span>
                                     </label>
 
-                                    {{-- DELETE --}}
                                     <label class="custom-checkbox small-checkbox">
-
                                         <input type="hidden"
-                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_delete]"
-                                            value="{{ $access && $access->can_delete ? 1 : 0 }}">
-
-                                        <input type="checkbox" value="1"
-                                            {{ $access && $access->can_delete ? 'checked' : '' }}
-                                            {{ $isAdmin ? 'disabled' : '' }}>
-
+                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_delete]" value="0">
+                                        <input type="checkbox"
+                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_delete]" value="1"
+                                            {{ $access && $access->can_delete ? 'checked' : '' }}>
                                         <span class="checkmark"></span>
                                         <span class="label-text">Delete</span>
                                     </label>
-
                                     @endif
 
-
-                                    {{-- PRINT --}}
                                     @if ($canPrint === 1)
-
                                     <label class="custom-checkbox small-checkbox">
-
                                         <input type="hidden" name="access[{{ $main }}][{{ $sub->sub_menu }}][can_print]"
-                                            value="{{ $access && $access->can_print ? 1 : 0 }}">
-
-                                        <input type="checkbox" value="1"
-                                            {{ $access && $access->can_print ? 'checked' : '' }}
-                                            {{ $isAdmin ? 'disabled' : '' }}>
-
+                                            value="0">
+                                        <input type="checkbox"
+                                            name="access[{{ $main }}][{{ $sub->sub_menu }}][can_print]" value="1"
+                                            {{ $access && $access->can_print ? 'checked' : '' }}>
                                         <span class="checkmark"></span>
                                         <span class="label-text">Print</span>
                                     </label>
-
                                     @endif
-
                                 </div>
                             </div>
                             @endforeach
                             @endif
                         </div>
-
                     </div>
                     @endforeach
                 </div>
+
+
                 <div class="text-right mt-3">
                     <a href="{{ route('user.index') }}" class="btn btn-secondary btn-round">Batal</a>
                     <button type="submit" class="btn btn-success btn-round">

@@ -130,59 +130,23 @@ Route::middleware('auth')->group(function () {
 
 
 /* ============================================================
-   MASTER: DISTRIBUTOR
-   ============================================================ */
-
-    Route::prefix('distributor')
-        ->middleware('check.access:Master,Master Distributor')
-        ->group(function () {
-
-            Route::get('/', [DistributorController::class, 'index'])
-                ->middleware('check.access:Master,Master Distributor,access')
-                ->name('distributor.index');
-
-            Route::get('/create', [DistributorController::class, 'create'])
-                ->middleware('check.access:Master,Master Distributor,create')
-                ->name('distributor.create');
-
-            Route::post('/', [DistributorController::class, 'store'])
-                ->middleware('check.access:Master,Master Distributor,create')
-                ->name('distributor.store');
-
-            Route::get('/{ID_DISTRIBUTOR}/edit', [DistributorController::class, 'edit'])
-                ->middleware('check.access:Master,Master Distributor,edit')
-                ->name('distributor.edit');
-
-            Route::put('/{ID_DISTRIBUTOR}', [DistributorController::class, 'update'])
-                ->middleware('check.access:Master,Master Distributor,edit')
-                ->name('distributor.update');
-
-            Route::delete('/{ID_DISTRIBUTOR}', [DistributorController::class, 'destroy'])
-                ->middleware('check.access:Master,Master Distributor,delete')
-                ->name('distributor.destroy');
-        });
-
-
-/* ============================================================
    DATA: DISTRIBUTOR
    ============================================================ */
 
     Route::prefix('distributor')
-        ->middleware('check.access:Data,Data Distributor')
+        ->middleware('check.access:Master,Master Distributor,access')
         ->group(function () {
 
             Route::get('/data', [DistributorController::class, 'data'])
-                ->middleware('check.access:Data,Data Distributor,access')
                 ->name('distributor.data');
 
             Route::get('/export-excel', [DistributorController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data Distributor,print')
                 ->name('distributor.exportExcel');
 
             Route::get('/export-pdf', [DistributorController::class, 'exportPdf'])
-                ->middleware('check.access:Data,Data Distributor,print')
                 ->name('distributor.exportPdf');
         });
+
 
 
 /* ============================================================
@@ -190,25 +154,22 @@ Route::middleware('auth')->group(function () {
    ============================================================ */
 
     Route::prefix('salesman')
-        ->middleware('check.access:Data,Data Salesman')
+        ->middleware('check.access:Master,Master Salesman,access')
         ->group(function () {
 
             Route::get('/data', [SalesmanController::class, 'data'])
-                ->middleware('check.access:Data,Data Salesman,access')
                 ->name('salesman.data');
 
             Route::get('/get-kecurangan/{idSales}', [SalesmanController::class, 'getKecurangan'])
-                ->middleware('check.access:Data,Data Salesman,access')
                 ->name('salesman.getKecurangan');
 
             Route::get('/export-excel', [SalesmanController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data Salesman,print')
                 ->name('salesman.exportExcel');
 
             Route::get('/export-pdf', [SalesmanController::class, 'exportPdf'])
-                ->middleware('check.access:Data,Data Salesman,print')
                 ->name('salesman.exportPdf');
         });
+
 
 
     /* ============================================================
@@ -216,23 +177,19 @@ Route::middleware('auth')->group(function () {
    ============================================================ */
 
     Route::prefix('ass')
-        ->middleware('check.access:Data,Data ASS')
+        ->middleware('check.access:Master,Master ASS')
         ->group(function () {
 
             Route::get('/data', [AssController::class, 'data'])
-                ->middleware('check.access:Data,Data ASS,access')
                 ->name('ass.data');
 
             Route::get('/get-kecurangan/{idSales}', [AssController::class, 'getKecurangan'])
-                ->middleware('check.access:Data,Data ASS,access')
                 ->name('ass.getKecurangan');
 
             Route::get('/export-excel', [AssController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data ASS,print')
                 ->name('ass.exportExcel');
 
             Route::get('/export-pdf', [AssController::class, 'exportPdf'])
-                ->middleware('check.access:Data,Data ASS,print')
                 ->name('ass.exportPdf');
         });
 
@@ -245,27 +202,21 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
 
             Route::get('/', [SanksiController::class, 'index'])
-                ->middleware('check.access:Master,Master Sanksi,access')
                 ->name('sanksi.index');
 
             Route::get('/create', [SanksiController::class, 'create'])
-                ->middleware('check.access:Master,Master Sanksi,create')
                 ->name('sanksi.create');
 
             Route::post('/', [SanksiController::class, 'store'])
-                ->middleware('check.access:Master,Master Sanksi,create')
                 ->name('sanksi.store');
 
             Route::get('/{id}/edit', [SanksiController::class, 'edit'])
-                ->middleware('check.access:Master,Master Sanksi,edit')
                 ->name('sanksi.edit');
 
             Route::put('/{id}', [SanksiController::class, 'update'])
-                ->middleware('check.access:Master,Master Sanksi,edit')
                 ->name('sanksi.update');
 
             Route::delete('/{id}', [SanksiController::class, 'destroy'])
-                ->middleware('check.access:Master,Master Sanksi,delete')
                 ->name('sanksi.destroy');
 
             Route::get('/deskripsi/{jenis}', [SanksiController::class, 'getDeskripsiByJenis'])
@@ -278,90 +229,83 @@ Route::middleware('auth')->group(function () {
 
 
 /* ============================================================
-   MASTER: KECURANGAN
+   DATA: TRANSAKSI KASUS
    ============================================================ */
 
     Route::prefix('kecurangan')
-        ->middleware('check.access:Master,Master Kecurangan')
+        ->middleware('check.access:Transaksi,Transaksi Kasus,access')
         ->group(function () {
 
+            // INDEX
             Route::get('/', [KecuranganController::class, 'index'])
-                ->middleware('check.access:Master,Master Kecurangan,access')
                 ->name('kecurangan.index');
 
+            // CREATE
             Route::get('/create', [KecuranganController::class, 'create'])
-                ->middleware('check.access:Master,Master Kecurangan,create')
                 ->name('kecurangan.create');
 
+            // GET SALES
             Route::get('/sales/{id}', [KecuranganController::class, 'getSales'])
-                ->middleware('check.access:Master,Master Kecurangan,access')
                 ->name('kecurangan.getSales');
 
+            // GET ASS
             Route::get('/ass/list', [KecuranganController::class, 'getAss'])
-                ->middleware('check.access:Master,Master Kecurangan,access')
                 ->name('kecurangan.getAss');
 
             Route::get('/ass/{idSales}', [KecuranganController::class, 'getAss'])
-                ->middleware('check.access:Master,Master Kecurangan,access')
                 ->name('kecurangan.getAss');
 
+            // GET NILAI
             Route::get('/nilai/{jenis}/{deskripsi}', [KecuranganController::class, 'getNilai'])
-                ->middleware('check.access:Master,Master Kecurangan,access')
                 ->name('kecurangan.getNilai');
 
+            // STORE
             Route::post('/', [KecuranganController::class, 'store'])
-                ->middleware('check.access:Master,Master Kecurangan,create')
                 ->name('kecurangan.store');
 
+            // EDIT
             Route::get('/{id}/edit', [KecuranganController::class, 'edit'])
-                ->middleware('check.access:Master,Master Kecurangan,edit')
                 ->name('kecurangan.edit');
 
+            // UPDATE
             Route::put('/{id}', [KecuranganController::class, 'update'])
-                ->middleware('check.access:Master,Master Kecurangan,edit')
                 ->name('kecurangan.update');
 
+            // DELETE
             Route::delete('/{id}', [KecuranganController::class, 'destroy'])
-                ->middleware('check.access:Master,Master Kecurangan,delete')
                 ->name('kecurangan.destroy');
 
+            // VALIDASI
             Route::post('/validasi/{id}', [KecuranganController::class, 'validasi'])
-                ->middleware('check.access:Master,Master Kecurangan,edit')
                 ->name('kecurangan.validasi');
 
+            // GET CUSTOMER
             Route::get('/customer/{idSales}', [KecuranganController::class, 'getCustomer'])
-                ->middleware('check.access:Master,Master Kecurangan,access')
                 ->name('kecurangan.getCustomer');
         });
 
 
 /* ============================================================
-   DATA: KECURANGAN
+   REPORT: KASUS
    ============================================================ */
 
     Route::prefix('kecurangan')
-        ->middleware('check.access:Data,Data Kecurangan')
+        ->middleware('check.access:Report,Report Kasus')
         ->group(function () {
 
             Route::get('/data', [KecuranganController::class, 'data'])
-                ->middleware('check.access:Data,Data Kecurangan,access')
                 ->name('kecurangan.data');
 
             Route::get('/export-excel', [KecuranganController::class, 'exportExcel'])
-                ->middleware('check.access:Data,Data Kecurangan,print')
                 ->name('kecurangan.exportExcel');
 
             Route::get('/export-pdf', [KecuranganController::class, 'exportPDF'])
-                ->middleware('check.access:Data,Data Kecurangan,print')
                 ->name('kecurangan.exportPDF');
 
             Route::get('/{id}/bukti', [KecuranganController::class, 'getBukti'])
-                ->middleware('check.access:Data,Data Kecurangan,access')
                 ->name('kecurangan.getBukti');
 
-            // ❗ HANYA DI SINI — AJAX dropdown
             Route::get('/get-keterangan/{jenis}', [KecuranganController::class, 'getKeteranganByJenis'])
-                ->middleware('check.access:Data,Data Kecurangan,access')
                 ->name('kecurangan.getKeteranganByJenis');
         });
 

@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Master Kecurangan',
+'namePage' => 'Transaksi Kasus',
 'class' => 'sidebar-mini',
 'activePage' => 'data_kecurangan',
 ])
@@ -42,7 +42,7 @@
             {{-- ✅ CARD DATA KECURANGAN --}}
             <div class="card" style="border-radius: 20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Master Kecurangan') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Transaksi Kasus') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         {{-- 🔍 Form Pencarian --}}
@@ -74,7 +74,7 @@
                         @endif
 
                         {{-- Tombol Tambah Asisten Manager (akses: create) --}}
-                        @if (checkAccess('Master', 'Master Kecurangan', 'create'))
+                        @if (checkAccess('Transaksi', 'Transaksi Kasus', 'create'))
                         <a href="{{ route('kecurangan.create') }}" class="btn btn-primary btn-icon btn-round"
                             style="background:#29b14a;border:none;" title="Tambah Kecurangan">
                             <i class="now-ui-icons ui-1_simple-add"></i>
@@ -216,7 +216,7 @@
                                         </form>
 
 
-                                        @if (checkAccess('Master', 'Master Kecurangan', 'edit'))
+                                        @if (checkAccess('Transaksi', 'Transaksi Kasus', 'edit'))
                                         <a href="{{ route('kecurangan.edit', $item->ID) }}"
                                             class="btn btn-warning btn-icon btn-sm btn-round" title="Edit Data"
                                             style="background:#f39c12;border:none;">
@@ -224,7 +224,7 @@
                                         </a>
                                         @endif
 
-                                        @if (checkAccess('Master', 'Master Kecurangan', 'delete'))
+                                        @if (checkAccess('Transaksi', 'Transaksi Kasus', 'delete'))
                                         <form action="{{ route('kecurangan.destroy', $item->ID) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf

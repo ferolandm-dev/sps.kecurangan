@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Data Kecurangan',
+'namePage' => 'Report Kasus',
 'class' => 'sidebar-mini',
 'activePage' => 'data_kecurangan',
 ])
@@ -43,7 +43,7 @@
             <div class="card" style="border-radius: 20px;">
                 <div class="card-header d-flex justify-content-between align-items-start flex-wrap">
 
-                    <h4 class="card-title mb-0 text-dark">{{ __('Data Kecurangan') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Report Kasus') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
                         {{-- 🔍 Form Pencarian --}}
@@ -75,7 +75,7 @@
                         @endif
 
                         {{-- ✅ Export Excel & PDF --}}
-                        @if (checkAccess('Data', 'Data Kecurangan', 'print'))
+                        @if (checkAccess('Report', 'Report Kasus', 'print'))
                         {{-- Tombol Excel (Open Modal) --}}
                         <button type="button" class="btn btn-success btn-round mr-2 d-flex align-items-center"
                             style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel"
@@ -378,6 +378,19 @@
 
             <form action="{{ route('kecurangan.data') }}" method="GET">
                 <div class="modal-body">
+                    {{-- NAMA ASS --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Nama ASS</label>
+                        <select name="ass" class="form-control select2">
+                            <option value="">Semua ASS</option>
+                            @foreach ($assList as $ass)
+                            <option value="{{ $ass->ID_SALESMAN }}"
+                                {{ request('ass') == $ass->ID_SALESMAN ? 'selected' : '' }}>
+                                {{ $ass->ID_SALESMAN }} - {{ $ass->NAMA_SALESMAN }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     {{-- NAMA SALES --}}
                     <div class="form-group">
@@ -392,8 +405,6 @@
                             </option>
                             @endforeach
                         </select>
-
-
                     </div>
                     {{-- JENIS SANKSI --}}
                     <div class="form-group">
@@ -462,6 +473,18 @@
 
             <form action="{{ route('kecurangan.exportExcel') }}" method="GET" target="_blank">
                 <div class="modal-body">
+                    {{-- NAMA ASS --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Nama ASS</label>
+                        <select name="ass" id="filter_ass_excel" class="form-control select2">
+                            <option value="">Semua ASS</option>
+                            @foreach ($assList as $ass)
+                            <option value="{{ $ass->ID_SALESMAN }}">
+                                {{ $ass->ID_SALESMAN }} - {{ $ass->NAMA_SALESMAN }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     {{-- NAMA SALES --}}
                     <div class="form-group">
@@ -552,6 +575,20 @@
 
             <form action="{{ route('kecurangan.exportPDF') }}" method="GET" target="_blank">
                 <div class="modal-body">
+
+                    {{-- NAMA ASS --}}
+                    <div class="form-group">
+                        <label class="text-dark font-weight-bold">Nama ASS</label>
+                        <select name="ass" id="filter_ass_pdf" class="form-control select2">
+                            <option value="">Semua ASS</option>
+                            @foreach ($assList as $ass)
+                            <option value="{{ $ass->ID_SALESMAN }}">
+                                {{ $ass->ID_SALESMAN }} - {{ $ass->NAMA_SALESMAN }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     {{-- NAMA SALES --}}
                     <div class="form-group">
                         <label class="text-dark font-weight-bold">Nama Sales</label>

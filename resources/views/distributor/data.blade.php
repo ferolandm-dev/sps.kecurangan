@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Data Distributor',
+'namePage' => 'Master Distributor',
 'class' => 'sidebar-mini',
 'activePage' => 'data_distributors',
 ])
@@ -29,7 +29,7 @@
             {{-- CARD DATA DISTRIBUTOR --}}
             <div class="card" style="border-radius:20px;">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">Data Distributor</h4>
+                    <h4 class="card-title mb-0 text-dark">Master Distributor</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
 
@@ -58,7 +58,7 @@
                         @endif
 
                         {{-- EXPORT --}}
-                        @if (checkAccess('Data', 'Data Distributor', 'print'))
+                        @if (checkAccess('Master', 'Master Distributor', 'print'))
                         <a href="{{ route('distributor.exportExcel') }}" class="btn btn-success btn-round mr-2"
                             style="background:#29b14a;">
                             <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel

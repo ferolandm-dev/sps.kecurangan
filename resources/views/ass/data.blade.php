@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Data ASS',
+'namePage' => 'Master ASS',
 'class' => 'sidebar-mini',
 'activePage' => 'data_ass',
 ])
@@ -32,7 +32,7 @@
 
                 {{-- CARD HEADER --}}
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Data ASS') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Master ASS') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
 
@@ -63,7 +63,7 @@
                         @endif
 
                         {{-- EXPORT --}}
-                        @if (checkAccess('Data', 'Data ASS', 'print'))
+                        @if (checkAccess('Master', 'Master ASS', 'print'))
                         <a href="{{ route('ass.exportExcel') }}" class="btn btn-success btn-round mr-2"
                             style="margin-top:10px;background:#29b14a;border:none;">
                             <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel

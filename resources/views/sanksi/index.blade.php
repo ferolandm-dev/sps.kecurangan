@@ -110,87 +110,80 @@
                 <div class="card-body" style="background: rgba(255,255,255,0.5); border-radius: 0 0 20px 20px;">
 
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle text-nowrap mb-0" style="color:#333;">
+                        <table class="table table-hover align-middle text-nowrap mb-0"
+                            style="color:#333; table-layout:fixed; width:100%;">
 
-                            {{-- ===========================
-                                  TABLE HEADER (SORTABLE)
-                            ============================ --}}
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th style="width:5%; text-align:center;">#</th>
+                                    <th class="text-center" style="width:5%;">#</th>
 
-                                    {{-- SORT: Jenis Sanksi --}}
+                                    {{-- JENIS --}}
                                     <th style="width:20%;">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                                                'sort_by' => 'jenis',
-                                                'sort_order' =>
-                                                    (request('sort_by') === 'jenis' && request('sort_order') === 'asc')
-                                                    ? 'desc'
-                                                    : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                        'sort_by' => 'jenis',
+                        'sort_order' =>
+                            (request('sort_by') === 'jenis' && request('sort_order') === 'asc')
+                            ? 'desc'
+                            : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
                                             Jenis Sanksi
                                         </a>
                                     </th>
 
-                                    {{-- SORT: Keterangan --}}
+                                    {{-- KETERANGAN --}}
                                     <th style="width:35%;">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                                                'sort_by' => 'keterangan',
-                                                'sort_order' =>
-                                                    (request('sort_by') === 'keterangan' && request('sort_order') === 'asc')
-                                                    ? 'desc'
-                                                    : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                        'sort_by' => 'keterangan',
+                        'sort_order' =>
+                            (request('sort_by') === 'keterangan' && request('sort_order') === 'asc')
+                            ? 'desc'
+                            : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
                                             Keterangan
                                         </a>
                                     </th>
 
-                                    {{-- SORT: Nilai --}}
+                                    {{-- NILAI --}}
                                     <th style="width:20%;">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                                                'sort_by' => 'nilai',
-                                                'sort_order' =>
-                                                    (request('sort_by') === 'nilai' && request('sort_order') === 'asc')
-                                                    ? 'desc'
-                                                    : 'asc'
-                                            ])) }}" class="text-success text-decoration-none">
+                        'sort_by' => 'nilai',
+                        'sort_order' =>
+                            (request('sort_by') === 'nilai' && request('sort_order') === 'asc')
+                            ? 'desc'
+                            : 'asc'
+                    ])) }}" class="text-success text-decoration-none">
                                             Nilai
                                         </a>
                                     </th>
 
-                                    <th style="width:20%; text-align:center;">Aksi</th>
+                                    <th class="text-center" style="width:20%;">Aksi</th>
                                 </tr>
                             </thead>
 
-                            {{-- ===========================
-                                   TABLE BODY
-                            ============================ --}}
                             <tbody>
-                                @forelse ($sanksi as $index => $item)
+                                @forelse ($sanksi as $item)
                                 <tr>
-
-                                    {{-- NOMOR URUT (support pagination atau tampil semua) --}}
-                                    <td style="text-align:center;">
+                                    {{-- NOMOR --}}
+                                    <td class="text-center">
                                         {{ $loop->iteration + (method_exists($sanksi, 'firstItem') ? $sanksi->firstItem() - 1 : 0) }}
                                     </td>
 
                                     {{-- JENIS --}}
                                     <td>{{ $item->JENIS }}</td>
 
-                                    {{-- KETERANGAN (truncate + tooltip) --}}
-                                    <td class="text-truncate" style="max-width: 300px;" title="{{ $item->KETERANGAN }}">
+                                    {{-- KETERANGAN (truncate rapi sama dengan table ASS) --}}
+                                    <td class="text-truncate" style="max-width:280px;" title="{{ $item->KETERANGAN }}">
                                         {{ $item->KETERANGAN }}
                                     </td>
 
-                                    {{-- NILAI SANKSI --}}
+                                    {{-- NILAI --}}
                                     <td>
                                         Rp {{ number_format($item->NILAI, 0, ',', '.') }}
                                     </td>
 
-                                    {{-- AKSI EDIT & DELETE (cek akses) --}}
+                                    {{-- AKSI --}}
                                     <td class="text-center">
 
-                                        {{-- Tombol EDIT --}}
                                         @if (checkAccess('Master', 'Master Sanksi', 'edit'))
                                         <a href="{{ route('sanksi.edit', $item->ID) }}"
                                             class="btn btn-warning btn-icon btn-sm btn-round"
@@ -199,29 +192,19 @@
                                         </a>
                                         @endif
 
-                                        {{-- Tombol DELETE via modal --}}
                                         @if (checkAccess('Master', 'Master Sanksi', 'delete'))
-                                        <form action="{{ route('sanksi.destroy', $item->ID) }}" method="POST"
-                                            style="display:inline-block;">
-
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button type="button"
-                                                class="btn btn-danger btn-icon btn-sm btn-round btn-confirm"
-                                                data-action="delete" data-url="{{ route('sanksi.destroy', $item->ID) }}"
-                                                title="Hapus" style="background:#e74c3c;border:none;">
-                                                <i class="now-ui-icons ui-1_simple-remove"></i>
-                                            </button>
-
-                                        </form>
+                                        <button type="button"
+                                            class="btn btn-danger btn-icon btn-sm btn-round btn-confirm"
+                                            data-action="delete" data-url="{{ route('sanksi.destroy', $item->ID) }}"
+                                            title="Hapus" style="background:#e74c3c;border:none;">
+                                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                                        </button>
                                         @endif
 
                                     </td>
                                 </tr>
 
                                 @empty
-                                {{-- Jika tidak ada data --}}
                                 <tr>
                                     <td colspan="5" class="text-center text-muted">
                                         Tidak ada data sanksi.
@@ -231,6 +214,7 @@
                             </tbody>
                         </table>
                     </div>
+
 
                     {{-- PAGINATION (disembunyikan ketika 'all=true') --}}
                     @if (!request()->has('all'))
@@ -544,6 +528,35 @@ body,
     background: linear-gradient(135deg, #25a344, #2fc655) !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
+}
+
+/* Header & cell tidak boleh turun baris */
+table.table th,
+table.table td {
+    white-space: nowrap !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+/* Header rata kiri */
+table.table th {
+    text-align: left !important;
+}
+
+/* Kolom nomor */
+table.table th:first-child,
+table.table td:first-child {
+    text-align: center !important;
+    width: 30px !important;
+    padding-left: 0 !important;
+}
+
+/* Kolom total kecurangan */
+table.table th:last-child,
+table.table td:last-child {
+    text-align: center !important;
+    width: 150px !important;
+    padding-left: 0 !important;
 }
 </style>
 @endpush

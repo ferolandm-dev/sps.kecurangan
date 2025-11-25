@@ -23,27 +23,27 @@ class KecuranganExport implements
     protected $jenis;
     protected $keterangan;
     protected $sales;
+    protected $ass;
 
-    public function __construct(
-        $mode = 'all',
-        $startDate = null,
-        $endDate = null,
-        $jenis = null,
-        $keterangan = null,
-        $sales = null
-    ) {
-        $this->mode        = $mode;
-        $this->startDate   = $startDate;
-        $this->endDate     = $endDate;
-        $this->jenis       = $jenis;
-        $this->keterangan  = $keterangan;
-        $this->sales       = $sales;
+    /**
+     * Controller mengirim: new KecuranganExport($request)
+     */
+    public function __construct($request)
+    {
+        // Ambil semua filter dari request
+        $this->mode        = $request->mode ?? 'all';
+        $this->startDate   = $request->start_date;
+        $this->endDate     = $request->end_date;
+        $this->jenis       = $request->jenis_sanksi;
+        $this->keterangan  = $request->keterangan_sanksi;
+        $this->sales       = $request->sales;
+        $this->ass         = $request->ass; // 🔥 tambahan filter ASS
     }
 
     public function collection()
     {
         $query = DB::table('kecurangan')
-            ->where('VALIDASI', 1)
+            ->where('kecurangan.VALIDASI', 1)
             ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
             ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
             ->select(
@@ -59,12 +59,15 @@ class KecuranganExport implements
                 'kecurangan.TANGGAL',
                 'kecurangan.KETERANGAN',
                 'kecurangan.KUARTAL'
-            )
-            ->where('kecurangan.VALIDASI', 1);
+            );
 
         // === FILTER ===
         if (!empty($this->sales)) {
             $query->where('kecurangan.ID_SALES', $this->sales);
+        }
+
+        if (!empty($this->ass)) {
+            $query->where('kecurangan.ID_ASS', $this->ass); // 🔥 Filter ASS
         }
 
         if (!empty($this->jenis)) {
@@ -126,7 +129,7 @@ class KecuranganExport implements
     public function columnFormats(): array
     {
         return [
-            'I' => NumberFormat::FORMAT_TEXT, // kolom KUNJUNGAN
+            'I' => NumberFormat::FORMAT_TEXT, // Kolom Kunjungan
         ];
     }
 }

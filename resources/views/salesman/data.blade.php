@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Data Sales',
+'namePage' => 'Master Salesman',
 'class' => 'sidebar-mini',
 'activePage' => 'data_sales',
 ])
@@ -38,7 +38,7 @@
 
                 {{-- ===================== CARD HEADER ===================== --}}
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h4 class="card-title mb-0 text-dark">{{ __('Data Salesman') }}</h4>
+                    <h4 class="card-title mb-0 text-dark">{{ __('Master Salesman') }}</h4>
 
                     <div class="d-flex align-items-center flex-wrap gap-2">
 
@@ -69,7 +69,7 @@
                         @endif
 
                         {{-- ===================== EXPORT BUTTON ===================== --}}
-                        @if (checkAccess('Data', 'Data Salesman', 'print'))
+                        @if (checkAccess('Master', 'Master Salesman', 'print'))
                         <a href="{{ route('salesman.exportExcel') }}" class="btn btn-success btn-round mr-2"
                             style="margin-top:10px;background:#29b14a;border:none;">
                             <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
@@ -96,7 +96,7 @@
                                     <th class="text-center" style="width:5%;">#</th>
 
                                     <th style="width:20%;">
-                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
+                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
                     'sort_by' => 'ID_SALESMAN',
                     'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                 ])) }}" class="text-success text-decoration-none">
@@ -105,7 +105,7 @@
                                     </th>
 
                                     <th style="width:20%;">
-                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
+                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
                     'sort_by' => 'ID_DISTRIBUTOR',
                     'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                 ])) }}" class="text-success text-decoration-none">
@@ -114,7 +114,7 @@
                                     </th>
 
                                     <th style="width:35%;">
-                                        <a href="{{ route('ass.data', array_merge(request()->query(), [
+                                        <a href="{{ route('salesman.data', array_merge(request()->query(), [
                     'sort_by' => 'NAMA_SALESMAN',
                     'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                 ])) }}" class="text-success text-decoration-none">

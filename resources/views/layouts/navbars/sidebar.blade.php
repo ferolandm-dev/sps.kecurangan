@@ -110,7 +110,8 @@
                     <i class="
                                     @switch($mainMenu)
                                         @case('Master') now-ui-icons education_agenda-bookmark @break
-                                        @case('Data') now-ui-icons files_single-copy-04 @break
+                                        @case('Transaksi') now-ui-icons shopping_delivery-fast @break
+                                        @case('Report') now-ui-icons files_single-copy-04 @break
                                         @case('Pengaturan') now-ui-icons ui-1_settings-gear-63 @break
                                         @default now-ui-icons design_bullet-list-67
                                     @endswitch

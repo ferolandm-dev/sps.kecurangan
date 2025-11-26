@@ -35,7 +35,7 @@
 
                     <button class="view-btn" data-view="calendar" role="tab" aria-selected="false">
                         <i class="now-ui-icons ui-1_calendar-60"></i>
-                        <span class="label">Heatmap Kecurangan</span>
+                        <span class="label">Heatmap Kasus</span>
                     </button>
 
                 </div>

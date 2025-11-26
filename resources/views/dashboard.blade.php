@@ -161,12 +161,12 @@
                 </div>
             </div>
 
-            {{-- Kecurangan Bulan Ini --}}
+            {{-- Kasus Bulan Ini --}}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card glass-card card-tilt fade-up" data-animate>
                     <div class="tilt-inner p-3">
                         <div class="card-header">
-                            <h5 class="card-category">Kecurangan Bulan Ini</h5>
+                            <h5 class="card-category">Kasus Bulan Ini</h5>
                             <h4 class="card-title">{{ $totalKecuranganBulanIni }}</h4>
                         </div>
                         <div class="card-body">
@@ -212,13 +212,13 @@
                 </div>
             </div>
 
-            {{-- Tren Kecurangan --}}
+            {{-- Tren Kasus --}}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card glass-card card-tilt fade-up" data-animate>
                     <div class="tilt-inner p-3">
                         <div class="card-header">
 
-                            <h5 class="card-category">Tren Kecurangan Bulan Ini</h5>
+                            <h5 class="card-category">Tren Kasus Bulan Ini</h5>
 
                             <h4 class="card-title" style="font-weight:700;">
                                 @if($trendFraud > 0)
@@ -301,7 +301,7 @@
 
                     <div class="card-header">
                         <h5 class="card-category">Top 5 Sales Curang</h5>
-                        <h4 class="card-title">Jumlah Kecurangan</h4>
+                        <h4 class="card-title">Jumlah Kasus</h4>
                     </div>
 
                     <div class="card-body">
@@ -456,7 +456,7 @@
                 <div class="card glass-card fade-up" data-animate>
 
                     <div class="card-header pb-0">
-                        <h5 class="card-category">Heatmap Kecurangan</h5>
+                        <h5 class="card-category">Heatmap Kasus</h5>
                         <h4 class="card-title">Calendar View</h4>
                     </div>
 
@@ -919,7 +919,7 @@ new Chart(document.getElementById("quarterSanksiChart"), {
                 borderWidth: 2,
                 yAxisID: "y",
             },
-            {
+            {   
                 label: "Total Nilai Sanksi",
                 data: @json($sanksiPerQuarter),
                 backgroundColor: "rgba(219,211,0,0.55)",

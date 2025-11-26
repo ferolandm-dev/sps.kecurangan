@@ -80,13 +80,13 @@
         ========================================== */
         if (Str::contains($labelLower, 'ass')) {
 
-        // Data ASS -> /asisten_manager/data
+        // Data ASS -> /ass/data
         if (Str::startsWith($labelLower, 'data ')) {
-        $url = url('/asisten_manager/data');
+        $url = url('/ass/data');
         }
-        // Master ASS -> /asisten_manager
+        // Master ASS -> /ass
         else {
-        $url = url('/asisten_manager');
+        $url = url('/ass/data');
         }
         }
 
@@ -102,6 +102,22 @@
         $url = url('/distributor/data');
         } else {
         $url = url('/' . $dataSlug . '/data');
+        }
+        }
+
+        /* =========================================
+        RULE KHUSUS UNTUK "Report Kasus" & "Transaksi Kasus"
+        ========================================= */
+        elseif (Str::contains($labelLower, 'kasus')) {
+
+        // Report Kasus -> kecurangan.data
+        if (Str::contains($labelLower, 'report')) {
+        $url = route('kecurangan.data');
+        }
+
+        // Transaksi Kasus -> kecurangan.index
+        else {
+        $url = route('kecurangan.index');
         }
         }
 

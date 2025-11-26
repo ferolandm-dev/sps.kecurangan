@@ -17,33 +17,42 @@ class KecuranganExport implements
     ShouldAutoSize,
     WithColumnFormatting
 {
-    protected $mode;
-    protected $startDate;
-    protected $endDate;
-    protected $jenis;
-    protected $keterangan;
     protected $sales;
     protected $ass;
+    protected $jenis;
+    protected $keterangan;
+    protected $startDate;
+    protected $endDate;
+    protected $createdStart;
+    protected $createdEnd;
+    protected $search;
+    protected $validasi;
 
-    /**
-     * Controller mengirim: new KecuranganExport($request)
-     */
     public function __construct($request)
     {
-        // Ambil semua filter dari request
-        $this->mode        = $request->mode ?? 'all';
-        $this->startDate   = $request->start_date;
-        $this->endDate     = $request->end_date;
-        $this->jenis       = $request->jenis_sanksi;
-        $this->keterangan  = $request->keterangan_sanksi;
-        $this->sales       = $request->sales;
-        $this->ass         = $request->ass; // 🔥 tambahan filter ASS
+        $this->sales        = $request['sales'] ?? null;
+        $this->ass          = $request['ass'] ?? null;
+        $this->jenis        = $request['jenis_sanksi'] ?? null;
+        $this->keterangan   = $request['keterangan_sanksi'] ?? null;
+
+        // Filter tanggal kejadian
+        $this->startDate    = $request['start_date'] ?? null;
+        $this->endDate      = $request['end_date'] ?? null;
+
+        // Filter CREATED_AT
+        $this->createdStart = $request['created_start_date'] ?? null;
+        $this->createdEnd   = $request['created_end_date'] ?? null;
+
+        // Search
+        $this->search       = $request['search'] ?? null;
+
+        // 🔥 Filter VALIDASI (bisa 1, 0, atau null = semua)
+        $this->validasi     = $request['validasi'] ?? null;
     }
 
     public function collection()
     {
         $query = DB::table('kecurangan')
-            ->where('kecurangan.VALIDASI', 1)
             ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
             ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
             ->select(
@@ -58,16 +67,40 @@ class KecuranganExport implements
                 'kecurangan.KUNJUNGAN',
                 'kecurangan.TANGGAL',
                 'kecurangan.KETERANGAN',
-                'kecurangan.KUARTAL'
+                'kecurangan.KUARTAL',
+                'kecurangan.CREATED_AT',
+                'kecurangan.VALIDASI'
             );
 
-        // === FILTER ===
+        /* ==========================================================
+           FILTER VALIDASI
+        ========================================================== */
+        if ($this->validasi !== null && $this->validasi !== '') {
+            $query->where('kecurangan.VALIDASI', $this->validasi);
+        }
+
+        /* ==========================================================
+           SEARCH
+        ========================================================== */
+        if (!empty($this->search)) {
+            $s = $this->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('salesman.NAMA_SALESMAN', 'like', "%{$s}%")
+                  ->orWhere('kecurangan.TOKO', 'like', "%{$s}%")
+                  ->orWhere('kecurangan.KETERANGAN_SANKSI', 'like', "%{$s}%")
+                  ->orWhere('kecurangan.JENIS_SANKSI', 'like', "%{$s}%");
+            });
+        }
+
+        /* ==========================================================
+           FILTER SALES / ASS / SANCTION
+        ========================================================== */
         if (!empty($this->sales)) {
             $query->where('kecurangan.ID_SALES', $this->sales);
         }
 
         if (!empty($this->ass)) {
-            $query->where('kecurangan.ID_ASS', $this->ass); // 🔥 Filter ASS
+            $query->where('kecurangan.ID_ASS', $this->ass);
         }
 
         if (!empty($this->jenis)) {
@@ -78,7 +111,20 @@ class KecuranganExport implements
             $query->where('kecurangan.KETERANGAN_SANKSI', $this->keterangan);
         }
 
-        if ($this->mode === 'date' && $this->startDate && $this->endDate) {
+        /* ==========================================================
+           FILTER CREATED_AT RANGE
+        ========================================================== */
+        if (!empty($this->createdStart) && !empty($this->createdEnd)) {
+            $query->whereBetween('kecurangan.CREATED_AT', [
+                $this->createdStart . " 00:00:00",
+                $this->createdEnd   . " 23:59:59"
+            ]);
+        }
+
+        /* ==========================================================
+           FILTER TANGGAL KEJADIAN
+        ========================================================== */
+        if (!empty($this->startDate) && !empty($this->endDate)) {
             $query->whereBetween('kecurangan.TANGGAL', [
                 $this->startDate,
                 $this->endDate
@@ -98,11 +144,12 @@ class KecuranganExport implements
             $row->JENIS_SANKSI ?? '-',
             $row->KETERANGAN_SANKSI ?? '-',
             $row->NILAI_SANKSI 
-                ? 'Rp ' . number_format($row->NILAI_SANKSI, 0, ',', '.') 
+                ? 'Rp ' . number_format($row->NILAI_SANKSI, 0, ',', '.')
                 : 'Rp 0',
             $row->TOKO,
             (string) $row->KUNJUNGAN,
             \Carbon\Carbon::parse($row->TANGGAL)->format('d/m/Y'),
+            \Carbon\Carbon::parse($row->CREATED_AT)->format('d/m/Y H:i'),
             $row->KETERANGAN ?: '-',
             $row->KUARTAL ?: '-',
         ];
@@ -120,16 +167,17 @@ class KecuranganExport implements
             'Nilai Sanksi',
             'Toko',
             'Kunjungan',
-            'Tanggal',
+            'Tanggal Kejadian',
+            'Tanggal Buat',
             'Keterangan',
-            'Kuartal',
+            'Kuartal'
         ];
     }
 
     public function columnFormats(): array
     {
         return [
-            'I' => NumberFormat::FORMAT_TEXT, // Kolom Kunjungan
+            'I' => NumberFormat::FORMAT_TEXT,
         ];
     }
 }

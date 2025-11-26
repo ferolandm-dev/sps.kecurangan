@@ -89,7 +89,6 @@ class KecuranganController extends Controller
         $jenisSanksi = DB::table('sanksi')->distinct()->pluck('JENIS');
         $keteranganSanksi = DB::table('sanksi')->select('ID','JENIS','KETERANGAN','NILAI')->get();
 
-
         $query = DB::table('kecurangan')
             ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
             ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
@@ -100,6 +99,9 @@ class KecuranganController extends Controller
                 'salesman.ID_DISTRIBUTOR as distributor'
             );
 
+        /* ==========================================================
+        SEARCH TEXT
+        ========================================================== */
         if ($request->filled('search')) {
             $s = $request->search;
             $query->where(function($q) use ($s) {
@@ -110,6 +112,9 @@ class KecuranganController extends Controller
             });
         }
 
+        /* ==========================================================
+        FILTER SALES / ASS / SANCTION
+        ========================================================== */
         if ($request->filled('sales')) {
             $query->where('kecurangan.ID_SALES', $request->sales);
         }
@@ -126,6 +131,26 @@ class KecuranganController extends Controller
             $query->where('kecurangan.KETERANGAN_SANKSI', $request->keterangan_sanksi);
         }
 
+        /* ==========================================================
+        🔥 FILTER VALIDASI (3 opsi: semua / 1 / 0)
+        ========================================================== */
+        if ($request->validasi !== null && $request->validasi !== '') {
+            $query->where('kecurangan.VALIDASI', $request->validasi);
+        }
+
+        /* ==========================================================
+        FILTER CREATED_AT RANGE
+        ========================================================== */
+        if ($request->filled('created_start_date') && $request->filled('created_end_date')) {
+            $query->whereBetween('kecurangan.CREATED_AT', [
+                $request->created_start_date . " 00:00:00",
+                $request->created_end_date . " 23:59:59"
+            ]);
+        }
+
+        /* ==========================================================
+        FILTER TANGGAL KEJADIAN (TANGGAL)
+        ========================================================== */
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('kecurangan.TANGGAL', [
                 $request->start_date,
@@ -133,6 +158,9 @@ class KecuranganController extends Controller
             ]);
         }
 
+        /* ==========================================================
+        SORTING
+        ========================================================== */
         $allowedSorts = [
             'ID_SALES',
             'nama_sales',
@@ -143,7 +171,6 @@ class KecuranganController extends Controller
             'TANGGAL',
             'KUARTAL'
         ];
-
 
         $sortBy = $request->get('sort_by', 'TANGGAL');
         $sortOrder = $request->get('sort_order', 'desc');
@@ -156,6 +183,9 @@ class KecuranganController extends Controller
             $query->orderBy($column, $sortOrder);
         }
 
+        /* ==========================================================
+        PAGINATION
+        ========================================================== */
         $kecurangan = $request->has('all')
             ? $query->get()
             : $query->paginate(10)->appends($request->query());
@@ -168,6 +198,8 @@ class KecuranganController extends Controller
             'assList'
         ));
     }
+
+
 
     /* ==========================================================
      | CREATE PAGE
@@ -591,7 +623,6 @@ class KecuranganController extends Controller
     public function exportPDF(Request $request)
     {
         $query = DB::table('kecurangan')
-            ->where('VALIDASI', 1)
             ->leftJoin('salesman', 'kecurangan.ID_SALES', '=', 'salesman.ID_SALESMAN')
             ->leftJoin('salesman as ass', 'kecurangan.ID_ASS', '=', 'ass.ID_SALESMAN')
             ->select(
@@ -601,6 +632,9 @@ class KecuranganController extends Controller
                 'salesman.ID_DISTRIBUTOR as distributor'
             );
 
+        /* ==========================================================
+        SEARCH
+        ========================================================== */
         if ($request->filled('search')) {
             $s = $request->search;
             $query->where(function ($q) use ($s) {
@@ -611,15 +645,20 @@ class KecuranganController extends Controller
             });
         }
 
+        /* ==========================================================
+        FILTER SALES / ASS
+        ========================================================== */
         if ($request->filled('sales')) {
             $query->where('kecurangan.ID_SALES', $request->sales);
         }
 
-        /* ✅ Tambahan: filter berdasarkan ASS */
         if ($request->filled('ass')) {
             $query->where('kecurangan.ID_ASS', $request->ass);
         }
 
+        /* ==========================================================
+        FILTER SANCTION
+        ========================================================== */
         if ($request->filled('jenis_sanksi')) {
             $query->where('kecurangan.JENIS_SANKSI', $request->jenis_sanksi);
         }
@@ -628,6 +667,26 @@ class KecuranganController extends Controller
             $query->where('kecurangan.KETERANGAN_SANKSI', $request->keterangan_sanksi);
         }
 
+        /* ==========================================================
+        🔥 FILTER VALIDASI (Semua / 1 / 0)
+        ========================================================== */
+        if ($request->validasi !== null && $request->validasi !== '') {
+            $query->where('kecurangan.VALIDASI', $request->validasi);
+        }
+
+        /* ==========================================================
+        FILTER CREATED_AT RANGE
+        ========================================================== */
+        if ($request->filled('created_start_date') && $request->filled('created_end_date')) {
+            $query->whereBetween('kecurangan.CREATED_AT', [
+                $request->created_start_date . " 00:00:00",
+                $request->created_end_date   . " 23:59:59"
+            ]);
+        }
+
+        /* ==========================================================
+        FILTER TANGGAL KEJADIAN
+        ========================================================== */
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('kecurangan.TANGGAL', [
                 $request->start_date,
@@ -635,31 +694,48 @@ class KecuranganController extends Controller
             ]);
         }
 
+        /* ==========================================================
+        FINAL EXECUTE
+        ========================================================== */
         $data = $query->orderBy('kecurangan.TANGGAL', 'desc')->get();
 
         $pdf = \PDF::loadView('pdf.kecurangan', [
-            'data'       => $data,
-            'startDate'  => $request->start_date,
-            'endDate'    => $request->end_date,
-            'sales'      => $request->filled('sales')
-                ? DB::table('salesman')->where('ID_SALESMAN', $request->sales)->first()
-                : null,
-            /* (Opsional) kirim ass ke view PDF jika butuh */
-            'ass'        => $request->filled('ass')
-                ? DB::table('salesman')->where('ID_SALESMAN', $request->ass)->first()
-                : null,
+            'data'        => $data,
+
+            // FILTER TANGGAL KEJADIAN
+            'startDate'   => $request->start_date,
+            'endDate'     => $request->end_date,
+
+            // FILTER SALES
+            'sales'       => $request->filled('sales')
+                                ? DB::table('salesman')->where('ID_SALESMAN', $request->sales)->first()
+                                : null,
+
+            // FILTER ASS
+            'ass'         => $request->filled('ass')
+                                ? DB::table('salesman')->where('ID_SALESMAN', $request->ass)->first()
+                                : null,
+
+            // FILTER CREATED_AT
+            'createdStart' => $request->created_start_date,
+            'createdEnd'   => $request->created_end_date,
+
+            // FILTER SANCTION
+            'jenis_sanksi'      => $request->jenis_sanksi,
+            'keterangan_sanksi' => $request->keterangan_sanksi,
+
+            // 🔥 FILTER VALIDASI
+            'validasi'          => $request->validasi,
         ])->setPaper('a4', 'landscape');
 
-        return $pdf->download('laporan_kecurangan.pdf');
+        return $pdf->download('laporan_kasus.pdf');
     }
-
-
 
     /* ==========================================================
      | EXPORT EXCEL
      ========================================================== */
     public function exportExcel(Request $request)
     {
-        return Excel::download(new KecuranganExport($request), 'laporan_kecurangan.xlsx');    
+        return Excel::download(new KecuranganExport($request), 'laporan_kasus.xlsx');    
     }
 }

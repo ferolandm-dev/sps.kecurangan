@@ -150,12 +150,12 @@
                                     <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
 
                                     {{-- TANGGAL --}}
-                                    <th class="col-tanggal text-center" style="width:150px;">
+                                    <th class="col-tanggal text-center" style="width:180px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
                                         'sort_by' => 'TANGGAL',
                                         'sort_order' => (request('sort_by') === 'TANGGAL' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                     ])) }}" class="text-success text-decoration-none">
-                                            Tanggal
+                                            Tanggal Kasus
                                         </a>
                                     </th>
 

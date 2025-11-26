@@ -76,19 +76,23 @@
 
                         {{-- ✅ Export Excel & PDF --}}
                         @if (checkAccess('Report', 'Report Kasus', 'print'))
-                        {{-- Tombol Excel (Open Modal) --}}
-                        <button type="button" class="btn btn-success btn-round mr-2 d-flex align-items-center"
-                            style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel"
-                            data-toggle="modal" data-target="#modalExportExcel">
-                            <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
-                        </button>
 
-                        {{-- Tombol PDF (Open Modal) --}}
-                        <button type="button" class="btn btn-danger btn-round d-flex align-items-center"
-                            style="margin-top:10px;background:#e74c3c;border:none;" title="Export PDF"
-                            data-toggle="modal" data-target="#modalExportPdf">
+                        {{-- Tombol Export Excel (langsung download sesuai filter) --}}
+                        <a href="{{ route('kecurangan.exportExcel', request()->query()) }}"
+                            class="btn btn-success btn-round mr-2 d-flex align-items-center"
+                            style="margin-top:10px;background:#29b14a;border:none;" title="Export Excel">
+
+                            <i class="now-ui-icons files_single-copy-04 mr-1"></i> Excel
+                        </a>
+
+                        {{-- Tombol Export PDF (langsung download sesuai filter) --}}
+                        <a href="{{ route('kecurangan.exportPDF', request()->query()) }}"
+                            class="btn btn-danger btn-round d-flex align-items-center"
+                            style="margin-top:10px;background:#e74c3c;border:none;" title="Export PDF">
+
                             <i class="now-ui-icons files_paper mr-1"></i> PDF
-                        </button>
+                        </a>
+
                         @endif
                     </div>
                     <div class="w-100"></div>
@@ -178,7 +182,7 @@
                                             Keterangan Sanksi
                                         </a>
                                     </th>
-                                    
+
                                     {{-- NILAI SANKSI --}}
                                     <th class="col-nilai-sanksi" style="width:160px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
@@ -196,12 +200,12 @@
                                     <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
 
                                     {{-- TANGGAL --}}
-                                    <th class="col-tanggal text-center" style="width:150px;">
+                                    <th class="col-tanggal text-center" style="width:180px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
                                         'sort_by' => 'tanggal',
                                         'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                     ])) }}" class="text-success text-decoration-none">
-                                            Tanggal
+                                            Tanggal Kasus
                                         </a>
                                     </th>
 
@@ -214,7 +218,7 @@
                                             Tanggal Buat
                                         </a>
                                     </th>
-                                    
+
                                     {{-- KETERANGAN --}}
                                     <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
 
@@ -347,42 +351,42 @@
 
                 {{-- Tombol Navigasi --}}
                 <button type="button" id="modalPrev" class="btn btn-link" style="
-    position:absolute;
-    left:0;
-    top:0;
-    height:100%;
-    width:120px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    padding-left:25px;
-    font-size:42px;
-    color:#333;
-    text-decoration:none;
-    opacity:0.7;
-    background:transparent;
-    border:none;
-">
+                        position:absolute;
+                        left:0;
+                        top:0;
+                        height:100%;
+                        width:120px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:flex-start;
+                        padding-left:25px;
+                        font-size:42px;
+                        color:#333;
+                        text-decoration:none;
+                        opacity:0.7;
+                        background:transparent;
+                        border:none;
+                    ">
                     ‹
                 </button>
 
                 <button type="button" id="modalNext" class="btn btn-link" style="
-    position:absolute;
-    right:0;
-    top:0;
-    height:100%;
-    width:120px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-end;
-    padding-right:25px;
-    font-size:42px;
-    color:#333;
-    text-decoration:none;
-    opacity:0.7;
-    background:transparent;
-    border:none;
-">
+                    position:absolute;
+                    right:0;
+                    top:0;
+                    height:100%;
+                    width:120px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:flex-end;
+                    padding-right:25px;
+                    font-size:42px;
+                    color:#333;
+                    text-decoration:none;
+                    opacity:0.7;
+                    background:transparent;
+                    border:none;
+                ">
                     ›
                 </button>
 
@@ -398,7 +402,7 @@
 
 {{-- Modal Filter --}}
 <div class="modal fade" id="modalFilter" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> {{-- modal-lg: lebih lebar --}}
         <div class="modal-content"
             style="border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3); overflow:hidden; border:none !important;">
 
@@ -408,76 +412,125 @@
 
             <form action="{{ route('kecurangan.data') }}" method="GET">
                 <div class="modal-body">
-                    {{-- NAMA ASS --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Nama ASS</label>
-                        <select name="ass" class="form-control select2">
-                            <option value="">Semua ASS</option>
-                            @foreach ($assList as $ass)
-                            <option value="{{ $ass->ID_SALESMAN }}"
-                                {{ request('ass') == $ass->ID_SALESMAN ? 'selected' : '' }}>
-                                {{ $ass->ID_SALESMAN }} - {{ $ass->NAMA_SALESMAN }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
 
-                    {{-- NAMA SALES --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Nama Sales</label>
-                        <select name="sales" class="form-control select2">
-                            <option value="">Semua Sales</option>
+                    <div class="row">
 
-                            @foreach ($sales as $row)
-                            <option value="{{ $row->id_sales }}"
-                                {{ request('sales') == $row->id_sales ? 'selected' : '' }}>
-                                {{ $row->id_sales }} - {{ $row->nama_sales }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    {{-- JENIS SANKSI --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Jenis Sanksi</label>
-                        <select name="jenis_sanksi" id="filter_jenis_sanksi_filter" class="form-control select2">
-                            <option value="">Semua Jenis</option>
-                            @foreach ($jenisSanksi as $row)
-                            <option value="{{ $row }}" {{ request('jenis_sanksi') == $row ? 'selected' : '' }}>
-                                {{ $row }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
+                        {{-- NAMA ASS --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="text-dark font-weight-bold">Nama ASS</label>
+                                <select name="ass" class="form-control select2">
+                                    <option value="">Semua ASS</option>
+                                    @foreach ($assList as $ass)
+                                    <option value="{{ $ass->ID_SALESMAN }}"
+                                        {{ request('ass') == $ass->ID_SALESMAN ? 'selected' : '' }}>
+                                        {{ $ass->ID_SALESMAN }} - {{ $ass->NAMA_SALESMAN }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                    {{-- KETERANGAN SANKSI --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
-                        <select name="keterangan_sanksi" id="filter_keterangan_sanksi_filter"
-                            class="form-control select2">
-                            <option value="">Semua Keterangan</option>
+                        {{-- NAMA SALES --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="text-dark font-weight-bold">Nama Sales</label>
+                                <select name="sales" class="form-control select2">
+                                    <option value="">Semua Sales</option>
+                                    @foreach ($sales as $row)
+                                    <option value="{{ $row->id_sales }}"
+                                        {{ request('sales') == $row->id_sales ? 'selected' : '' }}>
+                                        {{ $row->id_sales }} - {{ $row->nama_sales }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                            @if(request('jenis_sanksi'))
-                            @foreach(($keteranganSanksi ?? collect())->where('jenis', request('jenis_sanksi')) as $ket)
-                            <option value="{{ $ket->keterangan }}"
-                                {{ request('keterangan_sanksi') == $ket->keterangan ? 'selected' : '' }}>
-                                {{ $ket->keterangan }}
-                            </option>
-                            @endforeach
-                            @endif
-                        </select>
-                    </div>
+                        {{-- JENIS SANKSI --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="text-dark font-weight-bold">Jenis Sanksi</label>
+                                <select name="jenis_sanksi" class="form-control select2">
+                                    <option value="">Semua Jenis</option>
+                                    @foreach ($jenisSanksi as $row)
+                                    <option value="{{ $row }}" {{ request('jenis_sanksi') == $row ? 'selected' : '' }}>
+                                        {{ $row }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                    {{-- Tanggal --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Tanggal Mulai</label>
-                        <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
-                    </div>
+                        {{-- KETERANGAN SANKSI --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
+                                <select name="keterangan_sanksi" class="form-control select2">
+                                    <option value="">Semua Keterangan</option>
+                                    @if(request('jenis_sanksi'))
+                                    @foreach(($keteranganSanksi ?? collect())->where('jenis', request('jenis_sanksi'))
+                                    as $ket)
+                                    <option value="{{ $ket->keterangan }}"
+                                        {{ request('keterangan_sanksi') == $ket->keterangan ? 'selected' : '' }}>
+                                        {{ $ket->keterangan }}
+                                    </option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Tanggal Akhir</label>
-                        <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
-                    </div>
+                        {{-- TANGGAL BUAT --}}
+                        <div class="col-md-6">
+                            <label class="text-dark font-weight-bold d-block">Tanggal Buat</label>
 
+                            <div class="form-group mb-2">
+                                <label class="text-dark small mb-1">Mulai</label>
+                                <input type="date" name="created_start_date" class="form-control"
+                                    value="{{ request('created_start_date') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-dark small mb-1">Akhir</label>
+                                <input type="date" name="created_end_date" class="form-control"
+                                    value="{{ request('created_end_date') }}">
+                            </div>
+                        </div>
+
+                        {{-- TANGGAL KEJADIAN --}}
+                        <div class="col-md-6">
+                            <label class="text-dark font-weight-bold d-block">Tanggal Kasus</label>
+
+                            <div class="form-group mb-2">
+                                <label class="text-dark small mb-1">Mulai</label>
+                                <input type="date" name="start_date" class="form-control"
+                                    value="{{ request('start_date') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-dark small mb-1">Akhir</label>
+                                <input type="date" name="end_date" class="form-control"
+                                    value="{{ request('end_date') }}">
+                            </div>
+                        </div>
+
+                        {{-- VALIDASI --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="text-dark font-weight-bold">Status Validasi</label>
+                                <select name="validasi" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    <option value="1" {{ request('validasi') === "1" ? 'selected' : '' }}>
+                                        Sudah Validasi
+                                    </option>
+                                    <option value="0" {{ request('validasi') === "0" ? 'selected' : '' }}>
+                                        Belum Validasi
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div> {{-- row end --}}
                 </div>
 
                 <div class="modal-footer">
@@ -486,210 +539,11 @@
                 </div>
 
             </form>
-        </div>
-    </div>
-</div>
-
-
-{{-- Modal Export Excel --}}
-<div class="modal fade" id="modalExportExcel" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content"
-            style="border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3); overflow:hidden; border:none !important;">
-
-            <div class="modal-header">
-                <h5 class="modal-title font-weight-bold">Export Excel</h5>
-            </div>
-
-            <form action="{{ route('kecurangan.exportExcel') }}" method="GET" target="_blank">
-                <div class="modal-body">
-                    {{-- NAMA ASS --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Nama ASS</label>
-                        <select name="ass" id="filter_ass_excel" class="form-control select2">
-                            <option value="">Semua ASS</option>
-                            @foreach ($assList as $ass)
-                            <option value="{{ $ass->ID_SALESMAN }}">
-                                {{ $ass->ID_SALESMAN }} - {{ $ass->NAMA_SALESMAN }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- NAMA SALES --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Nama Sales</label>
-                        <select name="sales" id="filter_sales_excel" class="form-control select2">
-                            <option value="">Semua Sales</option>
-                            @foreach ($sales as $row)
-                            <option value="{{ $row->id_sales }}">
-                                {{ $row->id_sales }} - {{ $row->nama_sales }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- JENIS SANKSI --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Jenis Sanksi</label>
-                        <select name="jenis_sanksi" id="filter_jenis_sanksi_excel" class="form-control select2">
-                            <option value="">Semua Jenis</option>
-                            @foreach ($jenisSanksi as $row)
-                            <option value="{{ $row }}">
-                                {{ $row }}
-                            </option>
-                            @endforeach
-
-                        </select>
-                    </div>
-
-                    {{-- KETERANGAN SANKSI --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
-                        <select name="keterangan_sanksi" id="filter_keterangan_sanksi_excel"
-                            class="form-control select2">
-                            <option value="">Semua Keterangan</option>
-                        </select>
-                    </div>
-
-                    <hr>
-
-                    {{-- PILIHAN JENIS CETAK --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Jenis Cetak</label>
-                        <select name="mode_excel" id="mode_excel" class="form-control select2" required>
-                            <option value="">-- Pilih Jenis Cetak --</option>
-                            <option value="all">Cetak Semua</option>
-                            <option value="date">Berdasarkan Tanggal</option>
-                        </select>
-                    </div>
-
-                    {{-- RANGE TANGGAL --}}
-                    <div id="excel_date_range" style="display:none;">
-                        <div class="form-group">
-                            <label class="font-weight-bold text-dark">Dari Tanggal</label>
-                            <input type="date" class="form-control" name="start_date">
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold text-dark">Sampai Tanggal</label>
-                            <input type="date" class="form-control" name="end_date">
-                        </div>
-                        <div id="excel_error_alert" class="alert alert-danger d-none mt-2" role="alert"
-                            style="border-radius:20px;">
-                            Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Batal</button>
-                    <button type="submit" id="btn_export_excel" class="btn btn-danger btn-round">Export Excel</button>
-                </div>
-            </form>
 
         </div>
     </div>
 </div>
 
-
-{{-- Modal Export PDF --}}
-<div class="modal fade" id="modalExportPdf" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content"
-            style="border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3); overflow:hidden; border:none !important;">
-
-            <div class="modal-header">
-                <h5 class="modal-title font-weight-bold">Export PDF</h5>
-            </div>
-
-            <form action="{{ route('kecurangan.exportPDF') }}" method="GET" target="_blank">
-                <div class="modal-body">
-
-                    {{-- NAMA ASS --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Nama ASS</label>
-                        <select name="ass" id="filter_ass_pdf" class="form-control select2">
-                            <option value="">Semua ASS</option>
-                            @foreach ($assList as $ass)
-                            <option value="{{ $ass->ID_SALESMAN }}">
-                                {{ $ass->ID_SALESMAN }} - {{ $ass->NAMA_SALESMAN }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- NAMA SALES --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Nama Sales</label>
-                        <select name="sales" id="filter_sales_pdf" class="form-control select2">
-                            <option value="">Semua Sales</option>
-                            @foreach ($sales as $row)
-                            <option value="{{ $row->id_sales }}">
-                                {{ $row->id_sales }} - {{ $row->nama_sales }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- JENIS SANKSI --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Jenis Sanksi</label>
-                        <select name="jenis_sanksi" id="filter_jenis_sanksi_pdf" class="form-control select2">
-                            <option value="">Semua Jenis</option>
-                            @foreach ($jenisSanksi as $jenis)
-                            <option value="{{ $jenis }}">{{ $jenis }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- KETERANGAN SANKSI --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
-                        <select name="keterangan_sanksi" id="filter_keterangan_sanksi_pdf" class="form-control select2">
-                            <option value="">Semua Keterangan</option>
-                        </select>
-                    </div>
-
-                    <hr>
-
-                    {{-- PILIHAN JENIS CETAK --}}
-                    <div class="form-group">
-                        <label class="text-dark font-weight-bold">Jenis Cetak</label>
-                        <select name="mode_pdf" id="mode_pdf" class="form-control select2" required>
-                            <option value="">-- Pilih Jenis Cetak --</option>
-                            <option value="all">Cetak Semua</option>
-                            <option value="date">Berdasarkan Tanggal</option>
-                        </select>
-                    </div>
-
-                    {{-- RANGE TANGGAL --}}
-                    <div id="pdf_date_range" style="display:none;">
-                        <div class="form-group">
-                            <label class="font-weight-bold text-dark">Dari Tanggal</label>
-                            <input type="date" class="form-control" name="start_date">
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold text-dark">Sampai Tanggal</label>
-                            <input type="date" class="form-control" name="end_date">
-                        </div>
-                        <div id="pdf_error_alert" class="alert alert-danger d-none mt-2" role="alert"
-                            style="border-radius:20px;">
-                            Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Batal</button>
-                    <button type="submit" id="btn_export_pdf" class="btn btn-danger btn-round">Export PDF</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
 
 @endsection
 

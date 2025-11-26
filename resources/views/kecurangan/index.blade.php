@@ -94,9 +94,9 @@
                                     {{-- ID SALES --}}
                                     <th class="col-id-sales" style="width:150px; text-align:center">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-            'sort_by' => 'ID_SALES',
-            'sort_order' => (request('sort_by') === 'ID_SALES' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-        ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'ID_SALES',
+                                        'sort_order' => (request('sort_by') === 'ID_SALES' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             ID Sales
                                         </a>
                                     </th>
@@ -104,9 +104,9 @@
                                     {{-- NAMA SALES --}}
                                     <th class="col-nama-sales" style="width:200px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-            'sort_by' => 'NAMA_SALESMAN',
-            'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-        ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'NAMA_SALESMAN',
+                                        'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Nama Sales
                                         </a>
                                     </th>
@@ -114,9 +114,9 @@
                                     {{-- DISTRIBUTOR --}}
                                     <th class="col-distributor" style="width:350px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-            'sort_by' => 'DISTRIBUTOR',
-            'sort_order' => (request('sort_by') === 'DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-        ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'DISTRIBUTOR',
+                                        'sort_order' => (request('sort_by') === 'DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Distributor
                                         </a>
                                     </th>
@@ -124,9 +124,9 @@
                                     {{-- NAMA ASS --}}
                                     <th class="col-nama-ass" style="width:300px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-            'sort_by' => 'NAMA_ASS',
-            'sort_order' => (request('sort_by') === 'NAMA_ASS' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-        ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'NAMA_ASS',
+                                        'sort_order' => (request('sort_by') === 'NAMA_ASS' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
                                         </a>
                                     </th>
@@ -150,17 +150,32 @@
                                     <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
 
                                     {{-- TANGGAL --}}
-                                    <th class="col-tanggal" style="width:110px;">
+                                    <th class="col-tanggal text-center" style="width:150px;">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-            'sort_by' => 'TANGGAL',
-            'sort_order' => (request('sort_by') === 'TANGGAL' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-        ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'TANGGAL',
+                                        'sort_order' => (request('sort_by') === 'TANGGAL' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Tanggal
                                         </a>
                                     </th>
 
+                                    {{-- CREATED AT --}}
+                                    <th class="col-created text-center" style="width:150px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                                        'sort_by' => 'TANGGAL',
+                                        'sort_order' => (request('sort_by') === 'CREATED_AT' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
+                                            Tanggal Buat
+                                        </a>
+                                    </th>
+
+                                    {{-- KETERANGAN --}}
                                     <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
+
+                                    {{-- KUARTAL --}}
                                     <th class="col-kuartal" style="width:110px;">Kuartal</th>
+
+                                    {{-- AKSI --}}
                                     <th class="col-aksi text-center" style="width:200px;">Aksi</th>
                                 </tr>
 
@@ -181,7 +196,10 @@
                                     <td>Rp {{ number_format($item->NILAI_SANKSI, 0, ',', '.') }}</td>
                                     <td>{{ $item->TOKO }}</td>
                                     <td class="text-center">{{ $item->KUNJUNGAN }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ \Carbon\Carbon::parse($item->CREATED_AT)->format('d/m/Y') }}</td>
 
                                     <td class="text-center">
                                         @if ($item->KETERANGAN)

@@ -118,83 +118,110 @@
                             <thead style="color:#29b14a;">
                                 <tr>
                                     <th class="col-no text-center" style="width:40px;">#</th>
+
+                                    {{-- ID SALES --}}
                                     <th class="col-id-sales" style="width:150px; text-align:center;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                        'sort_by' => 'id_sales',
-                        'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'id_sales',
+                                        'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             ID Sales
                                         </a>
                                     </th>
 
+                                    {{-- NAMA SALES --}}
                                     <th class="col-nama-sales" style="width:200px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                        'sort_by' => 'nama_sales',
-                        'sort_order' => (request('sort_by') === 'nama_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'nama_sales',
+                                        'sort_order' => (request('sort_by') === 'nama_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Nama Sales
                                         </a>
                                     </th>
 
+                                    {{-- DISTRIBUTOR --}}
                                     <th class="col-distributor" style="width:350px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                        'sort_by' => 'distributor',
-                        'sort_order' => (request('sort_by') === 'distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'distributor',
+                                        'sort_order' => (request('sort_by') === 'distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Distributor
                                         </a>
                                     </th>
 
+                                    {{-- NAMA ASS --}}
                                     <th class="col-nama-ass" style="width:300px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                    'sort_by' => 'nama_ass',
-                    'sort_order' => (request('sort_by') === 'nama_ass' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'nama_ass',
+                                        'sort_order' => (request('sort_by') === 'nama_ass' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
                                         </a>
                                     </th>
 
+                                    {{-- JENIS SANKSI --}}
                                     <th class="col-jenis-sanksi" style="width:150px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                        'sort_by' => 'jenis_sanksi',
-                        'sort_order' => (request('sort_by') === 'jenis_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'jenis_sanksi',
+                                        'sort_order' => (request('sort_by') === 'jenis_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Jenis Sanksi
                                         </a>
                                     </th>
 
+                                    {{-- KETERANGAN SANKSI --}}
                                     <th class="col-ket-sanksi" style="width:320px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                        'sort_by' => 'keterangan_sanksi',
-                        'sort_order' => (request('sort_by') === 'keterangan_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'keterangan_sanksi',
+                                        'sort_order' => (request('sort_by') === 'keterangan_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Keterangan Sanksi
                                         </a>
                                     </th>
-
+                                    
+                                    {{-- NILAI SANKSI --}}
                                     <th class="col-nilai-sanksi" style="width:160px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                        'sort_by' => 'nilai_sanksi',
-                        'sort_order' => (request('sort_by') === 'nilai_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'nilai_sanksi',
+                                        'sort_order' => (request('sort_by') === 'nilai_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Nilai Sanksi
                                         </a>
                                     </th>
 
+                                    {{-- TOKO --}}
                                     <th class="col-toko" style="width:200px;">Toko</th>
+
+                                    {{-- KUNJUNGAN --}}
                                     <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
 
-                                    <th class="col-tanggal" style="width:110px;">
+                                    {{-- TANGGAL --}}
+                                    <th class="col-tanggal text-center" style="width:150px;">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                        'sort_by' => 'tanggal',
-                        'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                                        'sort_by' => 'tanggal',
+                                        'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
                                             Tanggal
                                         </a>
                                     </th>
 
+                                    {{-- CREATED AT --}}
+                                    <th class="col-created text-center" style="width:150px;">
+                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
+                                        'sort_by' => 'TANGGAL',
+                                        'sort_order' => (request('sort_by') === 'created_at' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                    ])) }}" class="text-success text-decoration-none">
+                                            Tanggal Buat
+                                        </a>
+                                    </th>
+                                    
+                                    {{-- KETERANGAN --}}
                                     <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
+
+                                    {{-- KUARTAL --}}
                                     <th class="col-kuartal" style="width:110px;">Kuartal</th>
+
+                                    {{-- AKSI --}}
                                     <th class="col-aksi text-center" style="width:150px;">Aksi</th>
                                 </tr>
                             </thead>
@@ -214,7 +241,10 @@
                                     <td>Rp {{ number_format($item->NILAI_SANKSI, 0, ',', '.') }}</td>
                                     <td>{{ $item->TOKO }}</td>
                                     <td class="text-center">{{ $item->KUNJUNGAN }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($item->TANGGAL)->format('d/m/Y') }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ \Carbon\Carbon::parse($item->CREATED_AT)->format('d/m/Y') }}</td>
 
                                     <td class="text-center">
                                         @if ($item->KETERANGAN)

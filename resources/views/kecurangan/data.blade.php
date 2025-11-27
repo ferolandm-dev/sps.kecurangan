@@ -451,7 +451,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="text-dark font-weight-bold">Jenis Sanksi</label>
-                                <select name="jenis_sanksi" class="form-control select2">
+                                <select id="filter_jenis_sanksi_filter" name="jenis_sanksi"
+                                    class="form-control select2">
                                     <option value="">Semua Jenis</option>
                                     @foreach ($jenisSanksi as $row)
                                     <option value="{{ $row }}" {{ request('jenis_sanksi') == $row ? 'selected' : '' }}>
@@ -466,14 +467,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="text-dark font-weight-bold">Keterangan Sanksi</label>
-                                <select name="keterangan_sanksi" class="form-control select2">
+                                <select id="filter_keterangan_sanksi_filter" name="keterangan_sanksi"
+                                    class="form-control select2">
                                     <option value="">Semua Keterangan</option>
                                     @if(request('jenis_sanksi'))
-                                    @foreach(($keteranganSanksi ?? collect())->where('jenis', request('jenis_sanksi'))
+                                    @foreach(($keteranganSanksi ?? collect())->where('JENIS', request('jenis_sanksi'))
                                     as $ket)
-                                    <option value="{{ $ket->keterangan }}"
-                                        {{ request('keterangan_sanksi') == $ket->keterangan ? 'selected' : '' }}>
-                                        {{ $ket->keterangan }}
+                                    <option value="{{ $ket->KETERANGAN }}"
+                                        {{ request('keterangan_sanksi') == $ket->KETERANGAN ? 'selected' : '' }}>
+                                        {{ $ket->KETERANGAN }}
                                     </option>
                                     @endforeach
                                     @endif

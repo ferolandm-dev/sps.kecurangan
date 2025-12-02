@@ -47,8 +47,8 @@ class KecuranganController extends Controller
             });
         }
 
-        $allowedSorts = ['ID_SALES','NAMA_SALESMAN','TOKO','KUNJUNGAN','TANGGAL','JENIS_SANKSI'];
-        $sortBy = $request->get('sort_by', 'TANGGAL');
+        $allowedSorts = ['ID_SALES','NAMA_SALESMAN','TOKO','KUNJUNGAN','TANGGAL','JENIS_SANKSI', 'CREATED_AT'];
+        $sortBy = $request->get('sort_by', 'CREATED_AT');
         $sortOrder = $request->get('sort_order', 'desc');
 
         if (in_array($sortBy, $allowedSorts)) {
@@ -169,10 +169,11 @@ class KecuranganController extends Controller
             'TOKO',
             'KUNJUNGAN',
             'TANGGAL',
-            'KUARTAL'
+            'KUARTAL',
+            'CREATED_AT'
         ];
 
-        $sortBy = $request->get('sort_by', 'TANGGAL');
+        $sortBy = $request->get('sort_by', 'CREATED_AT');
         $sortOrder = $request->get('sort_order', 'desc');
 
         if (in_array($sortBy, $allowedSorts)) {

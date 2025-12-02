@@ -211,9 +211,9 @@
 
                                     {{-- CREATED AT --}}
                                     <th class="col-created text-center" style="width:150px;">
-                                        <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                                        'sort_by' => 'TANGGAL',
-                                        'sort_order' => (request('sort_by') === 'created_at' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
+                                        'sort_by' => 'CREATED_AT',
+                                        'sort_order' => (request('sort_by') === 'CREATED_AT' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                                     ])) }}" class="text-success text-decoration-none">
                                             Tanggal Buat
                                         </a>
@@ -590,27 +590,51 @@ select:focus {
     border-color: #4caf50 !important;
 }
 
+/* ===============================
+   GLOBAL BACKGROUND (DESKTOP)
+=============================== */
 body,
 .wrapper,
 .main-panel {
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
     background-attachment: fixed !important;
-    /* supaya smooth */
 }
 
+/* ===============================
+   FIX: MOBILE MODAL BACKDROP BUG
+=============================== */
+@media (max-width: 768px) {
+
+    body,
+    .wrapper,
+    .main-panel {
+        background-attachment: scroll !important;
+        /* FIX iOS backdrop */
+    }
+}
+
+/* FIX: Modal tidak bisa di klik karena backdrop menutupi modal */
+.modal-backdrop {
+    z-index: 1060 !important;
+    pointer-events: none !important;
+}
+
+.modal {
+    z-index: 1070 !important;
+    pointer-events: auto !important;
+}
 
 .panel-header-sps {
     background: transparent !important;
     box-shadow: none !important;
 }
 
-
 .content {
     background: transparent !important;
 }
 
 /* ========================================
-   NAVBAR MATCHING — SAME GRADIENT AS HEADER
+   NAVBAR — MATCH THE HEADER STYLE
 ========================================= */
 
 .navbar-soft {
@@ -618,7 +642,6 @@ body,
     border: none !important;
     box-shadow: none !important;
 
-    /* Tinggi navbar sesuai permintaan */
     height: 95px !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -630,14 +653,12 @@ body,
     border-bottom-right-radius: 20px;
 }
 
-/* Brand */
 .navbar-soft .navbar-brand {
     color: #ffffff !important;
     font-size: 22px !important;
     font-weight: 700;
 }
 
-/* Icons */
 .navbar-soft .nav-link i {
     color: #ffffff !important;
     font-size: 22px;
@@ -650,18 +671,16 @@ body,
 
 .navbar-soft {
     transition: none !important;
-    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
     transition: color .25s ease, transform .25s ease !important;
-    /* biarkan hover tetap smooth */
 }
 
-/* =============================== */
-/*   SOFT UI MODERN PAGINATION     */
-/* =============================== */
+/* ===============================
+   PAGINATION (Soft UI)
+=============================== */
 
 .pagination {
     display: flex;
@@ -672,7 +691,6 @@ body,
     transition: 0.25s ease;
 }
 
-/* Default */
 .pagination .page-link {
     color: #29b14a !important;
     border: none !important;
@@ -684,7 +702,6 @@ body,
     transition: all 0.25s ease-in-out;
 }
 
-/* Hover */
 .pagination .page-link:hover {
     background: #29b14a !important;
     color: #fff !important;
@@ -692,7 +709,6 @@ body,
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
 }
 
-/* Active page */
 .pagination .page-item.active .page-link {
     background: linear-gradient(135deg, #29b14a, #34d058) !important;
     color: #fff !important;
@@ -700,7 +716,6 @@ body,
     transform: translateY(-2px);
 }
 
-/* Disabled */
 .pagination .page-item.disabled .page-link {
     background: #f1f1f1 !important;
     color: #b4b4b4 !important;
@@ -708,17 +723,15 @@ body,
     cursor: not-allowed !important;
 }
 
-/* Hover disabled (tidak berubah) */
 .pagination .page-item.disabled .page-link:hover {
     background: #f1f1f1 !important;
     color: #b4b4b4 !important;
-    transform: none !important;
-    box-shadow: none !important;
 }
 
-/* ===========================================================
-   GLOBAL SOFT UI BUTTON STYLE
-=========================================================== */
+/* ========================================
+   GLOBAL BUTTON STYLE
+========================================= */
+
 .btn {
     border: none !important;
     border-radius: 12px !important;
@@ -733,7 +746,6 @@ body,
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* SUCCESS BUTTON (Hijau) */
 .btn-success {
     background: linear-gradient(135deg, #29b14a, #34d058) !important;
     color: #fff !important;
@@ -743,7 +755,6 @@ body,
     background: linear-gradient(135deg, #25a344, #2fc655) !important;
 }
 
-/* DANGER BUTTON (Merah) */
 .btn-danger {
     background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
     color: white !important;
@@ -753,7 +764,6 @@ body,
     background: linear-gradient(135deg, #d84333, #fa5f50) !important;
 }
 
-/* SECONDARY BUTTON (Abu) */
 .btn-secondary {
     background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
     color: #333 !important;
@@ -763,7 +773,6 @@ body,
     background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
 }
 
-/* WARNING BUTTON (Kuning lembut) */
 .btn-warning {
     background: linear-gradient(135deg, #eee733, #faf26b) !important;
     color: #333 !important;
@@ -773,18 +782,15 @@ body,
     background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
 }
 
-/* ROUND STYLE */
 .btn-round {
     border-radius: 30px !important;
 }
 
-/* ICON ALIGNMENT FIX */
 .btn i {
     font-size: 15px;
     margin-right: 6px;
 }
 
-/* DISABLED BUTTON STYLE */
 .btn:disabled {
     opacity: 0.6 !important;
     cursor: not-allowed !important;
@@ -792,20 +798,18 @@ body,
     box-shadow: none !important;
 }
 
-/* ===========================================================
-   SOFT UI SEARCH BAR
-=========================================================== */
-/* WRAPPER agar semua tombol & search sejajar */
+/* ========================================
+   SEARCH BAR
+========================================= */
+
 .action-bar {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    /* jarak antar elemen */
     margin-top: 10px;
 }
 
-/* SEARCH WRAPPER */
 .search-group {
     display: flex;
     align-items: center;
@@ -813,7 +817,6 @@ body,
     min-width: 260px;
 }
 
-/* SEARCH INPUT */
 .search-input {
     height: 35px !important;
     border-radius: 20px 0 0 20px !important;
@@ -825,7 +828,6 @@ body,
     font-size: 14px;
 }
 
-/* SEARCH BUTTON */
 .search-btn {
     height: 35px !important;
     border-radius: 0 20px 20px 0 !important;
@@ -846,7 +848,10 @@ body,
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
 }
 
-/* Pastikan ditempatkan terakhir agar menimpa Bootstrap */
+/* ========================================
+   MODAL PREV/NEXT BUTTONS
+========================================= */
+
 #modalPrev,
 #modalNext {
     background: transparent !important;
@@ -858,48 +863,42 @@ body,
     appearance: none !important;
     -webkit-tap-highlight-color: transparent !important;
     color: #333 !important;
-    /* sesuaikan warna */
     text-decoration: none !important;
 }
 
-/* Hilangkan efek hover / fokus / aktif sepenuhnya */
 #modalPrev:hover,
 #modalNext:hover,
 #modalPrev:focus,
 #modalNext:focus,
 #modalPrev:active,
-#modalNext:active,
-#modalPrev:focus-visible,
-#modalNext:focus-visible {
+#modalNext:active {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    outline: none !important;
     opacity: 0.6 !important;
-    /* atur sesuai kebutuhan, atau 1 */
-    transform: none !important;
 }
 
-/* Khusus untuk tombol bootstrap .btn-link yang mungkin menambahkan inner focus di Firefox */
 #modalPrev::-moz-focus-inner,
 #modalNext::-moz-focus-inner {
     border: 0 !important;
     padding: 0 !important;
 }
 
-/* Jika masih muncul garis biru di Chrome pada focus, override ring color */
 #modalPrev:focus,
 #modalNext:focus {
     box-shadow: 0 0 0 0 transparent !important;
 }
 
-/* OPTIONAL: jika tetap ada style dari .btn-link atau .btn, paksa prioritas lebih tinggi */
 button#modalPrev.btn,
 button#modalNext.btn {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    outline: none !important;
+}
+
+.modal-backdrop.show {
+    opacity: 0 !important;
+    background-color: transparent !important;
 }
 </style>
 @endpush

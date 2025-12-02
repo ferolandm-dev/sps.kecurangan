@@ -232,6 +232,10 @@
 
 @push('styles')
 <style>
+/* ===============================
+   VALIDATION & FOCUS
+=============================== */
+
 input:invalid,
 textarea:invalid,
 select:invalid {
@@ -243,111 +247,114 @@ input:focus,
 textarea:focus,
 select:focus {
     border-color: #4caf50 !important;
-    /* hijau atau sesuai tema */
 }
+
+/* ===============================
+   GLOBAL BACKGROUND
+=============================== */
 
 body,
 .wrapper,
 .main-panel {
     background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
     background-attachment: fixed !important;
-    /* supaya smooth */
 }
 
+@media (max-width: 768px) {
+    body,
+    .wrapper,
+    .main-panel {
+        background-attachment: scroll !important;
+    }
+}
 
 .panel-header-sps {
     background: transparent !important;
     box-shadow: none !important;
 }
 
-
 .content {
     background: transparent !important;
 }
 
-/* ========================================
-   NAVBAR MATCHING — SAME GRADIENT AS HEADER
-========================================= */
+/* ===============================
+   NAVBAR
+=============================== */
 
 .navbar-soft {
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
     border: none !important;
     box-shadow: none !important;
-
-    /* Tinggi navbar sesuai permintaan */
     height: 95px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
+    padding: 0 !important;
     display: flex !important;
     align-items: center !important;
-
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
-/* Brand */
 .navbar-soft .navbar-brand {
     color: #ffffff !important;
     font-size: 22px !important;
     font-weight: 700;
 }
 
-/* Icons */
 .navbar-soft .nav-link i {
     color: #ffffff !important;
     font-size: 22px;
-    transition: .2s ease;
+    transition: .2s;
 }
 
 .navbar-soft .nav-link:hover i {
     color: #333 !important;
 }
 
-.navbar-soft {
-    transition: none !important;
-    /* matikan transisi container */
-}
-
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
     transition: color .25s ease, transform .25s ease !important;
-    /* biarkan hover tetap smooth */
 }
 
-/* === BACKDROP AKTIF DAN TIDAK TRANSPARAN === */
+/* ===============================
+   MODAL & BACKDROP
+=============================== */
+
 .modal-backdrop.show {
-    opacity: 1 !important;
-    background: rgba(0, 0, 0, 0.7) !important;
-    backdrop-filter: blur(2px);
+    opacity: 0.15 !important;
+    background: rgba(0, 0, 0, 0.15) !important;
+    backdrop-filter: blur(1px);
 }
 
-/* Tombol navigasi modal tetap di atas */
-#modalCloseBtn,
-#modalPrev,
-#modalNext {
-    z-index: 2102 !important;
+
+/* cegah backdrop blok klik */
+.modal-backdrop {
+    pointer-events: none !important;
+}
+
+/* modal tetap bisa diklik */
+.modal {
+    z-index: 2105 !important;
     pointer-events: auto !important;
 }
 
-/* Kunci scroll pada body dan modal */
-body.modal-open {
-    overflow: hidden !important;
+/* tombol navigasi modal selalu di atas */
+#modalCloseBtn,
+#modalPrev,
+#modalNext {
+    z-index: 2106 !important;
+    pointer-events: auto !important;
 }
 
-.modal {
-    overflow: hidden !important;
-}
 
-/* ===========================================================
-   GLOBAL SOFT UI BUTTON STYLE
-=========================================================== */
+/* ===============================
+   BUTTON GLOBAL (SOFT UI)
+=============================== */
+
 .btn {
     border: none !important;
     border-radius: 12px !important;
     font-weight: 600 !important;
     padding: 8px 18px !important;
-    transition: all 0.25s ease-in-out !important;
+    transition: .25s ease-in-out !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -356,7 +363,6 @@ body.modal-open {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* SUCCESS BUTTON (Hijau) */
 .btn-success {
     background: linear-gradient(135deg, #29b14a, #34d058) !important;
     color: #fff !important;
@@ -366,7 +372,6 @@ body.modal-open {
     background: linear-gradient(135deg, #25a344, #2fc655) !important;
 }
 
-/* DANGER BUTTON (Merah) */
 .btn-danger {
     background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
     color: white !important;
@@ -376,7 +381,6 @@ body.modal-open {
     background: linear-gradient(135deg, #d84333, #fa5f50) !important;
 }
 
-/* SECONDARY BUTTON (Abu) */
 .btn-secondary {
     background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
     color: #333 !important;
@@ -386,7 +390,6 @@ body.modal-open {
     background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
 }
 
-/* WARNING BUTTON (Kuning lembut) */
 .btn-warning {
     background: linear-gradient(135deg, #eee733, #faf26b) !important;
     color: #333 !important;
@@ -396,130 +399,78 @@ body.modal-open {
     background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
 }
 
-/* ROUND STYLE */
 .btn-round {
     border-radius: 30px !important;
 }
 
-/* ICON ALIGNMENT FIX */
 .btn i {
     font-size: 15px;
     margin-right: 6px;
 }
 
-/* DISABLED BUTTON STYLE */
 .btn:disabled {
     opacity: 0.6 !important;
     cursor: not-allowed !important;
-    transform: none !important;
     box-shadow: none !important;
 }
 
-/* Pastikan ditempatkan terakhir agar menimpa Bootstrap */
+/* ===============================
+   PREV/NEXT MODAL BUTTONS
+=============================== */
+
 #modalPrev,
 #modalNext {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    outline: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    -webkit-tap-highlight-color: transparent !important;
     color: #333 !important;
-    /* sesuaikan warna */
-    text-decoration: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
-/* Hilangkan efek hover / fokus / aktif sepenuhnya */
 #modalPrev:hover,
-#modalNext:hover,
-#modalPrev:focus,
-#modalNext:focus,
-#modalPrev:active,
-#modalNext:active,
-#modalPrev:focus-visible,
-#modalNext:focus-visible {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    opacity: 0.6 !important;
-    /* atur sesuai kebutuhan, atau 1 */
-    transform: none !important;
+#modalNext:hover {
+    opacity: .6 !important;
 }
 
-/* Khusus untuk tombol bootstrap .btn-link yang mungkin menambahkan inner focus di Firefox */
-#modalPrev::-moz-focus-inner,
-#modalNext::-moz-focus-inner {
-    border: 0 !important;
-    padding: 0 !important;
-}
-
-/* Jika masih muncul garis biru di Chrome pada focus, override ring color */
-#modalPrev:focus,
-#modalNext:focus {
-    box-shadow: 0 0 0 0 transparent !important;
-}
-
-/* OPTIONAL: jika tetap ada style dari .btn-link atau .btn, paksa prioritas lebih tinggi */
-button#modalPrev.btn,
-button#modalNext.btn {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-
-/* ============================================================
-   TOMBOL HAPUS FOTO (X) — SUPER RAPIH & PRESISI
-=========================================================== */
+/* ===============================
+   DELETE PHOTO BUTTON (X)
+=============================== */
 
 #preview-container .btn-remove,
 .existing-photo .btn-delete-existing {
     position: absolute;
     top: -9px;
     right: -9px;
-
     width: 28px;
     height: 28px;
-
     border-radius: 50% !important;
     background: #e74c3c !important;
     color: #fff !important;
-
     border: none !important;
     outline: none !important;
     padding: 0 !important;
-
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     font-size: 18px !important;
     font-weight: bold !important;
-    line-height: 0 !important;
-
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
     transition: 0.18s ease-in-out;
     z-index: 99;
 }
 
-/* Hover lebih smooth */
 #preview-container .btn-remove:hover,
 .existing-photo .btn-delete-existing:hover {
     background: #c0392b !important;
     transform: scale(1.10);
 }
 
-/* Active klik */
 #preview-container .btn-remove:active,
 .existing-photo .btn-delete-existing:active {
     transform: scale(0.92);
 }
 
-/* Hilangkan efek fokus biru */
 #preview-container .btn-remove:focus,
 .existing-photo .btn-delete-existing:focus {
     outline: none !important;

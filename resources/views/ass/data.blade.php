@@ -607,6 +607,33 @@ table.table td:last-child {
     }
 }
 
+/* ============================================================
+   FIX MODAL BACKDROP TERLALU GELAP & MENGHALANGI KLIK
+   ============================================================ */
+.modal-backdrop.show {
+    opacity: 0.15 !important; /* tidak gelap */
+    background: rgba(0,0,0,0.15) !important;
+    pointer-events: none !important; /* supaya backdrop tidak memblok klik */
+}
+
+/* Pastikan modal selalu berada di atas backdrop */
+#modalKecurangan.modal {
+    z-index: 2105 !important;
+    pointer-events: auto !important;
+}
+
+/* Tombol navigasi modal */
+#modalPrev,
+#modalNext,
+#modalCloseBtn {
+    z-index: 2106 !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #333 !important;
+}
+
 </style>
 @endpush
 

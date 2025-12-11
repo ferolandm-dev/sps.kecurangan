@@ -118,7 +118,7 @@
                     'sort_by' => 'NAMA_SALESMAN',
                     'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
                 ])) }}" class="text-success text-decoration-none">
-                                            Nama ASS
+                                            Nama Salesman
                                         </a>
                                     </th>
 

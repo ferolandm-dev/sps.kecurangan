@@ -28,25 +28,30 @@ class DistributorController extends Controller
         if (!in_array($sortBy, $allowedColumns)) $sortBy = 'NAMA_DISTRIBUTOR';
         if (!in_array($sortOrder, ['asc', 'desc'])) $sortOrder = 'asc';
 
-        $query = DB::table('distributor');
+        // Tambahkan subquery total salesman
+        $query = DB::table('distributor')
+            ->select(
+                'distributor.*',
+                DB::raw('(SELECT COUNT(*) FROM salesman s WHERE s.ID_DISTRIBUTOR = distributor.ID_DISTRIBUTOR AND s.TYPE_SALESMAN = 1) AS total_salesman')
+            );
 
         // Searching
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('ID_DISTRIBUTOR', 'like', "%$search%")
-                  ->orWhere('NAMA_DISTRIBUTOR', 'like', "%$search%")
-                  ->orWhere('ID_KOTA', 'like', "%$search%")
-                  ->orWhere('ID_REGION', 'like', "%$search%")
-                  ->orWhere('ID_SPV', 'like', "%$search%")
-                  ->orWhere('ID_LOGISTIC', 'like', "%$search%");
+                    ->orWhere('NAMA_DISTRIBUTOR', 'like', "%$search%")
+                    ->orWhere('ID_KOTA', 'like', "%$search%")
+                    ->orWhere('ID_REGION', 'like', "%$search%")
+                    ->orWhere('ID_SPV', 'like', "%$search%")
+                    ->orWhere('ID_LOGISTIC', 'like', "%$search%");
             });
         }
 
         // Sorting
         $query->orderBy($sortBy, $sortOrder);
 
-        // Pagination/show all
+        // Pagination / show all
         if ($request->has('all')) {
             $distributor = $query->get();
         } else {
@@ -76,4 +81,25 @@ class DistributorController extends Controller
 
         return $pdf->download('data_distributor.pdf');
     }
+
+    // =====================================================
+    // 📌 AJAX — GET SALESMAN PER DISTRIBUTOR
+    // =====================================================
+    public function getSalesman($id)
+    {
+        $data = DB::table('salesman')
+            ->where('ID_DISTRIBUTOR', $id)
+            ->where('TYPE_SALESMAN', 1)
+            ->orderBy('ID_SALESMAN', 'asc')
+            ->paginate(7);
+
+        return response()->json([
+            'data'           => $data->items(),                                // list datanya
+            'first'          => $data->firstItem(),                            // nomor pertama di halaman itu
+            'total_salesman' => $data->total(),                                // total salesman
+            'pagination'     => $data->links('pagination::modal')->render(),   // pagination
+        ]);
+    }
+
+
 }

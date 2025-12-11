@@ -97,9 +97,7 @@
                                         </a>
                                     </th>
 
-                                    <th style="width:252px;"></th>
-
-                                    <th class="text-center" style="width:150px;"></th>
+                                    <th class="text-center" style="width:150px;">Total Salesman</th>
                                 </tr>
                             </thead>
 
@@ -113,21 +111,20 @@
                                     <td>{{ $d->ID_DISTRIBUTOR }}</td>
                                     <td>{{ $d->NAMA_DISTRIBUTOR }}</td>
 
-                                    {{-- Empty cell mengikuti kolom Salesman --}}
-                                    <td></td>
-
-                                    {{-- Empty total column --}}
-                                    <td class="text-center"></td>
+                                    <td class="text-center">
+                                        <span class="badge-soft text-primary font-weight-bold" style="cursor:pointer;"
+                                            onclick="showSalesman('{{ $d->ID_DISTRIBUTOR }}')">
+                                            {{ $d->total_salesman }}
+                                        </span>
+                                    </td>
                                 </tr>
-
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">
-                                        Belum ada data distributor
-                                    </td>
+                                    <td colspan="6" class="text-center text-muted">Belum ada data distributor</td>
                                 </tr>
                                 @endforelse
                             </tbody>
+
                         </table>
                     </div>
 
@@ -144,6 +141,46 @@
         </div>
     </div>
 </div>
+
+{{-- MODAL SALES DISTRIBUTOR --}}
+<div class="modal fade" id="modalSalesman" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:750px;">
+        <div class="modal-content border-0"
+            style="background:rgba(255,255,255,0.97); border-radius:15px; box-shadow:0 4px 25px rgba(0,0,0,0.3);">
+
+            <div class="modal-header" style="border-bottom:none;">
+                <h5 class="modal-title text-primary" style="font-weight:600;">Daftar Salesman Distributor</h5>
+            </div>
+
+            <div class="modal-body" style="font-size:15px; color:#333;">
+                <div id="salesmanTotal"></div>
+
+                <div class="table-responsive" style="max-height:55vh; overflow-y:auto;">
+                    <table class="table table-bordered table-striped">
+                        <thead style="background:#29b14a; color:white;">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th style="width:120px;">ID Salesman</th>
+                                <th class="text-left">Nama Salesman</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody id="tableSalesman"></tbody>
+                    </table>
+                </div>
+
+                <div id="salesmanPagination" class="mt-2 text-center"></div>
+            </div>
+
+            <div class="modal-footer" style="border-top:none;">
+                <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Tutup</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('styles')
@@ -172,12 +209,10 @@ body,
     background-attachment: fixed !important;
 }
 
-
 .panel-header-sps {
     background: transparent !important;
     box-shadow: none !important;
 }
-
 
 .content {
     background: transparent !important;
@@ -191,27 +226,21 @@ body,
     background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
     border: none !important;
     box-shadow: none !important;
-
-    /* Tinggi navbar sesuai permintaan */
     height: 95px !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-
     display: flex !important;
     align-items: center !important;
-
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
-/* Brand */
 .navbar-soft .navbar-brand {
     color: #ffffff !important;
     font-size: 22px !important;
     font-weight: 700;
 }
 
-/* Icons */
 .navbar-soft .nav-link i {
     color: #ffffff !important;
     font-size: 22px;
@@ -224,13 +253,11 @@ body,
 
 .navbar-soft {
     transition: none !important;
-    /* matikan transisi container */
 }
 
 .navbar-soft .nav-link i,
 .navbar-soft .navbar-brand {
     transition: color .25s ease, transform .25s ease !important;
-    /* biarkan hover tetap smooth */
 }
 
 /* =============================== */
@@ -246,7 +273,6 @@ body,
     transition: 0.25s ease;
 }
 
-/* Default */
 .pagination .page-link {
     color: #29b14a !important;
     border: none !important;
@@ -258,7 +284,6 @@ body,
     transition: all 0.25s ease-in-out;
 }
 
-/* Hover */
 .pagination .page-link:hover {
     background: #29b14a !important;
     color: #fff !important;
@@ -266,7 +291,6 @@ body,
     box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
 }
 
-/* Active page */
 .pagination .page-item.active .page-link {
     background: linear-gradient(135deg, #29b14a, #34d058) !important;
     color: #fff !important;
@@ -274,7 +298,6 @@ body,
     transform: translateY(-2px);
 }
 
-/* Disabled */
 .pagination .page-item.disabled .page-link {
     background: #f1f1f1 !important;
     color: #b4b4b4 !important;
@@ -282,7 +305,6 @@ body,
     cursor: not-allowed !important;
 }
 
-/* Hover disabled (tidak berubah) */
 .pagination .page-item.disabled .page-link:hover {
     background: #f1f1f1 !important;
     color: #b4b4b4 !important;
@@ -293,6 +315,7 @@ body,
 /* ===========================================================
    GLOBAL SOFT UI BUTTON STYLE
 =========================================================== */
+
 .btn {
     border: none !important;
     border-radius: 12px !important;
@@ -307,7 +330,6 @@ body,
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* SUCCESS BUTTON (Hijau) */
 .btn-success {
     background: linear-gradient(135deg, #29b14a, #34d058) !important;
     color: #fff !important;
@@ -317,7 +339,6 @@ body,
     background: linear-gradient(135deg, #25a344, #2fc655) !important;
 }
 
-/* DANGER BUTTON (Merah) */
 .btn-danger {
     background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
     color: white !important;
@@ -327,7 +348,6 @@ body,
     background: linear-gradient(135deg, #d84333, #fa5f50) !important;
 }
 
-/* SECONDARY BUTTON (Abu) */
 .btn-secondary {
     background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
     color: #333 !important;
@@ -337,7 +357,6 @@ body,
     background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
 }
 
-/* WARNING BUTTON (Kuning lembut) */
 .btn-warning {
     background: linear-gradient(135deg, #eee733, #faf26b) !important;
     color: #333 !important;
@@ -347,18 +366,15 @@ body,
     background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
 }
 
-/* ROUND STYLE */
 .btn-round {
     border-radius: 30px !important;
 }
 
-/* ICON ALIGNMENT FIX */
 .btn i {
     font-size: 15px;
     margin-right: 6px;
 }
 
-/* DISABLED BUTTON STYLE */
 .btn:disabled {
     opacity: 0.6 !important;
     cursor: not-allowed !important;
@@ -369,17 +385,15 @@ body,
 /* ===========================================================
    SOFT UI SEARCH BAR
 =========================================================== */
-/* WRAPPER agar semua tombol & search sejajar */
+
 .action-bar {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    /* jarak antar elemen */
     margin-top: 10px;
 }
 
-/* SEARCH WRAPPER */
 .search-group {
     display: flex;
     align-items: center;
@@ -387,7 +401,6 @@ body,
     min-width: 260px;
 }
 
-/* SEARCH INPUT */
 .search-input {
     height: 35px !important;
     border-radius: 20px 0 0 20px !important;
@@ -399,7 +412,6 @@ body,
     font-size: 14px;
 }
 
-/* SEARCH BUTTON */
 .search-btn {
     height: 35px !important;
     border-radius: 0 20px 20px 0 !important;
@@ -423,22 +435,22 @@ body,
 /* ============================================
    RESPONSIVE TABLE – Header tidak pecah
 ============================================ */
-.table-responsive {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-}
 
 .table-responsive {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
 }
 
-/* Header & cell tidak boleh turun baris */
+table.table {
+    table-layout: fixed !important; /* Kunci layout agar tidak bergeser meski data banyak */
+}
+
+/* Padding disamakan dengan halaman ASS */
 table.table th,
 table.table td {
     white-space: nowrap !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
 }
 
 /* Header rata kiri */
@@ -446,20 +458,115 @@ table.table th {
     text-align: left !important;
 }
 
-/* Kolom nomor */
+/* Kolom pertama (#) — samakan dengan ASS */
 table.table th:first-child,
 table.table td:first-child {
     text-align: center !important;
-    width: 40px !important;
     padding-left: 0 !important;
+    width: 19px !important;
 }
 
-/* Kolom total kecurangan */
+
+/* Kolom kedua — ID Distributor */
+table.table th:nth-child(2),
+table.table td:nth-child(2) {
+    width: 100px !important; /* proporsional seperti ASS */
+}
+
+/* Kolom ketiga — Nama Distributor */
+table.table th:nth-child(3),
+table.table td:nth-child(3) {
+    width: 260px !important; /* sama seperti ASS */
+}
+
+/* Kolom ke-4 — Total Salesman (fixed) */
+table.table th:nth-child(4),
+table.table td:nth-child(4) {
+    width: 107px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+}
+
+/* Hilangkan aturan last-child yang membuat geser */
 table.table th:last-child,
 table.table td:last-child {
-    text-align: center !important;
-    width: 150px !important;
-    padding-left: 0 !important;
+    /* biarkan default */
 }
+
+
 </style>
+
+@endpush
+@push('js')
+<script>
+function showSalesman(idDistributor, pageUrl = null) {
+
+    $("#tableSalesman").html(`
+        <tr>
+            <td colspan="3" class="text-center text-muted py-3">Loading...</td>
+        </tr>
+    `);
+
+    $("#salesmanPagination").html("");
+    $("#modalSalesman").modal('show');
+
+    let url = pageUrl ?? ("{{ url('/distributor/get-salesman') }}/" + idDistributor);
+
+    $.get(url, function(res) {
+
+        // ===============================
+        // FORMAT BARU (SAMA SEPERTI ASS)
+        // ===============================
+
+        let list = res.data || []; // ARRAY data
+        let indexStart = res.first ?? 1; // NOMOR HALAMAN
+
+        let rows = "";
+
+        if (list.length === 0) {
+            rows = `
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-3">Tidak ada data</td>
+                </tr>
+            `;
+        } else {
+            list.forEach((row, i) => {
+                rows += `
+                    <tr>
+                        <td class="text-center">${indexStart + i}</td>
+                        <td>${row.ID_SALESMAN ?? '-'}</td>
+                        <td class="text-left">${row.NAMA_SALESMAN ?? '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        $("#tableSalesman").html(rows);
+
+        $("#salesmanTotal").html(`
+            <div class="mb-2 text-right">
+                <p class="text-primary font-weight-bold" style="font-size:14px;">
+                    Total Salesman: ${res.total_salesman}
+                </p>
+            </div>
+        `);
+
+        $("#salesmanPagination").html(res.pagination);
+
+        // AJAX pagination
+        $("#salesmanPagination a.page-link").click(function(e) {
+            e.preventDefault();
+            showSalesman(idDistributor, $(this).attr("href"));
+        });
+
+    }).fail(function(xhr) {
+
+        $("#tableSalesman").html(`
+            <tr>
+                <td colspan="3" class="text-center text-danger py-3">Gagal memuat data</td>
+            </tr>
+        `);
+    });
+}
+</script>
 @endpush

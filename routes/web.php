@@ -140,6 +140,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/data', [DistributorController::class, 'data'])
                 ->name('distributor.data');
 
+            Route::get('/get-salesman/{id}', [DistributorController::class, 'getSalesman'])
+                ->name('distributor.getSalesman');
+                
             Route::get('/export-excel', [DistributorController::class, 'exportExcel'])
                 ->name('distributor.exportExcel');
 

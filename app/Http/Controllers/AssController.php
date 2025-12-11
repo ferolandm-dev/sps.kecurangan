@@ -16,14 +16,14 @@ class AssController extends Controller
     public function data(Request $request)
     {
         $query = DB::table('salesman')
-            ->where('TYPE_SALESMAN', 7) // 🔥 HANYA TYPE 7
+            ->where('TYPE_SALESMAN', 7) 
             ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
             ->select(
                 'salesman.*',
                 'distributor.NAMA_DISTRIBUTOR',
                 DB::raw('(SELECT COUNT(*) FROM kecurangan 
                         WHERE kecurangan.ID_SALES = salesman.ID_SALESMAN
-                        AND kecurangan.VALIDASI = 1) AS total_kecurangan') // 🔥 ASS → ambil dari kolom ID_ASS
+                        AND kecurangan.VALIDASI = 1) AS total_kecurangan') 
             );
 
         // SEARCH

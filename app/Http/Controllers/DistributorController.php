@@ -32,7 +32,13 @@ class DistributorController extends Controller
         $query = DB::table('distributor')
             ->select(
                 'distributor.*',
-                DB::raw('(SELECT COUNT(*) FROM salesman s WHERE s.ID_DISTRIBUTOR = distributor.ID_DISTRIBUTOR AND s.TYPE_SALESMAN = 1) AS total_salesman')
+                DB::raw('(SELECT COUNT(*) 
+          FROM salesman s 
+          WHERE s.ID_DISTRIBUTOR = distributor.ID_DISTRIBUTOR 
+            AND s.TYPE_SALESMAN = 1 
+            AND s.ID_SPC_MANAGER IS NOT NULL
+         ) AS total_salesman')
+
             );
 
         // Searching
@@ -90,6 +96,7 @@ class DistributorController extends Controller
         $data = DB::table('salesman')
             ->where('ID_DISTRIBUTOR', $id)
             ->where('TYPE_SALESMAN', 1)
+            ->whereNotNull('ID_SPC_MANAGER')
             ->orderBy('ID_SALESMAN', 'asc')
             ->paginate(7);
 

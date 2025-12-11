@@ -442,7 +442,8 @@ body,
 }
 
 table.table {
-    table-layout: fixed !important; /* Kunci layout agar tidak bergeser meski data banyak */
+    table-layout: fixed !important;
+    /* Kunci layout agar tidak bergeser meski data banyak */
 }
 
 /* Padding disamakan dengan halaman ASS */
@@ -470,13 +471,15 @@ table.table td:first-child {
 /* Kolom kedua — ID Distributor */
 table.table th:nth-child(2),
 table.table td:nth-child(2) {
-    width: 100px !important; /* proporsional seperti ASS */
+    width: 100px !important;
+    /* proporsional seperti ASS */
 }
 
 /* Kolom ketiga — Nama Distributor */
 table.table th:nth-child(3),
 table.table td:nth-child(3) {
-    width: 260px !important; /* sama seperti ASS */
+    width: 260px !important;
+    /* sama seperti ASS */
 }
 
 /* Kolom ke-4 — Total Salesman (fixed) */
@@ -492,8 +495,6 @@ table.table th:last-child,
 table.table td:last-child {
     /* biarkan default */
 }
-
-
 </style>
 
 @endpush

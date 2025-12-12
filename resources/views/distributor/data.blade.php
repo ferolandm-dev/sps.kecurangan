@@ -79,20 +79,20 @@
                                 <tr>
                                     <th class="text-center" style="width:5%">#</th>
 
-                                    <th style="width:20%;">
+                                    <th style="width:30%;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
-                'sort_by' => 'ID_DISTRIBUTOR',
-                'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-            ])) }}" class="text-success text-decoration-none">
+                                            'sort_by' => 'ID_DISTRIBUTOR',
+                                            'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
 
                                     <th style="width:20%;">
                                         <a href="{{ route('distributor.data', array_merge(request()->query(), [
-                'sort_by' => 'NAMA_DISTRIBUTOR',
-                'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-            ])) }}" class="text-success text-decoration-none">
+                                            'sort_by' => 'NAMA_DISTRIBUTOR',
+                                            'sort_order' => (request('sort_by') === 'NAMA_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+                                        ])) }}" class="text-success text-decoration-none">
                                             Nama Distributor
                                         </a>
                                     </th>
@@ -155,14 +155,13 @@
             <div class="modal-body" style="font-size:15px; color:#333;">
                 <div id="salesmanTotal"></div>
 
-                <div class="table-responsive" style="max-height:55vh; overflow-y:auto;">
+                <div class="modal-table-wrapper">
                     <table class="table table-bordered table-striped">
                         <thead style="background:#29b14a; color:white;">
                             <tr>
                                 <th class="text-center">#</th>
                                 <th style="width:120px;">ID Salesman</th>
                                 <th class="text-left">Nama Salesman</th>
-
                             </tr>
                         </thead>
 
@@ -438,62 +437,168 @@ body,
 
 .table-responsive {
     overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch !important;
 }
 
-table.table {
-    table-layout: fixed !important;
-    /* Kunci layout agar tidak bergeser meski data banyak */
+.table-responsive table {
+    width: 100%;
+    white-space: nowrap !important;
+    table-layout: auto !important;
+    min-width: max-content !important;
 }
 
-/* Padding disamakan dengan halaman ASS */
+/* Padding sama seperti Master Salesman */
 table.table th,
 table.table td {
     white-space: nowrap !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-}
-
-/* Header rata kiri */
-table.table th {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
     text-align: left !important;
 }
 
-/* Kolom pertama (#) — samakan dengan ASS */
+/* Kolom pertama (#) — lebih ke kiri (rapat seperti di Salesman) */
 table.table th:first-child,
 table.table td:first-child {
     text-align: center !important;
-    padding-left: 0 !important;
-    width: 19px !important;
+    padding-left: 0px !important;
+    margin-left: -8px !important;
+    width: 36px !important;
 }
 
-
-/* Kolom kedua — ID Distributor */
+/* Kolom ID Distributor */
 table.table th:nth-child(2),
 table.table td:nth-child(2) {
-    width: 100px !important;
-    /* proporsional seperti ASS */
+    width: 140px !important;
 }
 
-/* Kolom ketiga — Nama Distributor */
+/* Kolom Nama Distributor */
 table.table th:nth-child(3),
 table.table td:nth-child(3) {
-    width: 260px !important;
-    /* sama seperti ASS */
+    width: 400px !important;
+    padding-left: 8px !important;
 }
 
-/* Kolom ke-4 — Total Salesman (fixed) */
-table.table th:nth-child(4),
-table.table td:nth-child(4) {
-    width: 107px !important;
-    text-align: center !important;
-    overflow: hidden !important;
+table.table th:nth-child(3),
+table.table td:nth-child(3) {
+    width: 440px !important;
+    padding-left: 8px !important;
 }
 
-/* Hilangkan aturan last-child yang membuat geser */
+
+
+/* Kolom terakhir tetap rata tengah */
 table.table th:last-child,
 table.table td:last-child {
-    /* biarkan default */
+    text-align: center !important;
+}
+
+
+
+/* ============================================================
+   FIX MODAL BACKDROP TERLALU GELAP & MENGHALANGI KLIK
+   ============================================================ */
+.modal-backdrop.show {
+    opacity: 0.15 !important;
+    /* tidak gelap */
+    background: rgba(0, 0, 0, 0.15) !important;
+    pointer-events: none !important;
+    /* supaya backdrop tidak memblok klik */
+}
+
+/* Tombol navigasi modal */
+#modalPrev,
+#modalNext,
+#modalCloseBtn {
+    z-index: 2106 !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #333 !important;
+}
+
+/* ====== FIX TABEL MOBILE ====== */
+@media screen and (max-width: 768px) {
+
+    .table-responsive table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        min-width: 600px;
+        /* cegah header bertumpuk */
+    }
+
+    /* Kolom # agar tidak turun */
+    table.table th:first-child,
+    table.table td:first-child {
+        width: 40px !important;
+    }
+}
+
+/* ================================
+   FIX MODAL TABLE RESPONSIVE
+   ================================ */
+
+.modal-table-wrapper {
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+/* Tabel modal: tidak bertumpuk & rapi */
+#modalSalesman table {
+    min-width: 600px !important;
+    /* diperbesar agar kolom rapi */
+    white-space: nowrap !important;
+    table-layout: auto !important;
+}
+
+/* Header tabel tetap menempel saat scroll */
+#modalSalesman thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #29b14a !important;
+    color: white !important;
+}
+
+/* ===============================
+   ALIGNMENT & PADDING (PERBAIKAN)
+   =============================== */
+
+/* Padding sel pada modal — samakan dengan tabel utama */
+#modalSalesman table th,
+#modalSalesman table td {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    text-align: left !important;
+    /* default rata kiri */
+    vertical-align: middle !important;
+}
+
+/* Kolom pertama (#) — tetap center */
+#modalSalesman table th:nth-child(1),
+#modalSalesman table td:nth-child(1) {
+    text-align: center !important;
+    width: 50px !important;
+    padding-left: 0 !important;
+}
+
+/* Kolom kedua (ID Salesman) — rata kiri */
+#modalSalesman table th:nth-child(2),
+#modalSalesman table td:nth-child(2) {
+    text-align: left !important;
+    width: 140px !important;
+}
+
+/* Kolom ketiga (Nama Salesman) — FIX: benar-benar rata kiri */
+#modalSalesman table th:nth-child(3),
+#modalSalesman table td:nth-child(3) {
+    text-align: left !important;
+    width: 350px !important;
+    padding-left: 10px !important;
 }
 </style>
 

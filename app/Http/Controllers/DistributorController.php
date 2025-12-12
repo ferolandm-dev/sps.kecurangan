@@ -91,12 +91,10 @@ class DistributorController extends Controller
             ->paginate(7);
 
         return response()->json([
-            'data'           => $data->items(),                                // list datanya
-            'first'          => $data->firstItem(),                            // nomor pertama di halaman itu
-            'total_salesman' => $data->total(),                                // total salesman
-            'pagination'     => $data->links('pagination::modal')->render(),   // pagination
+            'data'           => $data->items(),                              
+            'first'          => $data->firstItem(),                          
+            'total_salesman' => $data->total(),                              
+            'pagination'     => $data->links('pagination::modal')->render(), 
         ]);
     }
-
-
 }

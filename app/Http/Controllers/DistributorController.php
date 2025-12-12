@@ -29,17 +29,7 @@ class DistributorController extends Controller
         if (!in_array($sortOrder, ['asc', 'desc'])) $sortOrder = 'asc';
 
         // Tambahkan subquery total salesman
-        $query = DB::table('distributor')
-            ->select(
-                'distributor.*',
-                DB::raw('(SELECT COUNT(*) 
-          FROM salesman s 
-          WHERE s.ID_DISTRIBUTOR = distributor.ID_DISTRIBUTOR 
-            AND s.TYPE_SALESMAN = 1 
-            AND s.ID_SPC_MANAGER IS NOT NULL
-         ) AS total_salesman')
-
-            );
+        $query = DB::table('distributor')->select('distributor.*', DB::raw('(SELECT COUNT(*) FROM salesman s WHERE s.ID_DISTRIBUTOR = distributor.ID_DISTRIBUTOR AND s.TYPE_SALESMAN = 1 AND s.ID_SPC_MANAGER IS NOT NULL ) AS total_salesman'));
 
         // Searching
         if ($request->filled('search')) {

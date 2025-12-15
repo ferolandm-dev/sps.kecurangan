@@ -26,6 +26,7 @@ class DashboardController extends Controller
         // Total salesman aktif (TYPE_SALESMAN = 1)
         $totalSalesAktif = DB::table('salesman')
             ->where('TYPE_SALESMAN', 1)
+            ->whereNotNull('ID_SPC_MANAGER')
             ->count();
 
 
@@ -55,7 +56,8 @@ class DashboardController extends Controller
         $topDistributors = DB::table('distributor')
             ->leftJoin('salesman', function ($join) {
                 $join->on('salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
-                     ->where('salesman.TYPE_SALESMAN', 1);
+                     ->where('salesman.TYPE_SALESMAN', 1)
+                     ->whereNotNull('salesman.ID_SPC_MANAGER');
             })
             ->select(
                 'distributor.ID_DISTRIBUTOR as id',
@@ -233,6 +235,7 @@ class DashboardController extends Controller
         ================================================================ */
         $leaderboardDistributor = DB::table('kecurangan')
             ->leftJoin('distributor', 'distributor.ID_DISTRIBUTOR', '=', 'kecurangan.DISTRIBUTOR')
+            ->where('VALIDASI', 1)
             ->select(
                 'kecurangan.DISTRIBUTOR as distributor',
                 DB::raw('COUNT(kecurangan.ID) as total_kecurangan'),

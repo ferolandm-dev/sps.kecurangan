@@ -17,6 +17,7 @@ class SalesmanController extends Controller
     {
         $query = DB::table('salesman')
             ->whereIn('TYPE_SALESMAN', [1])
+            ->whereNotNull('ID_SPC_MANAGER')
             ->leftJoin('distributor', 'salesman.ID_DISTRIBUTOR', '=', 'distributor.ID_DISTRIBUTOR')
             ->select(
                 'salesman.*',
@@ -92,9 +93,6 @@ class SalesmanController extends Controller
             'total_nilai' => $totalNilai
         ]);
     }
-
-
-
 
     // =========================================================================================
     // EXPORT EXCEL

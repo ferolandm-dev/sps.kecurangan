@@ -106,6 +106,13 @@
         }
 
         /* =========================================
+        RULE KHUSUS MASTER SALESMAN
+        ========================================= */
+        elseif ($labelLower === 'master salesman') {
+            $url = url('/salesman/data');
+        }
+        
+        /* =========================================
         RULE KHUSUS UNTUK "Report Kasus" & "Transaksi Kasus"
         ========================================= */
         elseif (Str::contains($labelLower, 'kasus')) {

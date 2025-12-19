@@ -89,97 +89,110 @@
                         <table class="table table-hover align-middle mb-0 kecurangan-table" style="color:#333;">
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th class="col-no text-center" style="width:40px;">#</th>
+                                    <th class="col-no text-center">#</th>
 
                                     {{-- ID SALES --}}
-                                    <th class="col-id-sales" style="width:150px; text-align:center">
+                                    <th class="col-id-sales text-center">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                                        'sort_by' => 'ID_SALES',
-                                        'sort_order' => (request('sort_by') === 'ID_SALES' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'ID_SALES',
+                'sort_order' => (request('sort_by') === 'ID_SALES' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             ID Sales
                                         </a>
                                     </th>
 
                                     {{-- NAMA SALES --}}
-                                    <th class="col-nama-sales" style="width:200px;">
+                                    <th class="col-nama-sales">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                                        'sort_by' => 'NAMA_SALESMAN',
-                                        'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'NAMA_SALESMAN',
+                'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nama Sales
                                         </a>
                                     </th>
 
                                     {{-- DISTRIBUTOR --}}
-                                    <th class="col-distributor" style="width:350px;">
+                                    <th class="col-distributor">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                                        'sort_by' => 'DISTRIBUTOR',
-                                        'sort_order' => (request('sort_by') === 'DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'DISTRIBUTOR',
+                'sort_order' => (request('sort_by') === 'DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Distributor
                                         </a>
                                     </th>
 
                                     {{-- NAMA ASS --}}
-                                    <th class="col-nama-ass" style="width:300px;">
+                                    <th class="col-nama-ass">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                                        'sort_by' => 'NAMA_ASS',
-                                        'sort_order' => (request('sort_by') === 'NAMA_ASS' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'NAMA_ASS',
+                'sort_order' => (request('sort_by') === 'NAMA_ASS' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
                                         </a>
                                     </th>
 
                                     {{-- JENIS SANKSI --}}
-                                    <th class="col-jenis-sanksi" style="width:150px;">
+                                    <th class="col-jenis-sanksi">
                                         Jenis Sanksi
                                     </th>
 
                                     {{-- KETERANGAN SANKSI --}}
-                                    <th class="col-ket-sanksi" style="width:320px;">
+                                    <th class="col-ket-sanksi">
                                         Keterangan Sanksi
                                     </th>
 
                                     {{-- NILAI SANKSI --}}
-                                    <th class="col-nilai-sanksi" style="width:160px;">
+                                    <th class="col-nilai-sanksi">
                                         Nilai Sanksi
                                     </th>
 
-                                    <th class="col-toko" style="width:200px;">Toko</th>
-                                    <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
+                                    {{-- TOKO --}}
+                                    <th class="col-toko">
+                                        Toko
+                                    </th>
 
-                                    {{-- TANGGAL --}}
-                                    <th class="col-tanggal text-center" style="width:180px;">
+                                    {{-- KUNJUNGAN --}}
+                                    <th class="col-kunjungan text-center">
+                                        Kunjungan
+                                    </th>
+
+                                    {{-- TANGGAL KASUS --}}
+                                    <th class="col-tanggal text-center">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                                        'sort_by' => 'TANGGAL',
-                                        'sort_order' => (request('sort_by') === 'TANGGAL' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'TANGGAL',
+                'sort_order' => (request('sort_by') === 'TANGGAL' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Tanggal Kasus
                                         </a>
                                     </th>
 
                                     {{-- CREATED AT --}}
-                                    <th class="col-created text-center" style="width:150px;">
+                                    <th class="col-created text-center">
                                         <a href="{{ route('kecurangan.index', array_merge(request()->query(), [
-                                            'sort_by' => 'CREATED_AT',
-                                            'sort_order' => (request('sort_by') === 'CREATED_AT' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                        ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'CREATED_AT',
+                'sort_order' => (request('sort_by') === 'CREATED_AT' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Tanggal Buat
                                         </a>
                                     </th>
 
                                     {{-- KETERANGAN --}}
-                                    <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
+                                    <th class="col-keterangan text-center">
+                                        Keterangan
+                                    </th>
 
                                     {{-- KUARTAL --}}
-                                    <th class="col-kuartal" style="width:110px;">Kuartal</th>
+                                    <th class="col-kuartal">
+                                        Kuartal
+                                    </th>
 
                                     {{-- AKSI --}}
-                                    <th class="col-aksi text-center" style="width:200px;">Aksi</th>
+                                    <th class="col-aksi text-center">
+                                        Aksi
+                                    </th>
                                 </tr>
-
                             </thead>
+
 
                             <tbody>
                                 @forelse ($kecurangan as $index => $item)
@@ -417,475 +430,26 @@
 
 @endsection
 @push('styles')
+{{-- ========== LOAD CSS ========== --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
-<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
-<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-<style>
-.kecurangan-table {
-    table-layout: fixed !important;
-    width: 100%;
-}
-
-.kecurangan-table thead th {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
-    vertical-align: middle;
-}
-
-.kecurangan-table tbody td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.table-responsive {
-    overflow-x: auto;
-}
-
-input:invalid,
-textarea:invalid,
-select:invalid {
-    box-shadow: none !important;
-    border-color: #ced4da !important;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #4caf50 !important;
-}
-
-/* ===============================
-   GLOBAL BACKGROUND
-=============================== */
-body,
-.wrapper,
-.main-panel {
-    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-attachment: fixed !important;
-}
-
-/* ===============================
-   MOBILE FIX (BACKDROP BUG)
-=============================== */
-@media (max-width: 768px) {
-    body,
-    .wrapper,
-    .main-panel {
-        background-attachment: scroll !important;
-    }
-}
-
-/* ===============================
-   FIX MODAL HP (gelap + tidak bisa klik)
-=============================== */
-.modal-backdrop {
-    z-index: 1060 !important;
-    pointer-events: none !important;
-}
-
-.modal {
-    z-index: 1070 !important;
-    pointer-events: auto !important;
-}
-
-/* Hilangkan gelap backdrop */
-.modal-backdrop.show {
-    opacity: 0 !important;
-    background-color: transparent !important;
-}
-
-.panel-header-sps {
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-.content {
-    background: transparent !important;
-}
-
-/* ===============================
-   NAVBAR — Soft UI Gradient
-=============================== */
-.navbar-soft {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    border: none !important;
-    box-shadow: none !important;
-
-    height: 95px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
-.navbar-soft .navbar-brand {
-    color: #ffffff !important;
-    font-size: 22px !important;
-    font-weight: 700;
-}
-
-.navbar-soft .nav-link i {
-    color: #ffffff !important;
-    font-size: 22px;
-    transition: .2s ease;
-}
-
-.navbar-soft .nav-link:hover i {
-    color: #333 !important;
-}
-
-.navbar-soft {
-    transition: none !important;
-}
-
-.navbar-soft .nav-link i,
-.navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important;
-}
-
-/* ===============================
-   PAGINATION — Soft UI
-=============================== */
-.pagination {
-    display: flex;
-    gap: 6px;
-}
-
-.pagination .page-item {
-    transition: 0.25s ease;
-}
-
-.pagination .page-link {
-    color: #29b14a !important;
-    border: none !important;
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    padding: 8px 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    transition: 0.25s ease-in-out;
-}
-
-.pagination .page-link:hover {
-    background: #29b14a !important;
-    color: #fff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
-}
-
-.pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-    box-shadow: 0 6px 20px rgba(41, 177, 74, 0.45) !important;
-    transform: translateY(-2px);
-}
-
-.pagination .page-item.disabled .page-link {
-    background: #f1f1f1 !important;
-    color: #b4b4b4 !important;
-    box-shadow: none !important;
-}
-
-/* ===============================
-   GLOBAL BUTTON STYLE — Soft UI
-=============================== */
-.btn {
-    border: none !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    padding: 8px 18px !important;
-    transition: 0.25s ease-in-out !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-}
-
-.btn-success {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-}
-
-.btn-success:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
-    color: white !important;
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
-    color: #333 !important;
-}
-
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
-}
-
-.btn-warning {
-    background: linear-gradient(135deg, #eee733, #faf26b) !important;
-    color: #333 !important;
-}
-
-.btn-warning:hover {
-    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
-}
-
-.btn-round {
-    border-radius: 30px !important;
-}
-
-.btn i {
-    font-size: 15px;
-    margin-right: 6px;
-}
-
-.btn:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-    box-shadow: none !important;
-}
-
-/* ===============================
-   SEARCH BAR
-=============================== */
-.action-bar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.search-group {
-    display: flex;
-    align-items: center;
-    width: 260px;
-    min-width: 260px;
-}
-
-.search-input {
-    height: 35px !important;
-    border-radius: 20px 0 0 20px !important;
-    border: 1px solid #cfd3d6 !important;
-    padding-left: 15px !important;
-    background: #fff;
-    transition: .2s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    font-size: 14px;
-}
-
-.search-btn {
-    height: 35px !important;
-    border-radius: 0 20px 20px 0 !important;
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    border: none !important;
-    color: #fff !important;
-    padding: 0 16px !important;
-    box-shadow: 0 4px 10px rgba(41, 177, 74, 0.3) !important;
-    transition: .2s ease-in-out;
-}
-
-.search-btn:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
-}
-
-/* ===============================
-   MODAL PREV/NEXT BUTTONS
-=============================== */
-#modalPrev,
-#modalNext {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-    color: #333 !important;
-}
-
-#modalPrev:hover,
-#modalNext:hover,
-#modalPrev:focus,
-#modalNext:focus,
-#modalPrev:active,
-#modalNext:active {
-    opacity: 0.6 !important;
-}
-
-#modalPrev::-moz-focus-inner,
-#modalNext::-moz-focus-inner {
-    border: 0 !important;
-    padding: 0 !important;
-}
-
-button#modalPrev.btn,
-button#modalNext.btn {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-</style>
+<link rel="stylesheet" href="{{ asset('assets/css/global-focus-input.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-background-wrapper.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-header.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn-variant.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-pagination.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-search-bar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-backdrop.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-table-stable.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/modal-navigation-buttons.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/index-kecurangan.css') }}">
 @endpush
 
 @push('js')
-<script>
-$(document).ready(function() {
-
-    let fotoList = [];
-    let currentIndex = 0;
-
-    // === MODAL LIHAT BUKTI ===
-    $('.btn-lihat-bukti').on('click', function() {
-        const id = $(this).data('id');
-        fotoList = [];
-        currentIndex = 0;
-
-        $('#modalBukti').modal({
-            backdrop: 'static',
-            keyboard: true,
-            show: true
-        });
-
-        $.ajax({
-            url: `/kecurangan/${id}/bukti`,
-            method: 'GET',
-            beforeSend: function() {
-                $('#modalImage').attr('src', '').attr('alt', 'Memuat...');
-            },
-            success: function(response) {
-                if (!response.length) {
-                    $('#modalImage').attr('alt', 'Tidak ada foto.');
-                    return;
-                }
-
-                fotoList = response.map(f => f.url);
-                showModalImage(currentIndex);
-            },
-            error: function() {
-                $('#modalImage').attr('alt', 'Gagal memuat foto.');
-            }
-        });
-    });
-
-    function showModalImage(index) {
-        if (!fotoList.length) return;
-
-        $('#modalImage').addClass('fade-out');
-        setTimeout(() => {
-            $('#modalImage')
-                .attr('src', fotoList[index])
-                .removeClass('fade-out');
-        }, 150);
-    }
-
-    $('#modalNext').on('click', function() {
-        if (!fotoList.length) return;
-        currentIndex = (currentIndex + 1) % fotoList.length;
-        showModalImage(currentIndex);
-    });
-
-    $('#modalPrev').on('click', function() {
-        if (!fotoList.length) return;
-        currentIndex = (currentIndex - 1 + fotoList.length) % fotoList.length;
-        showModalImage(currentIndex);
-    });
-
-    // keyboard
-    $(document).on('keydown', function(e) {
-        if (!$('#modalBukti').hasClass('show')) return;
-        if (e.key === 'Escape') $('#modalBukti').modal('hide');
-        else if (e.key === 'ArrowRight') $('#modalNext').trigger('click');
-        else if (e.key === 'ArrowLeft') $('#modalPrev').trigger('click');
-    });
-
-    // Lock scroll saat modal buka
-    $('#modalBukti').on('shown.bs.modal', function() {
-        $('body').css('overflow', 'hidden');
-
-        $('#modalBukti').css('overflow', 'hidden');
-        $('#modalBukti .modal-body').css({
-            'overflow': 'hidden',
-            'touch-action': 'none'
-        });
-
-        $(document).on('touchmove.modalBlock', function(e) {
-            if ($('#modalBukti').hasClass('show') &&
-                $(e.target).closest('#modalBukti').length) {
-                e.preventDefault();
-            }
-        });
-    });
-
-    // Reset setelah modal tutup
-    $('#modalBukti').on('hidden.bs.modal', function() {
-        $('#modalImage').attr('src', '');
-        fotoList = [];
-        currentIndex = 0;
-
-        $('body').css('overflow', 'auto');
-        $('#modalBukti, #modalBukti .modal-body').css({
-            'overflow': '',
-            'touch-action': ''
-        });
-
-        $(document).off('touchmove.modalBlock');
-    });
-
-    // === MODAL KETERANGAN ===
-    $('.btn-lihat-keterangan').on('click', function() {
-        const isi = $(this).data('keterangan');
-        $('#isiKeterangan').text(isi);
-        $('#modalKeterangan').modal('show');
-    });
-
-});
-
-// =============================
-//      MODAL KONFIRMASI
-// =============================
-$(document).on('click', '.btn-confirm', function() {
-
-    let action = $(this).data('action');
-    let url = $(this).data('url');
-
-    // Atur form action
-    $('#confirmForm').attr('action', url);
-
-    // Default method POST
-    $('#confirmForm input[name="_method"]').remove();
-
-    if (action === 'delete') {
-        $('#confirmIcon').css('color', '#e74c3c');
-        $('#confirmTitle').text('Hapus Data?');
-        $('#confirmMessage').text('Data yang dihapus tidak dapat dikembalikan.');
-
-        // Tambah _method DELETE
-        $('#confirmForm').append('<input type="hidden" name="_method" value="DELETE">');
-
-    } else if (action === 'validasi') {
-        $('#confirmIcon').css('color', '#29b14a');
-        $('#confirmTitle').text('Validasi Data?');
-        $('#confirmMessage').text('Pastikan data sudah benar sebelum divalidasi.');
-    }
-
-    $('#modalConfirm').modal('show');
-});
-</script>
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
+<script src="{{ asset('assets/js/index-kecurangan.js') }}"></script>
 @endpush

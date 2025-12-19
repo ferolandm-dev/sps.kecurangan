@@ -1,0 +1,10 @@
+.modal-backdrop.show {
+    opacity: 0.15 !important;
+    background: rgba(0,0,0,0.15) !important;
+    pointer-events: none !important;
+}
+
+.modal {
+    z-index: 2105 !important;
+    pointer-events: auto !important;
+}

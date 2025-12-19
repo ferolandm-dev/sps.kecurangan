@@ -1,0 +1,252 @@
+/* ============================================================
+   GLOBAL PAGE BACKGROUND
+============================================================ */
+body,
+.wrapper,
+.main-panel {
+    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
+    background-attachment: fixed !important;
+}
+
+.panel-header-sps,
+.content {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* ============================================================
+   FADE-UP ANIMATION
+============================================================ */
+.fade-up {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.fade-up.in-view {
+    animation: fadeUp .6s forwards;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   GLASS CARDS / GLASS PANEL STYLE
+============================================================ */
+.glass-panel,
+.glass-card {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    border: 1px solid rgba(41, 177, 74, 0.12);
+}
+
+/* ============================================================
+   CARD TILT EFFECT
+============================================================ */
+.card-tilt {
+    perspective: 1000px;
+}
+
+.tilt-inner {
+    transform-style: preserve-3d;
+    transition: transform .2s;
+}
+
+/* ============================================================
+   TABLE HEADER STYLE
+============================================================ */
+.table thead th {
+    color: #29b14a;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   BADGE SOFT STYLE
+============================================================ */
+.badge-soft {
+    background: rgba(41, 177, 74, 0.14);
+    color: #29b14a;
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+/* ============================================================
+   VIEW SELECTOR (NAVBAR-STYLE)
+============================================================ */
+.view-selector-bar-wrapper {
+    margin-bottom: 18px;
+}
+
+.view-selector-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    gap: 8px;
+
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+
+    font-weight: 700;
+    color: #2f2f2f;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(41, 177, 74, 0.12);
+
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    transition: all .18s ease;
+}
+
+.view-btn i {
+    font-size: 18px;
+    color: rgba(41, 177, 74, 0.9);
+}
+
+/* Active button */
+.view-btn.active {
+    background: linear-gradient(135deg, #29b14a, #34d058);
+    color: #fff;
+    border: none;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(41, 177, 74, 0.22);
+}
+
+.view-btn.active i {
+    color: #fff;
+}
+
+/* Hover effect */
+.view-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* Mobile layout */
+@media (max-width: 576px) {
+    .view-btn {
+        flex: 1 1 100%;
+        padding-left: 12px;
+        min-width: auto;
+        justify-content: flex-start;
+    }
+}
+
+/* Remove focus outline */
+.view-btn:focus,
+.view-btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ============================================================
+   CALENDAR HEATMAP
+============================================================ */
+.calendar-heatmap {
+    display: grid;
+    grid-template-columns: repeat(53, 14px);
+    grid-gap: 3px;
+
+    margin-top: 20px;
+    padding: 20px;
+
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+}
+
+.calendar-day {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    background: #e9ecef;
+    transition: .2s ease;
+}
+
+.calendar-day.level-1 {
+    background: rgba(41, 177, 74, 0.25);
+}
+
+.calendar-day.level-2 {
+    background: rgba(41, 177, 74, 0.55);
+}
+
+.calendar-day.level-3 {
+    background: rgba(41, 177, 74, 0.75);
+}
+
+.calendar-day.level-4 {
+    background: rgba(41, 177, 74, 1);
+}
+
+.calendar-day:hover {
+    transform: scale(1.25);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================================
+   HEATMAP TOOLTIP
+============================================================ */
+.heatmap-tooltip {
+    position: fixed;
+    z-index: 99999;
+    pointer-events: none;
+
+    padding: 6px 10px;
+    font-size: 12px;
+
+    background: rgba(0, 0, 0, 0.80);
+    color: #fff;
+    border-radius: 6px;
+
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity .15s ease, transform .15s ease;
+}
+
+/* ============================================================
+   HEATMAP LEGEND
+============================================================ */
+.heatmap-legend {
+    margin-top: 14px;
+    padding: 10px 15px;
+    border-radius: 12px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.legend-item {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.legend-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+.legend-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}

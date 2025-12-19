@@ -275,6 +275,21 @@ class DashboardController extends Controller
 
 
         /* ================================================================
+        TOP 5 DISTRIBUTOR BERDASARKAN TOTAL CUSTOMER
+        =============================================================== */
+        $totalCustomerTopDistributor = DB::table('customer')
+            ->join('distributor', 'distributor.ID_DISTRIBUTOR', '=', 'customer.ID_DISTRIBUTOR')
+            ->select(
+                'customer.ID_DISTRIBUTOR',
+                'distributor.NAMA_DISTRIBUTOR',
+                DB::raw('COUNT(customer.ID_CUST) as total_customer')
+            )
+            ->groupBy('customer.ID_DISTRIBUTOR', 'distributor.NAMA_DISTRIBUTOR')
+            ->orderByDesc('total_customer')
+            ->limit(5)
+            ->get();
+
+        /* ================================================================
            RETURN VIEW
         ================================================================ */
         return view('dashboard', compact(
@@ -295,7 +310,8 @@ class DashboardController extends Controller
             'latestYear',
             'leaderboardDistributor',
             'recentFraudCases',
-            'totalAssAktif'
+            'totalAssAktif',
+            'totalCustomerTopDistributor'
         ));
     }
 }

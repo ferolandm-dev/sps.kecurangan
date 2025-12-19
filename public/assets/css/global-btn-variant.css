@@ -1,0 +1,36 @@
+.btn-success {
+    background: linear-gradient(135deg, #29b14a, #34d058) !important;
+    color: #fff !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #25a344, #2fc655) !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
+    color: #fff !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
+    color: #333 !important;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #eee733, #faf26b) !important;
+    color: #333 !important;
+}
+
+.btn-round {
+    border-radius: 30px !important;
+}
+
+.btn i {
+    font-size: 15px;
+    margin-right: 6px;
+}

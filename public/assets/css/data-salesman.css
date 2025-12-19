@@ -1,0 +1,27 @@
+/* Total & Pagination */
+#kecuranganBottom {
+    flex-shrink: 0;
+    margin-top: 10px;
+}
+
+#kecuranganPagination {
+    flex-shrink: 0;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* KHUSUS kolom ke-3 (Keterangan Sanksi) di modal */
+#modalKecurangan table th:nth-child(3),
+#modalKecurangan table td:nth-child(3) {
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+    vertical-align: top;
+    max-width: 320px;
+}
+
+/* Header kolom keterangan biar rapi */
+#modalKecurangan table thead th:nth-child(3) {
+    text-align: left;
+}

@@ -1,0 +1,12 @@
+input:invalid,
+textarea:invalid,
+select:invalid {
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #4caf50 !important;
+}

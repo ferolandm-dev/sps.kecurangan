@@ -153,146 +153,25 @@
 @endsection
 
 @push('styles')
-<style>
-/* =====================================================
-   FIX VALIDATION STATE (hilangkan border merah default)
-===================================================== */
-input:invalid,
-textarea:invalid,
-select:invalid {
-    box-shadow: none !important;
-    border-color: #ced4da !important;
-}
+{{-- ========== LOAD CSS ========== --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-focus-input.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-background-wrapper.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-header.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn-variant.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-pagination.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-search-bar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-backdrop.css') }}">
 
-/* Focus state hijau */
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #4caf50 !important;
-}
-
-
-
-/* =====================================================
-   GLOBAL PAGE BACKGROUND
-   (Gradient halaman utama sesuai tema)
-===================================================== */
-body,
-.wrapper,
-.main-panel {
-    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-attachment: fixed !important;
-}
-
-/* Panel header transparan */
-.panel-header-sps {
-    background: transparent !important;
-}
-
-/* Konten full transparan */
-.content {
-    background: transparent !important;
-}
-
-
-
-/* =====================================================
-   NAVBAR CUSTOM (Tetap tema hijau–kuning)
-===================================================== */
-.navbar-soft {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    height: 95px !important;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
-/* Brand text */
-.navbar-soft .navbar-brand {
-    color: #fff !important;
-    font-weight: 700;
-}
-
-
-
-/* =====================================================
-   BUTTON GLOBAL (Soft UI)
-===================================================== */
-.btn {
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    transition: 0.25s !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* Hover effect tetap sama */
-.btn:hover {
-    transform: translateY(-2px);
-}
-
-
-
-/* =====================================================
-   SPECIFIC BUTTON COLORS
-===================================================== */
-
-/* Success (Hijau) */
-.btn-success {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-}
-
-/* Secondary (Abu lembut) */
-.btn-secondary {
-    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
-    color: #333 !important;
-}
-
-
-
-/* =====================================================
-   ROUND BUTTON (kapsul)
-===================================================== */
-.btn-round {
-    border-radius: 30px !important;
-}
-</style>
 @endpush
 
-
 @push('js')
-
-<!-- ============================================
-     SIDEBAR FIX (Style & Script)
-============================================ -->
-<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
 <script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
-
-<!-- ============================================
-     UI LOCK (Prevent UI glitch / freeze)
-============================================ -->
-<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-
-<!-- ============================================
-     SELECT2 (Dropdown modern)
-============================================ -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
-<script>
-/* =======================================================
-   INIT SELECT2 UNTUK FIELD "jenis"
-   - Placeholder tetap "-- Pilih Jenis --"
-   - Full width
-   - Tidak mengubah fungsi asli sedikit pun
-======================================================= */
-$(document).ready(function() {
-    $('#jenis').select2({
-        placeholder: "-- Pilih Jenis --",
-        width: '100%'
-    });
-});
-</script>
-
+<script src="{{ asset('assets/js/edit-sanksi.js') }}"></script>
 @endpush

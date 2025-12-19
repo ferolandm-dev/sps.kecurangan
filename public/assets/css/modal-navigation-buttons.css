@@ -1,0 +1,31 @@
+/* ============================================================
+   MODAL PREV / NEXT BUTTONS
+============================================================ */
+
+#modalPrev,
+#modalNext,
+#modalCloseBtn {
+    z-index: 2106 !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    color: #333 !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+#modalPrev:hover,
+#modalNext:hover,
+#modalPrev:focus,
+#modalNext:focus,
+#modalPrev:active,
+#modalNext:active {
+    opacity: 0.6 !important;
+}
+
+#modalPrev::-moz-focus-inner,
+#modalNext::-moz-focus-inner {
+    border: 0 !important;
+    padding: 0 !important;
+}

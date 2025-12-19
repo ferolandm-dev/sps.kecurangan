@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class SalesmanExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
 {
     /**
-     * Ambil data salesman + distributor + total kecurangan valid
+     * Ambil data salesman + distributor + total kecurangan + total customer
      */
     public function collection()
     {
@@ -23,9 +23,19 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
                 'salesman.NAMA_SALESMAN',
                 'salesman.ID_DISTRIBUTOR',
                 'distributor.NAMA_DISTRIBUTOR',
-                DB::raw('(SELECT COUNT(*) FROM kecurangan 
-                          WHERE kecurangan.id_sales = salesman.ID_SALESMAN 
-                          AND kecurangan.validasi = 1) AS total_kecurangan')
+
+                // TOTAL CUSTOMER
+                DB::raw('(SELECT COUNT(*) 
+                          FROM customer 
+                          WHERE customer.ID_SALESMAN = salesman.ID_SALESMAN
+                         ) AS total_customer'),
+
+                // TOTAL KECURANGAN
+                DB::raw('(SELECT COUNT(*) 
+                          FROM kecurangan 
+                          WHERE kecurangan.ID_SALES = salesman.ID_SALESMAN 
+                          AND kecurangan.VALIDASI = 1
+                         ) AS total_kecurangan')
             )
             ->orderBy('salesman.ID_SALESMAN', 'asc')
             ->get();
@@ -41,6 +51,7 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
             'Nama Salesman',
             'ID Distributor',
             'Nama Distributor',
+            'Total Customer',
             'Total Kecurangan'
         ];
     }
@@ -55,6 +66,7 @@ class SalesmanExport implements FromCollection, WithHeadings, WithMapping, Shoul
             $row->NAMA_SALESMAN,
             $row->ID_DISTRIBUTOR,
             $row->NAMA_DISTRIBUTOR ?? '-',
+            $row->total_customer ?? 0,
             $row->total_kecurangan ?? 0
         ];
     }

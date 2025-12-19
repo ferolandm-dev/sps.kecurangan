@@ -30,6 +30,7 @@
 
     th {
         background-color: #f0f0f0;
+        text-align: center;
     }
 
     .text-center {
@@ -45,28 +46,40 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 5%; text-align:center;">No</th>
-                <th>ID Sales</th>
-                <th>Nama Sales</th>
+                <th style="width:5%;">No</th>
+                <th>ID Salesman</th>
+                <th>Nama Salesman</th>
                 <th>ID Distributor</th>
-                <th style="text-align:center;">Total Kecurangan</th>
+                <th style="width:12%;">Total Customer</th>
+                <th style="width:15%;">Total Kecurangan</th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach ($salesman as $s)
+            @forelse ($salesman as $s)
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $s->ID_SALESMAN }}</td>
                 <td>{{ $s->NAMA_SALESMAN }}</td>
                 <td>{{ $s->ID_DISTRIBUTOR }}</td>
 
-                {{-- Kolom baru --}}
+                {{-- TOTAL CUSTOMER --}}
+                <td class="text-center">
+                    {{ $s->total_customer ?? 0 }}
+                </td>
+
+                {{-- TOTAL KECURANGAN --}}
                 <td class="text-center">
                     {{ $s->total_kecurangan ?? 0 }}
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="6" class="text-center">
+                    Tidak ada data salesman
+                </td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 

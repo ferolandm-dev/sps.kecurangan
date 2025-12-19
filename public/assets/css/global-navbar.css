@@ -1,0 +1,29 @@
+.navbar-soft {
+    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 95px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    transition: none !important;
+}
+
+.navbar-soft .navbar-brand {
+    color: #ffffff !important;
+    font-size: 22px !important;
+    font-weight: 700;
+}
+
+.navbar-soft .nav-link i {
+    color: #ffffff !important;
+    font-size: 22px;
+    transition: .25s ease;
+}
+
+.navbar-soft .nav-link:hover i {
+    color: #333 !important;
+}

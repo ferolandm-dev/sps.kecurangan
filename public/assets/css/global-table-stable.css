@@ -1,0 +1,198 @@
+/* ============================================================
+   GLOBAL TABLE STABLE
+   Untuk SEMUA tabel (beda jumlah kolom tetap rapi)
+============================================================ */
+
+/* WRAPPER */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* BASE TABLE */
+.table {
+    width: 100%;
+    table-layout: fixed;
+    /* 🔑 KUNCI UTAMA */
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* HEADER */
+.table thead th {
+    white-space: normal;
+    vertical-align: middle;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 12px 10px;
+}
+
+/* BODY CELL */
+.table tbody td {
+    vertical-align: top;
+    padding: 10px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+/* TEXT TRUNCATE (AMAN) */
+.table .text-truncate,
+.table .truncate {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* NUMERIC / CENTER */
+.table .text-center {
+    text-align: center;
+}
+
+/* BADGE TIDAK MEMBESAR */
+.table .badge,
+.table .badge-soft {
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 10px;
+}
+
+/* BUTTON DALAM TABEL */
+.table .btn {
+    padding: 5px 8px;
+    font-size: 12px;
+}
+
+/* ROW HOVER */
+.table-hover tbody tr:hover {
+    background: rgba(41, 177, 74, 0.06);
+}
+
+/* ===============================
+   KECURANGAN TABLE COLUMNS
+=============================== */
+.col-no {
+    width: 50px;
+}
+
+.col-id {
+    width: 160px;
+}
+.col-id-sales {
+    width: 140px;
+}
+
+.col-nama-sales {
+    width: 200px;
+}
+
+.col-distributor {
+    width: 320px;
+}
+
+.col-nama-ass {
+    width: 260px;
+}
+
+.col-jenis-sanksi {
+    width: 160px;
+}
+
+.col-ket-sanksi {
+    width: 320px;
+}
+
+.col-nilai-sanksi {
+    width: 160px;
+}
+
+.col-toko {
+    width: 200px;
+}
+
+.col-kunjungan {
+    width: 140px;
+}
+
+.col-tanggal {
+    width: 160px;
+}
+
+.col-created {
+    width: 160px;
+}
+
+.col-keterangan {
+    width: 180px;
+}
+
+.col-kuartal {
+    width: 110px;
+}
+
+.col-aksi {
+    width: 200px;
+}
+
+.table thead th {
+    white-space: nowrap;
+}
+
+
+/* ===============================
+   RESPONSIVE (MOBILE)
+=============================== */
+@media (max-width: 768px) {
+
+    .table thead th,
+    .table tbody td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .table .btn {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+}
+
+/* ===============================
+   FIX HEIGHT BARIS TABEL
+=============================== */
+
+/* Header: satu baris, rata tengah */
+.table thead th {
+    height: 48px;
+    line-height: 1.2;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Body: semua baris sama tinggi */
+.table tbody tr {
+    height: 56px;
+    /* 🔑 ubah angka kalau mau lebih tinggi */
+}
+
+/* Cell body */
+.table tbody td {
+    height: 56px;
+    vertical-align: middle;
+    white-space: nowrap;
+    /* ⛔ cegah turun baris */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* … */
+}
+
+/* struktur tabel dikunci */
+.table-responsive table.table {
+    width: 100%;
+    min-width: 1250px;
+    /* ❗ dibuat lebih lebar → kolom tidak padat */
+    table-layout: fixed;
+    /* ❗ WAJIB */
+}

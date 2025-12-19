@@ -173,140 +173,25 @@
 @endsection
 
 @push('styles')
-
-{{-- ============================================================
-                 STYLE GLOBAL – FORM SANTRI
-============================================================ --}}
-<style>
-/* ------------------------------------------------------------
-       VALIDASI INPUT
-    ------------------------------------------------------------ */
-input:invalid,
-textarea:invalid,
-select:invalid {
-    box-shadow: none !important;
-    border-color: #ced4da !important;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #4caf50 !important;
-}
-
-
-/* ------------------------------------------------------------
-       BACKGROUND HALAMAN
-    ------------------------------------------------------------ */
-body,
-.wrapper,
-.main-panel {
-    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-attachment: fixed !important;
-}
-
-.panel-header-sps {
-    background: transparent !important;
-}
-
-.content {
-    background: transparent !important;
-}
-
-
-/* ------------------------------------------------------------
-       NAVBAR
-    ------------------------------------------------------------ */
-.navbar-soft {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    height: 95px !important;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
-.navbar-soft .navbar-brand {
-    color: #ffffff !important;
-    font-weight: 700;
-}
-
-
-/* ------------------------------------------------------------
-       BUTTON STYLE GLOBAL
-    ------------------------------------------------------------ */
-.btn {
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    transition: 0.25s !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-}
-
-
-/* ------------------------------------------------------------
-       BUTTON VARIAN
-    ------------------------------------------------------------ */
-.btn-success {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
-    color: #333 !important;
-}
-
-
-/* ------------------------------------------------------------
-       ROUND BUTTON
-    ------------------------------------------------------------ */
-.btn-round {
-    border-radius: 30px !important;
-}
-</style>
+{{-- ========== LOAD CSS ========== --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-focus-input.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-background-wrapper.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-header.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn-variant.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-pagination.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-search-bar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-backdrop.css') }}">
 
 @endpush
 
-
-
 @push('js')
-
-{{-- ============================================================
-                    JS & PLUGIN INITIALIZATION
-============================================================ --}}
-
-{{-- Sidebar Fix --}}
 <script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
-
-{{-- UI Lock --}}
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-
-{{-- Sidebar Fix CSS --}}
-<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
-
-{{-- UI Lock CSS --}}
-<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
-
-{{-- Select2 CSS --}}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-{{-- Select2 JS --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
-{{-- ============================================================
-                    SELECT2 INITIALIZER
-============================================================ --}}
-<script>
-$(document).ready(function() {
-    $('#jenis').select2({
-        placeholder: "-- Pilih Jenis --",
-        allowClear: false,
-        width: '100%'
-    });
-});
-</script>
-
+<script src="{{ asset('assets/js/create-sanksi.js') }}"></script>
 @endpush

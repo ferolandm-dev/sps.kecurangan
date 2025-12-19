@@ -1,0 +1,66 @@
+
+/* ================================
+   FIX MODAL TABLE RESPONSIVE
+   ================================ */
+
+.modal-table-wrapper {
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+/* Tabel modal: tidak bertumpuk & rapi */
+#modalSalesman table {
+    min-width: 600px !important;
+    /* diperbesar agar kolom rapi */
+    white-space: nowrap !important;
+    table-layout: auto !important;
+}
+
+/* Header tabel tetap menempel saat scroll */
+#modalSalesman thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #29b14a !important;
+    color: white !important;
+}
+
+/* ===============================
+   ALIGNMENT & PADDING (PERBAIKAN)
+   =============================== */
+
+/* Padding sel pada modal — samakan dengan tabel utama */
+#modalSalesman table th,
+#modalSalesman table td {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    text-align: left !important;
+    /* default rata kiri */
+    vertical-align: middle !important;
+}
+
+/* Kolom pertama (#) — tetap center */
+#modalSalesman table th:nth-child(1),
+#modalSalesman table td:nth-child(1) {
+    text-align: center !important;
+    width: 50px !important;
+    padding-left: 0 !important;
+}
+
+/* Kolom kedua (ID Salesman) — rata kiri */
+#modalSalesman table th:nth-child(2),
+#modalSalesman table td:nth-child(2) {
+    text-align: left !important;
+    width: 140px !important;
+}
+
+/* Kolom ketiga (Nama Salesman) — FIX: benar-benar rata kiri */
+#modalSalesman table th:nth-child(3),
+#modalSalesman table td:nth-child(3) {
+    text-align: left !important;
+    width: 350px !important;
+    padding-left: 10px !important;
+}

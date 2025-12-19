@@ -93,36 +93,49 @@
                             style="color:#333; table-layout:fixed; width:100%;">
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th class="text-center" style="width:5%;">#</th>
+                                    <th class="col-no text-center">#</th>
 
-                                    <th style="width:20%;">
+                                    <th class="col-id">
                                         <a href="{{ route('salesman.data', array_merge(request()->query(), [
-                    'sort_by' => 'ID_SALESMAN',
-                    'sort_order' => (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'ID_SALESMAN',
+                'sort_order' =>
+                    (request('sort_by') === 'ID_SALESMAN' && request('sort_order') === 'asc')
+                    ? 'desc'
+                    : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             ID Salesman
                                         </a>
                                     </th>
 
-                                    <th style="width:20%;">
+                                    <th class="col-id">
                                         <a href="{{ route('salesman.data', array_merge(request()->query(), [
-                    'sort_by' => 'ID_DISTRIBUTOR',
-                    'sort_order' => (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'ID_DISTRIBUTOR',
+                'sort_order' =>
+                    (request('sort_by') === 'ID_DISTRIBUTOR' && request('sort_order') === 'asc')
+                    ? 'desc'
+                    : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             ID Distributor
                                         </a>
                                     </th>
 
-                                    <th style="width:35%;">
+                                    <th class="col-name">
                                         <a href="{{ route('salesman.data', array_merge(request()->query(), [
-                    'sort_by' => 'NAMA_SALESMAN',
-                    'sort_order' => (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'NAMA_SALESMAN',
+                'sort_order' =>
+                    (request('sort_by') === 'NAMA_SALESMAN' && request('sort_order') === 'asc')
+                    ? 'desc'
+                    : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nama Salesman
                                         </a>
                                     </th>
 
-                                    <th class="text-center" style="width:150px;">
+                                    <th class="col-action text-center">
+                                        Total Customer
+                                    </th>
+
+                                    <th class="col-action text-center">
                                         Total Kecurangan
                                     </th>
                                 </tr>
@@ -132,7 +145,7 @@
                             <tbody>
                                 @forelse ($salesman as $item)
                                 <tr>
-                                    <td class="text-center">
+                                    <td class=" text-center">
                                         {{ $loop->iteration + ($salesman->firstItem() - 1) }}
                                     </td>
 
@@ -140,6 +153,14 @@
                                     <td>{{ $item->ID_DISTRIBUTOR }}</td>
                                     <td>{{ $item->NAMA_SALESMAN }}</td>
 
+                                    {{-- TOTAL CUSTOMER --}}
+                                    <td class="text-center">
+                                        <span class="badge-soft text-success font-weight-bold">
+                                            {{ number_format($item->total_customer ?? 0) }}
+                                        </span>
+                                    </td>
+
+                                    {{-- TOTAL KECURANGAN --}}
                                     <td class="text-center">
                                         <span class="badge-soft text-danger font-weight-bold" style="cursor:pointer;"
                                             onclick="showKecurangan('{{ $item->ID_SALESMAN }}')">
@@ -150,12 +171,13 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="13" class="text-center text-muted">
+                                    <td colspan="6" class="text-center text-muted">
                                         Belum ada data salesman
                                     </td>
                                 </tr>
                                 @endforelse
                             </tbody>
+
                         </table>
 
                     </div>
@@ -227,508 +249,33 @@
 
 @push ('styles')
 {{-- ========== LOAD CSS ========== --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
-<style>
-/* ============================================================
-   FORM STATE (INVALID & FOCUS)
-   - Mengatur warna border saat input invalid / focus
-   ============================================================ */
-input:invalid,
-textarea:invalid,
-select:invalid {
-    box-shadow: none !important;
-    border-color: #ced4da !important;
-    /* abu default */
-}
+<link rel="stylesheet" href="{{ asset('assets/css/global-focus-input.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-background-wrapper.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-header.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn-variant.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-pagination.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-search-bar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-backdrop.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-table-stable.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/modal-navigation-buttons.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/modal-kecurangan.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/data-salesman.css') }}">
 
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #4caf50 !important;
-    /* warna hijau fokus */
-}
-
-
-/* ============================================================
-   GLOBAL BACKGROUND (BODY, WRAPPER, MAIN PANEL)
-   - Background gradient utama dashboard
-   ============================================================ */
-body,
-.wrapper,
-.main-panel {
-    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-attachment: fixed !important;
-    /* smooth scroll */
-}
-
-
-/* ============================================================
-   PANEL HEADER & CONTENT TRANSPARENT
-   ============================================================ */
-.panel-header-sps {
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-.content {
-    background: transparent !important;
-}
-
-
-/* ============================================================
-   CUSTOM NAVBAR (MIRROR GRADIENT HEADER)
-   ============================================================ */
-.navbar-soft {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    border: none !important;
-    box-shadow: none !important;
-
-    /* Ukuran navbar */
-    height: 95px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
-    /* Vertical center */
-    display: flex !important;
-    align-items: center !important;
-
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-
-    transition: none !important;
-    /* matikan transisi container */
-}
-
-/* Brand logo teks */
-.navbar-soft .navbar-brand {
-    color: #ffffff !important;
-    font-size: 22px !important;
-    font-weight: 700;
-}
-
-/* Icon di kanan navbar */
-.navbar-soft .nav-link i {
-    color: #ffffff !important;
-    font-size: 22px;
-    transition: .2s ease;
-}
-
-/* Hover icon navbar */
-.navbar-soft .nav-link:hover i {
-    color: #333 !important;
-}
-
-/* Hover smooth */
-.navbar-soft .nav-link i,
-.navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important;
-}
-
-
-/* ============================================================
-   SOFT UI PAGINATION (MODERN STYLE)
-   ============================================================ */
-.pagination {
-    display: flex;
-    gap: 6px;
-}
-
-.pagination .page-item {
-    transition: 0.25s ease;
-}
-
-/* Default state */
-.pagination .page-link {
-    color: #29b14a !important;
-    border: none !important;
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    padding: 8px 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    transition: all 0.25s ease-in-out;
-}
-
-/* Hover */
-.pagination .page-link:hover {
-    background: #29b14a !important;
-    color: #fff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
-}
-
-/* Active page */
-.pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-    box-shadow: 0 6px 20px rgba(41, 177, 74, 0.45) !important;
-    transform: translateY(-2px);
-}
-
-/* Disabled pagination */
-.pagination .page-item.disabled .page-link {
-    background: #f1f1f1 !important;
-    color: #b4b4b4 !important;
-    box-shadow: none !important;
-    cursor: not-allowed !important;
-}
-
-/* Disabled hover tetap sama */
-.pagination .page-item.disabled .page-link:hover {
-    background: #f1f1f1 !important;
-    color: #b4b4b4 !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-
-/* ============================================================
-   GLOBAL BUTTON STYLE (SOFT UI BUTTONS)
-   ============================================================ */
-.btn {
-    border: none !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    padding: 8px 18px !important;
-    transition: all 0.25s ease-in-out !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* Hover efek */
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* ================= BUTTON COLOR VARIANTS ================ */
-
-/* Hijau */
-.btn-success {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-}
-
-.btn-success:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-}
-
-/* Merah */
-.btn-danger {
-    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
-    color: white !important;
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
-}
-
-/* Abu */
-.btn-secondary {
-    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
-    color: #333 !important;
-}
-
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
-}
-
-/* Kuning */
-.btn-warning {
-    background: linear-gradient(135deg, #eee733, #faf26b) !important;
-    color: #333 !important;
-}
-
-.btn-warning:hover {
-    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
-}
-
-/* Round button */
-.btn-round {
-    border-radius: 30px !important;
-}
-
-/* Icon di tombol */
-.btn i {
-    font-size: 15px;
-    margin-right: 6px;
-}
-
-/* Disabled state */
-.btn:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-
-/* ============================================================
-   SEARCH BAR (INPUT + BUTTON)
-   ============================================================ */
-
-/* Wrapper pencarian */
-.action-bar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* Group input + tombol */
-.search-group {
-    display: flex;
-    align-items: center;
-    width: 260px;
-    min-width: 260px;
-}
-
-/* Input pencarian */
-.search-input {
-    height: 35px !important;
-    border-radius: 20px 0 0 20px !important;
-    border: 1px solid #cfd3d6 !important;
-    padding-left: 15px !important;
-    background: #fff;
-    transition: all .2s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    font-size: 14px;
-}
-
-/* Tombol search */
-.search-btn {
-    height: 35px !important;
-    border-radius: 0 20px 20px 0 !important;
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    border: none !important;
-    color: #fff !important;
-    padding: 0 16px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(41, 177, 74, 0.3) !important;
-    transition: all .2s ease-in-out;
-}
-
-.search-btn:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
-}
-
-
-/* ============================================================
-   MODAL KEKURANGAN (RESPONSIVE + SMOOTH RESIZE)
-   ============================================================ */
-
-/* Modal responsive: tinggi mengikuti isi, tapi tetap dibatasi layar */
-#modalKecurangan .modal-content {
-    height: auto !important;
-    max-height: 90vh;
-    /* batas maksimum tinggi */
-    display: flex;
-    flex-direction: column;
-    transition: max-height .25s ease, height .25s ease;
-    /* smooth resize */
-}
-
-/* Body fleksibel — membungkus tabel & pagination */
-#modalKecurangan .modal-body {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    /* hindari body ikut scroll */
-    padding-bottom: 0 !important;
-}
-
-/* Area tabel scroll — hanya tabel yang scroll, bukan seluruh modal */
-#modalKecurangan .table-wrapper-fixed {
-    flex: 1;
-    max-height: 55vh;
-    /* batas maksimal tinggi tabel */
-    min-height: 120px;
-    /* tetap rapi walau data sedikit */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    transition: max-height .25s ease;
-    /* smooth resize */
-}
-
-/* Total & Pagination — fixed di bawah modal, tidak ikut scroll */
-#kecuranganBottom {
-    flex-shrink: 0;
-    margin-top: 10px;
-}
-
-#kecuranganPagination {
-    flex-shrink: 0;
-    margin-top: 10px;
-    text-align: center;
-}
-
-/* ============================================
-   RESPONSIVE TABLE – Header tidak pecah
-============================================ */
-.table-responsive {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-}
-
-.table-responsive {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Header & cell tidak boleh turun baris */
-table.table th,
-table.table td {
-    white-space: nowrap !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-}
-
-/* Header rata kiri */
-table.table th {
-    text-align: left !important;
-}
-
-/* Kolom nomor */
-table.table th:first-child,
-table.table td:first-child {
-    text-align: center !important;
-    width: 40px !important;
-    padding-left: 0 !important;
-}
-
-/* Kolom total kecurangan */
-table.table th:last-child,
-table.table td:last-child {
-    text-align: center !important;
-    width: 150px !important;
-    padding-left: 0 !important;
-}
-
-/* Mobile font */
-@media (max-width: 576px) {
-    table.table {
-        font-size: 12px !important;
-    }
-}
-
-/* ============================================================
-   FIX MODAL BACKDROP TERLALU GELAP & MENGHALANGI KLIK
-   ============================================================ */
-.modal-backdrop.show {
-    opacity: 0.15 !important; /* tidak gelap */
-    background: rgba(0,0,0,0.15) !important;
-    pointer-events: none !important; /* supaya backdrop tidak memblok klik */
-}
-
-/* Pastikan modal selalu berada di atas backdrop */
-#modalKecurangan.modal {
-    z-index: 2105 !important;
-    pointer-events: auto !important;
-}
-
-/* Tombol navigasi modal */
-#modalPrev,
-#modalNext,
-#modalCloseBtn {
-    z-index: 2106 !important;
-    pointer-events: auto !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: #333 !important;
-}
-
-</style>
 @endpush
 
 @push('js')
-{{-- ========== LOAD JS ========== --}}
+<script>
+window.SALESMAN_CFG = {
+    getKecuranganUrl: "{{ url('/salesman/get-kecurangan') }}"
+};
+</script>
+
 <script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-
-<script>
-/* ========== OPEN MODAL & LOAD DATA ========== */
-function showKecurangan(idSales, pageUrl = null) {
-
-    /* ========== LOADING STATE ========== */
-    $("#tableKecurangan").html(`
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-3">Loading...</td>
-                </tr>
-            `);
-
-    $("#kecuranganPagination").html("");
-    $("#modalKecurangan").modal('show');
-
-    /* ========== URL HANDLING ========== */
-    let url = pageUrl ?? ("{{ url('/salesman/get-kecurangan') }}/" + idSales);
-
-    /* ========== AJAX FETCH ========== */
-    $.get(url, function(res) {
-
-        /* ========== RENDER TABLE ROWS ========== */
-        let indexStart = res.first ?? 1;
-        let rows = "";
-
-        if (!res.data || res.data.length === 0) {
-            rows = `
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-3">Tidak ada data</td>
-                        </tr>
-                    `;
-        } else {
-            res.data.forEach((row, i) => {
-                rows += `
-                            <tr>
-                                <td class="text-center">${indexStart + i}</td>
-                                <td>${row.JENIS_SANKSI ?? '-'}</td>
-                                <td>${row.KETERANGAN_SANKSI ?? '-'}</td>
-                                <td> Rp ${new Intl.NumberFormat("id-ID").format(row.NILAI_SANKSI ?? 0)}</td>
-                                <td>${row.TANGGAL}</td>
-                            </tr>
-                        `;
-            });
-        }
-
-        $("#tableKecurangan").html(rows);
-
-        /* ========== RENDER TOTAL ========== */
-        let totalHTML = `
-                    <div class="mb-2 text-right">
-                        <p class="text-danger font-weight-bold" style="font-size:14px;">
-                            Total Nilai Sanksi: Rp ${new Intl.NumberFormat("id-ID").format(res.total_nilai ?? 0)}
-                        </p>
-                    </div>
-                `;
-
-        $("#kecuranganTotal").html(totalHTML);
-
-        /* ========== RENDER PAGINATION ========== */
-        $("#kecuranganPagination").append(res.pagination);
-
-        /* ========== PAGINATION AJAX HANDLER ========== */
-        $("#kecuranganPagination a.page-link").click(function(e) {
-            e.preventDefault();
-            showKecurangan(idSales, $(this).attr("href"));
-        });
-
-    }).fail(function(xhr) {
-
-        /* ========== ERROR STATE ========== */
-        console.log("AJAX Error:", xhr.responseText);
-
-        $("#tableKecurangan").html(`
-                    <tr>
-                        <td colspan="5" class="text-center text-danger py-3">Gagal memuat data</td>
-                    </tr>
-                `);
-    });
-
-}
-</script>
+<script src="{{ asset('assets/js/data-salesman.js') }}"></script>
 @endpush

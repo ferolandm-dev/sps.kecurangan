@@ -115,51 +115,53 @@
 
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th class="text-center" style="width:5%;">#</th>
+                                    <th class="col-no text-center">#</th>
 
                                     {{-- JENIS --}}
-                                    <th style="width:20%;">
+                                    <th class="col-name">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                        'sort_by' => 'jenis',
-                        'sort_order' =>
-                            (request('sort_by') === 'jenis' && request('sort_order') === 'asc')
-                            ? 'desc'
-                            : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'jenis',
+                'sort_order' =>
+                    (request('sort_by') === 'jenis' && request('sort_order') === 'asc')
+                    ? 'desc'
+                    : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Jenis Sanksi
                                         </a>
                                     </th>
 
                                     {{-- KETERANGAN --}}
-                                    <th style="width:35%;">
+                                    <th class="col-desc">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                        'sort_by' => 'keterangan',
-                        'sort_order' =>
-                            (request('sort_by') === 'keterangan' && request('sort_order') === 'asc')
-                            ? 'desc'
-                            : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'keterangan',
+                'sort_order' =>
+                    (request('sort_by') === 'keterangan' && request('sort_order') === 'asc')
+                    ? 'desc'
+                    : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Keterangan
                                         </a>
                                     </th>
 
                                     {{-- NILAI --}}
-                                    <th style="width:20%;">
+                                    <th class="col-value">
                                         <a href="{{ route('sanksi.index', array_merge(request()->query(), [
-                        'sort_by' => 'nilai',
-                        'sort_order' =>
-                            (request('sort_by') === 'nilai' && request('sort_order') === 'asc')
-                            ? 'desc'
-                            : 'asc'
-                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'nilai',
+                'sort_order' =>
+                    (request('sort_by') === 'nilai' && request('sort_order') === 'asc')
+                    ? 'desc'
+                    : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nilai
                                         </a>
                                     </th>
 
-                                    <th class="text-center" style="width:20%;">Aksi</th>
+                                    {{-- AKSI --}}
+                                    <th class="col-action text-center">
+                                        Aksi
+                                    </th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 @forelse ($sanksi as $item)
                                 <tr>
@@ -271,360 +273,26 @@
 @endsection
 
 @push('styles')
-<style>
-/* ===========================================================
-   FORM INPUT NORMALIZATION
-   =========================================================== */
-input:invalid,
-textarea:invalid,
-select:invalid {
-    box-shadow: none !important;
-    border-color: #ced4da !important;
-}
+{{-- ========== LOAD CSS ========== --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-focus-input.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-background-wrapper.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-header.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn-variant.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-pagination.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-search-bar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-backdrop.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-table-stable.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/index-sanksi.css') }}">
 
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #4caf50 !important;
-}
-
-
-/* ===========================================================
-   GLOBAL PAGE BACKGROUND & PANEL STYLE
-   =========================================================== */
-body,
-.wrapper,
-.main-panel {
-    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-attachment: fixed !important;
-}
-
-.panel-header-sps {
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-.content {
-    background: transparent !important;
-}
-
-
-/* ===========================================================
-   NAVBAR — GRADIENT + NO SHADOW (MATCH HEADER)
-   =========================================================== */
-.navbar-soft {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    border: none !important;
-    box-shadow: none !important;
-    height: 95px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    transition: none !important;
-}
-
-/* Brand Title */
-.navbar-soft .navbar-brand {
-    color: #ffffff !important;
-    font-size: 22px !important;
-    font-weight: 700;
-}
-
-/* Navbar Icons */
-.navbar-soft .nav-link i {
-    color: #ffffff !important;
-    font-size: 22px;
-    transition: .2s ease;
-}
-
-.navbar-soft .nav-link:hover i {
-    color: #333 !important;
-}
-
-.navbar-soft .nav-link i,
-.navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important;
-}
-
-
-/* ===========================================================
-   PAGINATION (Soft UI Modern Style)
-   =========================================================== */
-.pagination {
-    display: flex;
-    gap: 6px;
-}
-
-.pagination .page-item {
-    transition: 0.25s ease;
-}
-
-/* Default */
-.pagination .page-link {
-    color: #29b14a !important;
-    border: none !important;
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    padding: 8px 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    transition: all 0.25s ease-in-out;
-}
-
-/* Hover */
-.pagination .page-link:hover {
-    background: #29b14a !important;
-    color: #fff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
-}
-
-/* Active */
-.pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-    box-shadow: 0 6px 20px rgba(41, 177, 74, 0.45) !important;
-    transform: translateY(-2px);
-}
-
-/* Disabled */
-.pagination .page-item.disabled .page-link {
-    background: #f1f1f1 !important;
-    color: #b4b4b4 !important;
-    box-shadow: none !important;
-    cursor: not-allowed !important;
-}
-
-
-/* ===========================================================
-   GLOBAL BUTTON STYLE (Soft UI)
-   =========================================================== */
-.btn {
-    border: none !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    padding: 8px 18px !important;
-    transition: all 0.25s ease-in-out !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Success */
-.btn-success {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-}
-
-.btn-success:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-}
-
-/* Danger */
-.btn-danger {
-    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
-    color: white !important;
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
-}
-
-/* Secondary */
-.btn-secondary {
-    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
-    color: #333 !important;
-}
-
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
-}
-
-/* Warning */
-.btn-warning {
-    background: linear-gradient(135deg, #eee733, #faf26b) !important;
-    color: #333 !important;
-}
-
-.btn-warning:hover {
-    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
-}
-
-/* Round Buttons */
-.btn-round {
-    border-radius: 30px !important;
-}
-
-/* Icon alignment */
-.btn i {
-    font-size: 15px;
-    margin-right: 6px;
-}
-
-/* Disabled Button */
-.btn:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-
-/* ===========================================================
-   SEARCH BAR (Soft UI)
-   =========================================================== */
-
-/* Wrapper agar baring lurus */
-.action-bar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* Search box container */
-.search-group {
-    display: flex;
-    align-items: center;
-    width: 260px;
-    min-width: 260px;
-}
-
-/* Input */
-.search-input {
-    height: 35px !important;
-    border-radius: 20px 0 0 20px !important;
-    border: 1px solid #cfd3d6 !important;
-    padding-left: 15px !important;
-    background: #fff;
-    transition: all .2s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    font-size: 14px;
-}
-
-/* Button */
-.search-btn {
-    height: 35px !important;
-    border-radius: 0 20px 20px 0 !important;
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    border: none !important;
-    color: #fff !important;
-    padding: 0 16px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(41, 177, 74, 0.3) !important;
-    transition: all .2s ease-in-out;
-}
-
-.search-btn:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
-}
-
-/* Header & cell tidak boleh turun baris */
-table.table th,
-table.table td {
-    white-space: nowrap !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-}
-
-/* Header rata kiri */
-table.table th {
-    text-align: left !important;
-}
-
-/* Kolom nomor */
-table.table th:first-child,
-table.table td:first-child {
-    text-align: center !important;
-    width: 30px !important;
-    padding-left: 0 !important;
-}
-
-/* Kolom total kecurangan */
-table.table th:last-child,
-table.table td:last-child {
-    text-align: center !important;
-    width: 150px !important;
-    padding-left: 0 !important;
-}
-</style>
 @endpush
 
 @push('js')
-<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
 <script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
-
-<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-
-<script>
-/* ===========================================================
-   GLOBAL MODAL KONFIRMASI (DELETE / VALIDASI)
-   =========================================================== */
-$(document).on('click', '.btn-confirm', function() {
-
-    // --- Ambil aksi dan url ---
-    let action = $(this).data('action');
-    let url = $(this).data('url');
-
-    // Set form action ke URL (delete / validasi)
-    $('#confirmForm').attr('action', url);
-
-    // Hapus method lama untuk memastikan tidak dobel
-    $('#confirmForm input[name="_method"]').remove();
-
-    /* ============================
-       MODE DELETE
-       ============================ */
-    if (action === 'delete') {
-
-        // Title & pesan
-        $('#confirmTitle').text('Hapus Data?');
-        $('#confirmMessage').text('Data yang dihapus tidak dapat dikembalikan.');
-
-        // Set method DELETE
-        $('#confirmForm').append('<input type="hidden" name="_method" value="DELETE">');
-
-        // Tombol submit menjadi merah
-        $('#confirmForm button[type="submit"]')
-            .removeClass('btn-success')
-            .addClass('btn-danger');
-    }
-
-    /* ============================
-       MODE VALIDASI
-       ============================ */
-    if (action === 'validasi') {
-
-        // Ganti ikon modal
-        $('#confirmIcon')
-            .removeClass()
-            .addClass('now-ui-icons ui-1_check')
-            .css('color', '#29b14a');
-
-        // Title & pesan modal validasi
-        $('#confirmTitle').text('Validasi Data?');
-        $('#confirmMessage').text('Pastikan data sudah benar sebelum divalidasi.');
-
-        // Tombol submit menjadi hijau
-        $('#confirmForm button[type="submit"]')
-            .removeClass('btn-danger')
-            .addClass('btn-success');
-    }
-
-    // --- Tampilkan modal ---
-    $('#modalConfirm').modal('show');
-});
-</script>
+<script src="{{ asset('assets/js/index-sanksi.js') }}"></script>
 @endpush

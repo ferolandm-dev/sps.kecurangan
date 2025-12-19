@@ -267,7 +267,7 @@
                                         <th class="text-center">Rank</th>
                                         <th>ID Distributor</th>
                                         <th style="min-width:300px;">Nama Distributor</th>
-                                        <th class="text-right">Jumlah Sales</th>
+                                        <th class="text-center">Jumlah Sales</th>
                                     </tr>
                                 </thead>
 
@@ -277,7 +277,7 @@
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $d->id }}</td>
                                         <td>{{ $d->distributor }}</td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <span class="badge-soft">{{ $d->total_sales }}</span>
                                         </td>
                                     </tr>
@@ -312,7 +312,7 @@
                                         <th class="text-center">Rank</th>
                                         <th>ID Sales</th>
                                         <th>Nama Sales</th>
-                                        <th class="text-right">Kecurangan</th>
+                                        <th class="text-center">Kecurangan</th>
                                     </tr>
                                 </thead>
 
@@ -322,7 +322,7 @@
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $s->id_sales }}</td>
                                         <td>{{ $s->nama_sales }}</td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <span class="badge-soft">{{ $s->total_kecurangan }}</span>
                                         </td>
                                     </tr>
@@ -357,7 +357,7 @@
                                     <tr>
                                         <th class="text-center">Rank</th>
                                         <th style="min-width:400px;">Distributor</th>
-                                        <th class="text-right">Jumlah Kasus</th>
+                                        <th class="text-center">Jumlah Kasus</th>
                                     </tr>
                                 </thead>
 
@@ -370,7 +370,7 @@
                                             </span>
                                         </td>
                                         <td>{{ $d->distributor }}</td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <span class="badge-soft">{{ $d->total_kecurangan }}</span>
                                         </td>
                                     </tr>
@@ -394,42 +394,42 @@
                 <div class="card glass-card fade-up h-100" data-animate>
 
                     <div class="card-header pb-0">
-                        <h5 class="card-category">Top 5 Kasus Terbaru</h5>
-                        <h4 class="card-title">Kasus Terbaru</h4>
+                        <h5 class="card-category">Top 5 Customer</h5>
+                        <h4 class="card-title">Top Customer Distributor</h4>
                     </div>
 
                     <div class="card-body">
                         <div class="table-responsive" style="overflow-x:auto;">
 
-                            <table class="table table-hover align-middle" style="min-width:1050px;">
+                            <table class="table table-hover align-middle" style="min-width:800px;">
                                 <thead>
                                     <tr>
-                                        <th style="min-width:120px;">Tanggal</th>
-                                        <th style="min-width:150px;">ID Sales</th>
-                                        <th style="min-width:230px;">Nama Sales</th>
-                                        <th style="min-width:350px;">Distributor</th>
-                                        <th>Pelanggaran</th>
-                                        <th class="text-right" style="min-width:150px;">Nilai</th>
+                                        <th class="text-center" style="width:80px;">Rank</th>
+                                        <th style="min-width:150px;">ID Distributor</th>
+                                        <th style="min-width:300px;">Nama Distributor</th>
+                                        <th class="text-center" style="min-width:180px;">Total Customer</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @forelse($recentFraudCases as $f)
+                                    @forelse($totalCustomerTopDistributor as $index => $d)
                                     <tr>
-                                        <td>{{ \Carbon\Carbon::parse($f->tanggal)->translatedFormat('d M Y') }}</td>
-                                        <td>{{ $f->id_sales }}</td>
-                                        <td>{{ $f->nama_sales }}</td>
-                                        <td>{{ $f->distributor }}</td>
-                                        <td>{{ $f->jenis_sanksi ?? 'Non-Sanksi' }}</td>
-                                        <td class="text-right">
+                                        <td class="text-center fw-bold">
+                                            {{ $index + 1 }}
+                                        </td>
+                                        <td>{{ $d->ID_DISTRIBUTOR }}</td>
+                                        <td>{{ $d->NAMA_DISTRIBUTOR }}</td>
+                                        <td class="text-center">
                                             <span class="badge-soft">
-                                                Rp {{ number_format($f->nilai_sanksi,0,',','.') }}
+                                                {{ number_format($d->total_customer, 0, ',', '.') }}
                                             </span>
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted">Belum ada data</td>
+                                        <td colspan="4" class="text-center text-muted">
+                                            Belum ada data
+                                        </td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -504,374 +504,16 @@
 @endsection
 
 @push('styles')
-<style>
-/* ============================================================
-   GLOBAL PAGE BACKGROUND
-============================================================ */
-body,
-.wrapper,
-.main-panel {
-    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-attachment: fixed !important;
-}
-
-.panel-header-sps,
-.content {
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-/* ============================================================
-   FADE-UP ANIMATION
-============================================================ */
-.fade-up {
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-.fade-up.in-view {
-    animation: fadeUp .6s forwards;
-}
-
-@keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ============================================================
-   GLASS CARDS / GLASS PANEL STYLE
-============================================================ */
-.glass-panel,
-.glass-card {
-    background: rgba(255, 255, 255, 0.92);
-    border-radius: 14px;
-    border: 1px solid rgba(41, 177, 74, 0.12);
-}
-
-/* ============================================================
-   CARD TILT EFFECT
-============================================================ */
-.card-tilt {
-    perspective: 1000px;
-}
-
-.tilt-inner {
-    transform-style: preserve-3d;
-    transition: transform .2s;
-}
-
-/* ============================================================
-   TABLE HEADER STYLE
-============================================================ */
-.table thead th {
-    color: #29b14a;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-/* ============================================================
-   BADGE SOFT STYLE
-============================================================ */
-.badge-soft {
-    background: rgba(41, 177, 74, 0.14);
-    color: #29b14a;
-    padding: 6px 10px;
-    border-radius: 8px;
-}
-
-/* ============================================================
-   VIEW SELECTOR (NAVBAR-STYLE)
-============================================================ */
-.view-selector-bar-wrapper {
-    margin-bottom: 18px;
-}
-
-.view-selector-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-}
-
-.view-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 140px;
-    gap: 8px;
-
-    padding: 8px 14px;
-    border-radius: 12px;
-    cursor: pointer;
-
-    font-weight: 700;
-    color: #2f2f2f;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(41, 177, 74, 0.12);
-
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-    transition: all .18s ease;
-}
-
-.view-btn i {
-    font-size: 18px;
-    color: rgba(41, 177, 74, 0.9);
-}
-
-/* Active button */
-.view-btn.active {
-    background: linear-gradient(135deg, #29b14a, #34d058);
-    color: #fff;
-    border: none;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 26px rgba(41, 177, 74, 0.22);
-}
-
-.view-btn.active i {
-    color: #fff;
-}
-
-/* Hover effect */
-.view-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
-}
-
-/* Mobile layout */
-@media (max-width: 576px) {
-    .view-btn {
-        flex: 1 1 100%;
-        padding-left: 12px;
-        min-width: auto;
-        justify-content: flex-start;
-    }
-}
-
-/* Remove focus outline */
-.view-btn:focus,
-.view-btn:active {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* ============================================================
-   CALENDAR HEATMAP
-============================================================ */
-.calendar-heatmap {
-    display: grid;
-    grid-template-columns: repeat(53, 14px);
-    grid-gap: 3px;
-
-    margin-top: 20px;
-    padding: 20px;
-
-    width: max-content;
-    max-width: 100%;
-    overflow-x: auto;
-
-    background: rgba(255, 255, 255, 0.92);
-    border-radius: 14px;
-}
-
-.calendar-day {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-    background: #e9ecef;
-    transition: .2s ease;
-}
-
-.calendar-day.level-1 {
-    background: rgba(41, 177, 74, 0.25);
-}
-
-.calendar-day.level-2 {
-    background: rgba(41, 177, 74, 0.55);
-}
-
-.calendar-day.level-3 {
-    background: rgba(41, 177, 74, 0.75);
-}
-
-.calendar-day.level-4 {
-    background: rgba(41, 177, 74, 1);
-}
-
-.calendar-day:hover {
-    transform: scale(1.25);
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
-}
-
-/* ============================================================
-   HEATMAP TOOLTIP
-============================================================ */
-.heatmap-tooltip {
-    position: fixed;
-    z-index: 99999;
-    pointer-events: none;
-
-    padding: 6px 10px;
-    font-size: 12px;
-
-    background: rgba(0, 0, 0, 0.80);
-    color: #fff;
-    border-radius: 6px;
-
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity .15s ease, transform .15s ease;
-}
-
-/* ============================================================
-   HEATMAP LEGEND
-============================================================ */
-.heatmap-legend {
-    margin-top: 14px;
-    padding: 10px 15px;
-    border-radius: 12px;
-
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    align-items: center;
-
-    background: rgba(255, 255, 255, 0.85);
-}
-
-.legend-item {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-}
-
-.legend-box {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-}
-
-.legend-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #333;
-}
-</style>
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
 @endpush
 
 @push('js')
-<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
 <script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
-
-<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
 <script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-/* ============================================================
-   VIEW SELECTOR (NAVBAR STYLE)
-   ============================================================ */
-document.addEventListener("DOMContentLoaded", function() {
-
-    const viewButtons = document.querySelectorAll(".view-btn");
-
-    const sections = {
-        overview: document.getElementById("section-overview"),
-        summary: document.getElementById("section-summary"),
-        tables: document.getElementById("section-tables"),
-        calendar: document.getElementById("section-calendar"),
-    };
-
-    function showSection(key) {
-        Object.keys(sections).forEach(name => {
-            sections[name].style.display = (name === key ? "block" : "none");
-        });
-    }
-
-    // Toggle view button active state
-    viewButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            viewButtons.forEach(b => {
-                b.classList.remove("active");
-                b.setAttribute("aria-selected", "false");
-            });
-
-            btn.classList.add("active");
-            btn.setAttribute("aria-selected", "true");
-
-            const view = btn.dataset.view;
-            showSection(view);
-
-            // Render heatmap only when calendar activated
-            if (view === "calendar") {
-                setTimeout(renderHeatmap, 150);
-            }
-        });
-    });
-
-    /* ============================================================
-       RANDOM DEFAULT VIEW
-       ============================================================ */
-    const randomView = ["overview", "summary", "tables", "calendar"]
-        [Math.floor(Math.random() * 4)];
-
-    showSection(randomView);
-
-    viewButtons.forEach(b => {
-        const active = b.dataset.view === randomView;
-        b.classList.toggle("active", active);
-        b.setAttribute("aria-selected", active ? "true" : "false");
-    });
-
-    if (randomView === "calendar") {
-        setTimeout(() => {
-            if (typeof renderHeatmap === "function") renderHeatmap();
-        }, 200);
-    }
-
-});
-</script>
-
-<script>
-/* ============================================================
-   ANIMASI SCROLL (FADE-UP)
-   ============================================================ */
-const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-        if (e.isIntersecting) {
-            e.target.classList.add("in-view");
-            obs.unobserve(e.target);
-        }
-    });
-}, {
-    threshold: 0.15
-});
-
-document.querySelectorAll("[data-animate]").forEach(el => obs.observe(el));
-</script>
-
-<script>
-/* ============================================================
-   CARD TILT EFFECT
-   ============================================================ */
-document.querySelectorAll(".card-tilt").forEach(card => {
-    const inner = card.querySelector(".tilt-inner");
-
-    card.addEventListener("mousemove", e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        inner.style.transform =
-            `rotateX(${(y * -8).toFixed(2)}deg) rotateY(${(x * 8).toFixed(2)}deg)`;
-    });
-
-    card.addEventListener("mouseleave", () => {
-        inner.style.transform = "none";
-    });
-});
-</script>
+<script src="{{ asset('assets/js/dashboard.js') }}"></script>
 
 <script>
 /* ============================================================
@@ -917,7 +559,7 @@ new Chart(document.getElementById("quarterSanksiChart"), {
                 borderWidth: 2,
                 yAxisID: "y",
             },
-            {   
+            {
                 label: "Total Nilai Sanksi",
                 data: @json($sanksiPerQuarter),
                 backgroundColor: "rgba(219,211,0,0.55)",

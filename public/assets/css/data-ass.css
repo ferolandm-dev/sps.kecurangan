@@ -1,0 +1,12 @@
+/* Total & Pagination — fixed di bawah modal, tidak ikut scroll */
+#kecuranganBottom {
+    flex-shrink: 0;
+    margin-top: 10px;
+}
+
+#kecuranganPagination {
+    flex-shrink: 0;
+    margin-top: 10px;
+    text-align: center;
+}
+

@@ -1,0 +1,139 @@
+/* ==================================================
+   JQUERY UI DATEPICKER – CLEAN & NEAT
+================================================== */
+
+.ui-datepicker {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    width: 300px;
+    font-family: inherit;
+    z-index: 9999 !important;
+}
+
+/* ================= HEADER ================= */
+.ui-datepicker-header {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border: 1px solid #e5e7eb;
+    position: relative;
+}
+
+/* TITLE */
+.ui-datepicker-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* ================= MONTH & YEAR ================= */
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
+    appearance: none;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+}
+
+.ui-datepicker select:hover {
+    border-color: #29b14a;
+}
+
+/* ================= YEAR JUMP ================= */
+.ui-year-jump {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+}
+
+.ui-year-jump:hover {
+    background: #f1f5f9;
+    border-color: #29b14a;
+}
+
+/* POSITION YEAR JUMP */
+.ui-datepicker-header .ui-year-jump:first-of-type {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ui-datepicker-header .ui-year-jump:last-of-type {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* ================= TABLE ================= */
+.ui-datepicker table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+}
+
+/* DAY HEADER */
+.ui-datepicker th {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* ================= DAY CELL ================= */
+.ui-datepicker td a {
+    display: block;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 13px;
+    color: #374151;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+
+/* HOVER */
+.ui-datepicker td a:hover {
+    background: #f1f5f9;
+}
+
+/* TODAY */
+.ui-datepicker-today a {
+    background: #e8f7ee !important;
+    color: #29b14a !important;
+    font-weight: 600;
+}
+
+/* SELECTED */
+.ui-datepicker-current-day a {
+    background: #29b14a !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* DISABLED */
+.ui-datepicker-unselectable span {
+    display: block;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 13px;
+    color: #cbd5e1;
+}

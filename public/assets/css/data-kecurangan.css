@@ -1,0 +1,7 @@
+
+button#modalPrev.btn,
+button#modalNext.btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}

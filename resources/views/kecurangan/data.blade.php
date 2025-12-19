@@ -121,114 +121,115 @@
                         <table class="table table-hover align-middle mb-0 kecurangan-table" style="color:#333;">
                             <thead style="color:#29b14a;">
                                 <tr>
-                                    <th class="col-no text-center" style="width:40px;">#</th>
+                                    <th class="col-no text-center">#</th>
 
                                     {{-- ID SALES --}}
-                                    <th class="col-id-sales" style="width:150px; text-align:center;">
+                                    <th class="col-id-sales text-center">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'id_sales',
-                                        'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'id_sales',
+                'sort_order' => (request('sort_by') === 'id_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             ID Sales
                                         </a>
                                     </th>
 
                                     {{-- NAMA SALES --}}
-                                    <th class="col-nama-sales" style="width:200px;">
+                                    <th class="col-nama-sales">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'nama_sales',
-                                        'sort_order' => (request('sort_by') === 'nama_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'nama_sales',
+                'sort_order' => (request('sort_by') === 'nama_sales' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nama Sales
                                         </a>
                                     </th>
 
                                     {{-- DISTRIBUTOR --}}
-                                    <th class="col-distributor" style="width:350px;">
+                                    <th class="col-distributor">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'distributor',
-                                        'sort_order' => (request('sort_by') === 'distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'distributor',
+                'sort_order' => (request('sort_by') === 'distributor' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Distributor
                                         </a>
                                     </th>
 
                                     {{-- NAMA ASS --}}
-                                    <th class="col-nama-ass" style="width:300px;">
+                                    <th class="col-nama-ass">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'nama_ass',
-                                        'sort_order' => (request('sort_by') === 'nama_ass' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'nama_ass',
+                'sort_order' => (request('sort_by') === 'nama_ass' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nama ASS
                                         </a>
                                     </th>
 
                                     {{-- JENIS SANKSI --}}
-                                    <th class="col-jenis-sanksi" style="width:150px;">
+                                    <th class="col-jenis-sanksi">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'jenis_sanksi',
-                                        'sort_order' => (request('sort_by') === 'jenis_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'jenis_sanksi',
+                'sort_order' => (request('sort_by') === 'jenis_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Jenis Sanksi
                                         </a>
                                     </th>
 
                                     {{-- KETERANGAN SANKSI --}}
-                                    <th class="col-ket-sanksi" style="width:320px;">
+                                    <th class="col-ket-sanksi">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'keterangan_sanksi',
-                                        'sort_order' => (request('sort_by') === 'keterangan_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'keterangan_sanksi',
+                'sort_order' => (request('sort_by') === 'keterangan_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Keterangan Sanksi
                                         </a>
                                     </th>
 
                                     {{-- NILAI SANKSI --}}
-                                    <th class="col-nilai-sanksi" style="width:160px;">
+                                    <th class="col-nilai-sanksi">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'nilai_sanksi',
-                                        'sort_order' => (request('sort_by') === 'nilai_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'nilai_sanksi',
+                'sort_order' => (request('sort_by') === 'nilai_sanksi' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Nilai Sanksi
                                         </a>
                                     </th>
 
                                     {{-- TOKO --}}
-                                    <th class="col-toko" style="width:200px;">Toko</th>
+                                    <th class="col-toko">Toko</th>
 
                                     {{-- KUNJUNGAN --}}
-                                    <th class="col-kunjungan text-center" style="width:150px;">Kunjungan</th>
+                                    <th class="col-kunjungan text-center">Kunjungan</th>
 
                                     {{-- TANGGAL --}}
-                                    <th class="col-tanggal text-center" style="width:180px;">
+                                    <th class="col-tanggal text-center">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'tanggal',
-                                        'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'tanggal',
+                'sort_order' => (request('sort_by') === 'tanggal' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Tanggal Kasus
                                         </a>
                                     </th>
 
                                     {{-- CREATED AT --}}
-                                    <th class="col-created text-center" style="width:150px;">
+                                    <th class="col-created text-center">
                                         <a href="{{ route('kecurangan.data', array_merge(request()->query(), [
-                                        'sort_by' => 'CREATED_AT',
-                                        'sort_order' => (request('sort_by') === 'CREATED_AT' && request('sort_order') === 'asc') ? 'desc' : 'asc'
-                                    ])) }}" class="text-success text-decoration-none">
+                'sort_by' => 'CREATED_AT',
+                'sort_order' => (request('sort_by') === 'CREATED_AT' && request('sort_order') === 'asc') ? 'desc' : 'asc'
+            ])) }}" class="text-success text-decoration-none">
                                             Tanggal Buat
                                         </a>
                                     </th>
 
                                     {{-- KETERANGAN --}}
-                                    <th class="col-keterangan text-center" style="width:180px;">Keterangan</th>
+                                    <th class="col-keterangan text-center">Keterangan</th>
 
                                     {{-- KUARTAL --}}
-                                    <th class="col-kuartal" style="width:110px;">Kuartal</th>
+                                    <th class="col-kuartal">Kuartal</th>
 
                                     {{-- AKSI --}}
-                                    <th class="col-aksi text-center" style="width:150px;">Aksi</th>
+                                    <th class="col-aksi text-center">Aksi</th>
                                 </tr>
                             </thead>
+
 
                             <tbody>
                                 @forelse ($kecurangan as $index => $item)
@@ -489,14 +490,14 @@
 
                             <div class="form-group mb-2">
                                 <label class="text-dark small mb-1">Mulai</label>
-                                <input type="date" name="created_start_date" class="form-control"
-                                    value="{{ request('created_start_date') }}">
+                                <input type="text" name="created_start_date" class="form-control datepicker"
+                                    placeholder="dd/mm/yyyy" value="{{ request('created_start_date') }}">
                             </div>
 
                             <div class="form-group">
                                 <label class="text-dark small mb-1">Akhir</label>
-                                <input type="date" name="created_end_date" class="form-control"
-                                    value="{{ request('created_end_date') }}">
+                                <input type="text" name="created_end_date" class="form-control datepicker"
+                                    placeholder="dd/mm/yyyy" value="{{ request('created_end_date') }}">
                             </div>
                         </div>
 
@@ -506,14 +507,14 @@
 
                             <div class="form-group mb-2">
                                 <label class="text-dark small mb-1">Mulai</label>
-                                <input type="date" name="start_date" class="form-control"
-                                    value="{{ request('start_date') }}">
+                                <input type="text" name="start_date" class="form-control datepicker"
+                                    placeholder="dd/mm/yyyy" value="{{ request('start_date') }}">
                             </div>
 
                             <div class="form-group">
                                 <label class="text-dark small mb-1">Akhir</label>
-                                <input type="date" name="end_date" class="form-control"
-                                    value="{{ request('end_date') }}">
+                                <input type="text" name="end_date" class="form-control datepicker"
+                                    placeholder="dd/mm/yyyy" value="{{ request('end_date') }}">
                             </div>
                         </div>
 
@@ -550,563 +551,36 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
-<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
-<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
-<style>
-.kecurangan-table {
-    table-layout: fixed !important;
-    width: 100%;
-}
-
-.kecurangan-table thead th {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
-    vertical-align: middle;
-}
-
-.kecurangan-table tbody td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.table-responsive {
-    overflow-x: auto;
-}
-
-input:invalid,
-textarea:invalid,
-select:invalid {
-    box-shadow: none !important;
-    border-color: #ced4da !important;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #4caf50 !important;
-}
-
-/* ===============================
-   GLOBAL BACKGROUND (DESKTOP)
-=============================== */
-body,
-.wrapper,
-.main-panel {
-    background: linear-gradient(140deg, #29b14a 0%, #c7c500 50%, #dbd300 92%) !important;
-    background-attachment: fixed !important;
-}
-
-/* ===============================
-   FIX: MOBILE MODAL BACKDROP BUG
-=============================== */
-@media (max-width: 768px) {
-
-    body,
-    .wrapper,
-    .main-panel {
-        background-attachment: scroll !important;
-        /* FIX iOS backdrop */
-    }
-}
-
-/* FIX: Modal tidak bisa di klik karena backdrop menutupi modal */
-.modal-backdrop {
-    z-index: 1060 !important;
-    pointer-events: none !important;
-}
-
-.modal {
-    z-index: 1070 !important;
-    pointer-events: auto !important;
-}
-
-.panel-header-sps {
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-.content {
-    background: transparent !important;
-}
-
-/* ========================================
-   NAVBAR — MATCH THE HEADER STYLE
-========================================= */
-
-.navbar-soft {
-    background: linear-gradient(90deg, #29b14a 0%, #dbd300 85%) !important;
-    border: none !important;
-    box-shadow: none !important;
-
-    height: 95px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
-.navbar-soft .navbar-brand {
-    color: #ffffff !important;
-    font-size: 22px !important;
-    font-weight: 700;
-}
-
-.navbar-soft .nav-link i {
-    color: #ffffff !important;
-    font-size: 22px;
-    transition: .2s ease;
-}
-
-.navbar-soft .nav-link:hover i {
-    color: #333 !important;
-}
-
-.navbar-soft {
-    transition: none !important;
-}
-
-.navbar-soft .nav-link i,
-.navbar-soft .navbar-brand {
-    transition: color .25s ease, transform .25s ease !important;
-}
-
-/* ===============================
-   PAGINATION (Soft UI)
-=============================== */
-
-.pagination {
-    display: flex;
-    gap: 6px;
-}
-
-.pagination .page-item {
-    transition: 0.25s ease;
-}
-
-.pagination .page-link {
-    color: #29b14a !important;
-    border: none !important;
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    padding: 8px 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    transition: all 0.25s ease-in-out;
-}
-
-.pagination .page-link:hover {
-    background: #29b14a !important;
-    color: #fff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.35);
-}
-
-.pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-    box-shadow: 0 6px 20px rgba(41, 177, 74, 0.45) !important;
-    transform: translateY(-2px);
-}
-
-.pagination .page-item.disabled .page-link {
-    background: #f1f1f1 !important;
-    color: #b4b4b4 !important;
-    box-shadow: none !important;
-    cursor: not-allowed !important;
-}
-
-.pagination .page-item.disabled .page-link:hover {
-    background: #f1f1f1 !important;
-    color: #b4b4b4 !important;
-}
-
-/* ========================================
-   GLOBAL BUTTON STYLE
-========================================= */
-
-.btn {
-    border: none !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    padding: 8px 18px !important;
-    transition: all 0.25s ease-in-out !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-}
-
-.btn-success {
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    color: #fff !important;
-}
-
-.btn-success:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #e74c3c, #ff6b5c) !important;
-    color: white !important;
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #d84333, #fa5f50) !important;
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #bfc2c7, #d6d8db) !important;
-    color: #333 !important;
-}
-
-.btn-secondary:hover {
-    background: linear-gradient(135deg, #b0b3b7, #c9cbce) !important;
-}
-
-.btn-warning {
-    background: linear-gradient(135deg, #eee733, #faf26b) !important;
-    color: #333 !important;
-}
-
-.btn-warning:hover {
-    background: linear-gradient(135deg, #e2db2e, #f0eb63) !important;
-}
-
-.btn-round {
-    border-radius: 30px !important;
-}
-
-.btn i {
-    font-size: 15px;
-    margin-right: 6px;
-}
-
-.btn:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* ========================================
-   SEARCH BAR
-========================================= */
-
-.action-bar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.search-group {
-    display: flex;
-    align-items: center;
-    width: 260px;
-    min-width: 260px;
-}
-
-.search-input {
-    height: 35px !important;
-    border-radius: 20px 0 0 20px !important;
-    border: 1px solid #cfd3d6 !important;
-    padding-left: 15px !important;
-    background: #fff;
-    transition: all .2s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    font-size: 14px;
-}
-
-.search-btn {
-    height: 35px !important;
-    border-radius: 0 20px 20px 0 !important;
-    background: linear-gradient(135deg, #29b14a, #34d058) !important;
-    border: none !important;
-    color: #fff !important;
-    padding: 0 16px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(41, 177, 74, 0.3) !important;
-    transition: all .2s ease-in-out;
-}
-
-.search-btn:hover {
-    background: linear-gradient(135deg, #25a344, #2fc655) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(41, 177, 74, 0.4) !important;
-}
-
-/* ========================================
-   MODAL PREV/NEXT BUTTONS
-========================================= */
-
-#modalPrev,
-#modalNext {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-    color: #333 !important;
-    text-decoration: none !important;
-}
-
-#modalPrev:hover,
-#modalNext:hover,
-#modalPrev:focus,
-#modalNext:focus,
-#modalPrev:active,
-#modalNext:active {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    opacity: 0.6 !important;
-}
-
-#modalPrev::-moz-focus-inner,
-#modalNext::-moz-focus-inner {
-    border: 0 !important;
-    padding: 0 !important;
-}
-
-#modalPrev:focus,
-#modalNext:focus {
-    box-shadow: 0 0 0 0 transparent !important;
-}
-
-button#modalPrev.btn,
-button#modalNext.btn {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.modal-backdrop.show {
-    opacity: 0 !important;
-    background-color: transparent !important;
-}
-</style>
-@endpush
-@push('js')
+{{-- ========== LOAD CSS ========== --}}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/sidebar-fix.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/ui-lock.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-focus-input.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-background-wrapper.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-header.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-btn-variant.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-pagination.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-search-bar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-backdrop.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/global-table-stable.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/modal-navigation-buttons.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/data-kecurangan.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/calendar-ui.css') }}">
+@endpush
+
+@push('js')
 <script>
-/* ===========================================================
-   INIT SELECT2 FOR EACH MODAL
-=========================================================== */
-
-function initSelect2InModal(modalId) {
-    let modal = $(modalId);
-
-    modal.on("shown.bs.modal", function() {
-        modal.find("select.select2").select2({
-            dropdownParent: modal,
-            width: '100%'
-        });
-    });
-}
-
-// Modal Filter
-initSelect2InModal("#modalFilter");
-
-// Modal Export Excel
-initSelect2InModal("#modalExportExcel");
-
-// Modal Export PDF
-initSelect2InModal("#modalExportPdf");
-
-/* ===========================================================
-   LOAD KETERANGAN BERDASARKAN JENIS SANKSI (3 MODAL)
-=========================================================== */
-function loadKeterangan(jenis, targetSelect) {
-    $(targetSelect).empty().append(`<option value="">Memuat...</option>`);
-
-    // Jika jenis belum dipilih
-    if (!jenis) {
-        $(targetSelect).html(`<option value="">Semua Keterangan</option>`);
-        return;
-    }
-
-    $.ajax({
-        url: "/kecurangan/get-keterangan/" + encodeURIComponent(jenis),
-        type: "GET",
-        success: function(data) {
-
-            // Reset dropdown
-            $(targetSelect).empty().append(`<option value="">Semua Keterangan</option>`);
-
-            // Tambahkan opsi dari DB
-            data.forEach(item => {
-                $(targetSelect).append(`
-                    <option value="${item.KETERANGAN}">${item.KETERANGAN}</option>
-                `);
-            });
-
-            // Refresh Select2 / Trigger change
-            $(targetSelect).trigger('change');
-        },
-        error: function() {
-            $(targetSelect).html(`<option value="">Gagal memuat</option>`);
-        }
-    });
-}
-
-
-
-// Filter
-$("#filter_jenis_sanksi_filter").change(function() {
-    loadKeterangan($(this).val(), "#filter_keterangan_sanksi_filter");
-});
-
-// Excel
-$("#filter_jenis_sanksi_excel").change(function() {
-    loadKeterangan($(this).val(), "#filter_keterangan_sanksi_excel");
-});
-
-// PDF
-$("#filter_jenis_sanksi_pdf").change(function() {
-    loadKeterangan($(this).val(), "#filter_keterangan_sanksi_pdf");
-});
-
-/* ===========================================================
-   EXPORT DATE RANGE LOGIC (PDF & EXCEL)
-=========================================================== */
-
-function setupDateRange(modeSelect, rangeBox, alertBox, submitButton) {
-
-    $("#" + modeSelect).change(function() {
-        if ($(this).val() === "date") {
-            $("#" + rangeBox).slideDown(150);
-        } else {
-            $("#" + rangeBox).slideUp(150);
-            $(`#${rangeBox} input`).val('');
-            $("#" + alertBox).addClass("d-none");
-        }
-    });
-
-    $("#" + submitButton).on("click", function(e) {
-
-        if ($("#" + modeSelect).val() !== "date") return true;
-
-        let start = $(`#${rangeBox} input[name="start_date"]`).val();
-        let end = $(`#${rangeBox} input[name="end_date"]`).val();
-
-        if (!start || !end) {
-            e.preventDefault();
-            $("#" + alertBox).removeClass("d-none").text("Harap isi kedua tanggal sebelum export.");
-            return false;
-        }
-
-        if (end < start) {
-            e.preventDefault();
-            $("#" + alertBox).removeClass("d-none").text(
-                "Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!");
-            return false;
-        }
-
-        $("#" + alertBox).addClass("d-none");
-        return true;
-    });
-}
-
-// SETUP PDF & EXCEL DATE PICKER
-setupDateRange("mode_pdf", "pdf_date_range", "pdf_error_alert", "btn_export_pdf");
-setupDateRange("mode_excel", "excel_date_range", "excel_error_alert", "btn_export_excel");
-
-$('#pdf_date_range').hide();
-$('#excel_date_range').hide();
-
-/* ===========================================================
-   MODAL BUKTI (GAMBAR SLIDER)
-=========================================================== */
-$(document).ready(function() {
-    let fotoList = [];
-    let currentIndex = 0;
-
-    $(".btn-lihat-bukti").click(function() {
-        const id = $(this).data("id");
-        fotoList = [];
-        currentIndex = 0;
-
-        $("#modalBukti").modal({
-            backdrop: "static",
-            keyboard: true,
-            show: true
-        });
-
-        $.ajax({
-            url: `/kecurangan/${id}/bukti`,
-            method: "GET",
-            beforeSend: () => $("#modalImage").attr("src", "").attr("alt", "Memuat..."),
-            success: function(response) {
-                if (!response.length) {
-                    $("#modalImage").attr("alt", "Tidak ada foto.");
-                    return;
-                }
-                fotoList = response.map(f => f.url);
-                showModalImage(currentIndex);
-            },
-            error: () => $("#modalImage").attr("alt", "Gagal memuat foto.")
-        });
-    });
-
-    function showModalImage(index) {
-        if (!fotoList.length) return;
-
-        $("#modalImage").addClass("fade-out");
-        setTimeout(() => {
-            $("#modalImage").attr("src", fotoList[index]).removeClass("fade-out");
-        }, 150);
-    }
-
-    $("#modalNext").click(() => {
-        if (!fotoList.length) return;
-        currentIndex = (currentIndex + 1) % fotoList.length;
-        showModalImage(currentIndex);
-    });
-
-    $("#modalPrev").click(() => {
-        if (!fotoList.length) return;
-        currentIndex = (currentIndex - 1 + fotoList.length) % fotoList.length;
-        showModalImage(currentIndex);
-    });
-
-    $(document).keydown(function(e) {
-        if (!$("#modalBukti").hasClass("show")) return;
-        if (e.key === "Escape") $("#modalBukti").modal("hide");
-        if (e.key === "ArrowRight") $("#modalNext").click();
-        if (e.key === "ArrowLeft") $("#modalPrev").click();
-    });
-
-    $("#modalBukti").on("shown.bs.modal", function() {
-        $("body").css("overflow", "hidden");
-    });
-
-    $("#modalBukti").on("hidden.bs.modal", function() {
-        $("#modalImage").attr("src", "");
-        fotoList = [];
-        $("body").css("overflow", "auto");
-    });
-
-    $(".btn-lihat-keterangan").click(function() {
-        $("#isiKeterangan").text($(this).data("keterangan"));
-        $("#modalKeterangan").modal("show");
-    });
-});
+window.KECURANGAN_REPORT_CONFIG = {
+    keteranganByJenisUrl: "{{ url('/kecurangan/get-keterangan') }}",
+    buktiByIdUrl: "{{ url('/kecurangan') }}"
+};
 </script>
+
+<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+<script src="{{ asset('assets/js/ui-lock.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{ asset('assets/js/data-kecurangan.js') }}"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 @endpush

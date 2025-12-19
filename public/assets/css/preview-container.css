@@ -1,0 +1,43 @@
+/* ===============================
+   DELETE PHOTO BUTTON (X)
+=============================== */
+#preview-container .btn-remove,
+.existing-photo .btn-delete-existing {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50% !important;
+    background: #e74c3c !important;
+    color: #fff !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+    transition: 0.18s ease-in-out;
+    z-index: 99;
+}
+
+#preview-container .btn-remove:hover,
+.existing-photo .btn-delete-existing:hover {
+    background: #c0392b !important;
+    transform: scale(1.10);
+}
+
+#preview-container .btn-remove:active,
+.existing-photo .btn-delete-existing:active {
+    transform: scale(0.92);
+}
+
+#preview-container .btn-remove:focus,
+.existing-photo .btn-delete-existing:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}

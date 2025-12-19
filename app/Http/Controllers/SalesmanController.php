@@ -22,9 +22,19 @@ class SalesmanController extends Controller
             ->select(
                 'salesman.*',
                 'distributor.NAMA_DISTRIBUTOR',
-                DB::raw('(SELECT COUNT(*) FROM kecurangan 
-                        WHERE kecurangan.id_sales = salesman.ID_SALESMAN 
-                        AND kecurangan.validasi = 1) AS total_kecurangan')
+
+                // TOTAL KECURANGAN
+                DB::raw('(SELECT COUNT(*) 
+                        FROM kecurangan 
+                        WHERE kecurangan.ID_SALES = salesman.ID_SALESMAN 
+                        AND kecurangan.VALIDASI = 1
+                ) AS total_kecurangan'),
+
+                // TOTAL CUSTOMER
+                DB::raw('(SELECT COUNT(*) 
+                        FROM customer 
+                        WHERE customer.ID_SALESMAN = salesman.ID_SALESMAN
+                ) AS total_customer')
             );
 
         // 🔍 SEARCH
@@ -39,7 +49,7 @@ class SalesmanController extends Controller
         }
 
         // 🔀 SORTING
-        $sortBy = $request->get('sort_by', 'ID_SALESMAN');
+        $sortBy    = $request->get('sort_by', 'ID_SALESMAN');
         $sortOrder = $request->get('sort_order', 'asc');
 
         $allowed = [
@@ -48,29 +58,28 @@ class SalesmanController extends Controller
             'ID_DISTRIBUTOR',
             'NAMA_DISTRIBUTOR',
             'TYPE_SALESMAN',
-            'total_kecurangan' // <= sort jumlah kecurangan
+            'total_kecurangan',
+            'total_customer' 
         ];
 
         if (!in_array($sortBy, $allowed)) {
             $sortBy = 'ID_SALESMAN';
         }
 
-        // PERHATIAN: kolom total_kecurangan harus pakai raw
-        if ($sortBy === 'total_kecurangan') {
-            $query->orderBy(DB::raw('total_kecurangan'), $sortOrder);
+        // kolom hasil subquery wajib pakai RAW
+        if (in_array($sortBy, ['total_kecurangan', 'total_customer'])) {
+            $query->orderBy(DB::raw($sortBy), $sortOrder);
         } else {
             $query->orderBy($sortBy, $sortOrder);
         }
 
-        if ($request->has('all')) {
-            $salesman = $query->paginate(999999)->appends($request->query());
-        } else {
-            $salesman = $query->paginate(10)->appends($request->query());
-        }
-
+        $salesman = $request->has('all')
+            ? $query->paginate(999999)->appends($request->query())
+            : $query->paginate(10)->appends($request->query());
 
         return view('salesman.data', compact('salesman', 'sortBy', 'sortOrder'));
     }
+
 
     public function getKecurangan(Request $request, $id)
     {
@@ -113,9 +122,17 @@ class SalesmanController extends Controller
             ->select(
                 'salesman.*',
                 'distributor.NAMA_DISTRIBUTOR',
-                DB::raw('(SELECT COUNT(*) FROM kecurangan 
-                        WHERE kecurangan.id_sales = salesman.ID_SALESMAN 
-                        AND kecurangan.validasi = 1) AS total_kecurangan')
+
+                DB::raw('(SELECT COUNT(*) 
+                        FROM kecurangan 
+                        WHERE kecurangan.ID_SALES = salesman.ID_SALESMAN 
+                        AND kecurangan.VALIDASI = 1
+                ) AS total_kecurangan'),
+
+                DB::raw('(SELECT COUNT(*) 
+                        FROM customer 
+                        WHERE customer.ID_SALESMAN = salesman.ID_SALESMAN
+                ) AS total_customer')
             )
             ->get();
 
